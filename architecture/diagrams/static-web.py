@@ -1,4 +1,4 @@
-#!/Users/chicks/.pyenv/versions/3.13.5/bin/python
+#!/usr/bin/env -S uv run --script
 
 from diagrams import Diagram
 from diagrams.azure.general import Usericon

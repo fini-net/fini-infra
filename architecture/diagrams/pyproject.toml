@@ -1,0 +1,7 @@
+[project]
+name = "diagrams"
+version = "0.1.0"
+description = "Generate diagrams for FINI architecture"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = ["diagrams"]
