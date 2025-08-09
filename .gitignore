@@ -7,6 +7,9 @@
 *.pm.tdy
 *.bs
 
+# vim swap files
+*.sw[a-p]
+
 # Devel::Cover
 cover_db/
 
