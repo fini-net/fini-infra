@@ -6,4 +6,4 @@ from diagrams.digitalocean.network import Firewall
 from diagrams.digitalocean.storage import Space
 
 with Diagram("FINI Static Web Serving"):
-        Usericon("web user") >> Firewall("CDN") >> Space("bucket")
+    Usericon("web user") >> Firewall("CDN") >> Space("bucket")
