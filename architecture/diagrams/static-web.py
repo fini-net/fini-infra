@@ -5,5 +5,11 @@ from diagrams.azure.general import Usericon
 from diagrams.digitalocean.network import Firewall
 from diagrams.digitalocean.storage import Space
 
-with Diagram("FINI Static Web Serving"):
-    Usericon("web user") >> Firewall("CDN") >> Space("bucket")
+with Diagram("FINI Static Web Serving", show=False):
+    user = Usericon("web user")
+    cdn = Firewall("CDN")
+    storage = Space("bucket")
+
+    user >> cdn >> storage
+
+print("Done generating diagrams")
