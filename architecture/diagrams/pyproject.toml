@@ -1,7 +1,11 @@
 [project]
 name = "diagrams"
-version = "0.1.0"
+version = "0.2.0"
 description = "Generate diagrams for FINI architecture"
+authors = [{ name = "Christopher Hicks", email = "chicks.net@gmail.com" }]
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = ["diagrams"]
+
+[project.urls]
+Repository = "https://github.com/fini-net/fini-infra/tree/main/architecture/diagrams"
