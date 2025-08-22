@@ -6,7 +6,7 @@ from diagrams.custom import Custom
 
 with Diagram("Otel example", show=False):
     user = Usericon("web user")
-    otel = Custom("Otel","./icons/otel.png")
+    otel = Custom("Otel", "./icons/otel.png")
 
     user >> otel
 
