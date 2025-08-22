@@ -9,24 +9,26 @@ from diagrams.onprem.monitoring import Prometheus
 _graph_attr = {
     "fontsize": "45",
     "fontname": "Inter, Arial",
-    "labelloc": "t"
+    "labelloc": "t",
 }
 
-_node_attr={
+_node_attr = {
     "fontname": "Inter, Arial",
-    "fontsize": "20"
+    "fontsize": "20",
 }
 
-_edge_attr={
+_edge_attr = {
     "fontname": "Inter, Arial",
     "fontsize": "18",
 }
 
-with Diagram("FINI Static Web Serving",
-             graph_attr=_graph_attr, 
-             node_attr=_node_attr,
-             edge_attr=_edge_attr,
-             show=False):
+with Diagram(
+    "FINI Static Web Serving",
+    graph_attr=_graph_attr,
+    node_attr=_node_attr,
+    edge_attr=_edge_attr,
+    show=False,
+):
     user = Usericon("web user")
     cdn = Firewall("CDN")
     storage = Space("bucket")
