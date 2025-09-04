@@ -11,11 +11,13 @@ on:
   workflow_dispatch:
 
 # global permissions
-permissions: read-all
+permissions: {}
 
 jobs:
   actionlint:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - name: Check workflow files
