@@ -7,6 +7,7 @@ Lee Briggs said:
 > queues, and anything else that’s used to store or transfer data.
 >
 > ## Example Resources
+>
 > - AWS: RDS, DynamoDB, S3, SQS, SNS, Kinesis, Redshift, DocumentDB,
 >   ElastiCache, DynamoDB
 > - Azure: SQL, CosmosDB, Blob Storage, Queue Storage, Event Grid, Event Hubs,
