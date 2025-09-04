@@ -36,3 +36,11 @@ inc/
 /MANIFEST.bak
 /pm_to_blib
 /*.zip
+
+# Terraform files
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+terraform.tfvars
+*.tfplan
