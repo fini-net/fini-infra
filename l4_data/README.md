@@ -14,3 +14,4 @@ Lee Briggs said:
 >   Service Bus, Redis Cache
 > - Google Cloud: Cloud SQL, Cloud Spanner, Cloud Storage, Cloud Pub/Sub, Cloud
 >   Datastore, Cloud Bigtable, Cloud Memorystore
+> - DigitalOcean: Managed Databases, Spaces, Load Balancers
