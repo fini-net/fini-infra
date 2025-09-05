@@ -10,4 +10,9 @@ Lee Briggs said:
 > - AWS: ALB, Network Load Balancers, API Gateway, CloudFront
 > - Azure: Application Gateway, Load Balancer, API Management, Front Door
 > - Google Cloud: Load Balancers, API Gateway, Cloud CDN
-> - DigitalOcean: Load Balancers, CDN
+
+## DigitalOcean Resources
+
+- [Load Balancers](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/loadbalancer) - Application and network load balancing
+- [CDN](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/cdn) - Content delivery network
+- [Certificate](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/certificate) - TLS/SSL certificates

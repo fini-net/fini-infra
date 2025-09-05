@@ -9,4 +9,11 @@ Lee Briggs said:
 > - AWS: EC2, ECS, EKS, Lambda, Fargate
 > - Azure: Virtual Machines, Container Instances, AKS, Functions
 > - Google Cloud: Compute Engine, GKE, Cloud Run, Cloud Functions
-> - DigitalOcean: Droplets, Kubernetes, App Platform, Functions
+
+## DigitalOcean Resources
+
+- [Droplets](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/droplet) - Virtual machines
+- [Kubernetes](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/kubernetes_cluster) - Managed Kubernetes clusters
+- [Container Registry](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/container_registry) - Docker image storage
+- [App Platform](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/app) - PaaS for web apps
+- [Functions](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/function) - Serverless functions

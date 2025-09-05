@@ -14,4 +14,9 @@ Lee Briggs said:
 >   Service Bus, Redis Cache
 > - Google Cloud: Cloud SQL, Cloud Spanner, Cloud Storage, Cloud Pub/Sub, Cloud
 >   Datastore, Cloud Bigtable, Cloud Memorystore
-> - DigitalOcean: Managed Databases, Spaces, Load Balancers
+
+## DigitalOcean Resources
+
+- [Managed Databases](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/database_cluster) - PostgreSQL, MySQL, Redis, MongoDB
+- [Spaces](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/spaces_bucket) - S3-compatible object storage
+- [Spaces Bucket Objects](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/spaces_bucket_object) - Object storage management

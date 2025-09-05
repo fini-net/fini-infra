@@ -10,4 +10,9 @@ Lee Briggs said:
 > - AWS: Lambda, ECS Tasks, Elastic Beanstalk
 > - Azure: Functions, Container Instances, App Service
 > - Google Cloud: Cloud Functions, Cloud Run, App Engine
-> - DigitalOcean: Functions, App Platform, Container Registry
+
+## DigitalOcean Resources
+
+- [App Platform](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/app) - Deploy apps from source code
+- [Functions](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/function) - Serverless functions
+- [Container Registry](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/container_registry) - Store and deploy containers

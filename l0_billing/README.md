@@ -9,4 +9,7 @@ Lee Briggs said:
 > - AWS: Organization
 > - Azure: Account
 > - Google Cloud: Account
-> - DigitalOcean: Account
+
+## DigitalOcean Resources
+
+- [Account Management](https://docs.digitalocean.com/reference/api/api-reference/#tag/Account) - API-based account configuration

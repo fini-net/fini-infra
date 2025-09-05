@@ -10,4 +10,7 @@ Lee Briggs said:
 > - AWS: Account
 > - Azure: Subscription
 > - Google Cloud: Project
-> - DigitalOcean: Project
+
+## DigitalOcean Resources
+
+- [Projects](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/project) - Organize resources into projects
