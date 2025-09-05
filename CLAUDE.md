@@ -13,7 +13,7 @@ Lee Briggs' 7-layer infrastructure architecture using OpenTofu
 
 The project follows a structured 7-layer approach:
 
-- **l0_billing** - Cost management and billing setup  
+- **l0_billing** - Cost management and billing setup
 - **l1_privilege** - Identity and access management
 - **l2_network** - VPCs, subnets, networking components
 - **l3_permissions** - Fine-grained access controls
@@ -37,7 +37,7 @@ The project follows a structured 7-layer approach:
 
 - `just list` - Show all available commands
 - `just clean_readme` - Generate standardized README
-- `just sync` - Sync with main branch  
+- `just sync` - Sync with main branch
 - `just branch <name>` - Create timestamped branch
 - `just pr` - Create pull request automatically
 - `just merge` - Merge PR and clean up branches
@@ -76,7 +76,7 @@ The project follows a structured 7-layer approach:
 Four GitHub Actions workflows run on push/PR to main:
 
 - **terraform-lint.yml** - Terraform formatting and TFLint
-- **checkov.yml** - Security scanning with SARIF upload  
+- **checkov.yml** - Security scanning with SARIF upload
 - **markdownlint.yml** - Markdown standards
 - **actionlint.yml** - GitHub Actions validation
 
