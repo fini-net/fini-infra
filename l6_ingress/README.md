@@ -13,6 +13,10 @@ Lee Briggs said:
 
 ## DigitalOcean Resources
 
-- [Load Balancers](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/loadbalancer) - Application and network load balancing
-- [CDN](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/cdn) - Content delivery network
-- [Certificate](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/certificate) - TLS/SSL certificates
+- [Load Balancers][do-lb] - Application and network load balancing
+- [CDN][do-cdn] - Content delivery network
+- [Certificate][do-cert] - TLS/SSL certificates
+
+[do-lb]: https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/loadbalancer
+[do-cdn]: https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/cdn
+[do-cert]: https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/certificate

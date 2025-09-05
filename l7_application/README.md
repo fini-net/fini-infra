@@ -13,6 +13,10 @@ Lee Briggs said:
 
 ## DigitalOcean Resources
 
-- [App Platform](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/app) - Deploy apps from source code
-- [Functions](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/function) - Serverless functions
-- [Container Registry](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/container_registry) - Store and deploy containers
+- [App Platform][do-app] - Deploy apps from source code
+- [Functions][do-function] - Serverless functions
+- [Container Registry][do-registry] - Store and deploy containers
+
+[do-app]: https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/app
+[do-function]: https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/function
+[do-registry]: https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/container_registry

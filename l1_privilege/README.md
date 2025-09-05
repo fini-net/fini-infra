@@ -13,4 +13,6 @@ Lee Briggs said:
 
 ## DigitalOcean Resources
 
-- [Projects](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/project) - Organize resources into projects
+- [Projects][do-project] - Organize resources into projects
+
+[do-project]: https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/project

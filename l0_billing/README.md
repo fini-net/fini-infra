@@ -12,4 +12,6 @@ Lee Briggs said:
 
 ## DigitalOcean Resources
 
-- [Account Management](https://docs.digitalocean.com/reference/api/api-reference/#tag/Account) - API-based account configuration
+- [Account Management][do-account] - API-based account configuration
+
+[do-account]: https://docs.digitalocean.com/reference/api/api-reference/#tag/Account

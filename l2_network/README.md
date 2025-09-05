@@ -13,6 +13,10 @@ Lee Briggs said:
 
 ## DigitalOcean Resources
 
-- [VPCs](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/vpc) - Virtual Private Clouds
-- [Firewalls](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/firewall) - Cloud firewalls
-- [Reserved IPs](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/reserved_ip) - Static IP addresses
+- [VPCs][do-vpc] - Virtual Private Clouds
+- [Firewalls][do-firewall] - Cloud firewalls
+- [Reserved IPs][do-reserved-ip] - Static IP addresses
+
+[do-vpc]: https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/vpc
+[do-firewall]: https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/firewall
+[do-reserved-ip]: https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/reserved_ip

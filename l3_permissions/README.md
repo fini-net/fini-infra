@@ -13,6 +13,9 @@ Lee Briggs said:
 
 ## DigitalOcean Resources
 
-- [SSH Keys](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/ssh_key) - SSH key management
-- [Team](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/team) - Team management (Business/Team plans)
+- [SSH Keys][do-ssh-key] - SSH key management
+- [Team][do-team] - Team management (Business/Team plans)
 - API Tokens - Managed through DigitalOcean Control Panel
+
+[do-ssh-key]: https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/ssh_key
+[do-team]: https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/team
