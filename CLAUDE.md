@@ -1,10 +1,13 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working
+with code in this repository.
 
 ## Project Overview
 
-**fini-infra** is an Infrastructure as Code (IaC) project implementing Lee Briggs' 7-layer infrastructure architecture using OpenTofu (open-source Terraform fork) and DigitalOcean as the primary cloud provider.
+**fini-infra** is an Infrastructure as Code (IaC) project implementing
+Lee Briggs' 7-layer infrastructure architecture using OpenTofu
+(open-source Terraform fork) and DigitalOcean as the primary cloud provider.
 
 ## Architecture
 
@@ -13,8 +16,9 @@ The project follows a structured 7-layer approach:
 - **l0_billing** - Cost management and billing setup  
 - **l1_privilege** - Identity and access management
 - **l2_network** - VPCs, subnets, networking components
-- **l3_permissions** - Fine-grained access controls  
-- **l4_data** - Databases, object stores, message queues (currently the only layer with actual Terraform code)
+- **l3_permissions** - Fine-grained access controls
+- **l4_data** - Databases, object stores, message queues (currently the only
+  layer with actual Terraform code)
 - **l5_compute** - Virtual machines, containers
 - **l6_ingress** - Load balancers, CDNs, edge services
 - **l7_application** - Application-specific resources
@@ -30,6 +34,7 @@ The project follows a structured 7-layer approach:
 ## Common Commands
 
 ### Build Automation (via justfile)
+
 - `just list` - Show all available commands
 - `just clean_readme` - Generate standardized README
 - `just sync` - Sync with main branch  
@@ -39,17 +44,20 @@ The project follows a structured 7-layer approach:
 - `just release <version>` - Create GitHub release
 
 ### Infrastructure Management
+
 - `tofu init` - Initialize OpenTofu (in layer directories)
 - `tofu plan` - Plan infrastructure changes
 - `tofu apply` - Apply infrastructure changes
 - `tofu fmt` - Format Terraform files
 
 ### Architecture Diagrams
+
 - Located in `architecture/diagrams/`
 - Execute with `uv run --script static-web.py`
 - Uses Python with self-contained uv shebangs
 
 ### Quality Assurance
+
 - `markdownlint-cli2 **/*.md` - Lint markdown files
 - `tofu fmt -check -recursive` - Check Terraform formatting
 - `tflint` - Lint Terraform code
@@ -66,6 +74,7 @@ The project follows a structured 7-layer approach:
 ## CI/CD Pipeline
 
 Four GitHub Actions workflows run on push/PR to main:
+
 - **terraform-lint.yml** - Terraform formatting and TFLint
 - **checkov.yml** - Security scanning with SARIF upload  
 - **markdownlint.yml** - Markdown standards
