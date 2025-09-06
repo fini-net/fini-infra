@@ -17,3 +17,7 @@ dependancies.  Inconceivable!
 ## Static Web Serving
 
 ![diagram for static web serving](fini_static_web_serving.png)
+
+## Authelia SSO
+
+![diagram for Authelia SSO](authelia_sso_infrastructure.png)
