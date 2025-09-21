@@ -1,5 +1,6 @@
 # l4data/tfstate opentofu
 
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -33,3 +34,4 @@ No resources.
 |------|-------------|
 | environment | Environment name |
 | region | DigitalOcean region |
+<!-- END_TF_DOCS -->
