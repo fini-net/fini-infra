@@ -1,0 +1,133 @@
+name: Terraform CI
+on:
+  # There should be no main commits without a PR
+  pull_request:
+    branches: [main]
+    paths: ['**.tf', '**.tfvars']
+
+# Set minimal permissions at the workflow level
+permissions:
+  contents: read
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    # Grant only the specific permissions this job needs
+    permissions:
+      contents: read          # Read repository contents
+      pull-requests: write    # Comment on PRs with plans/results
+      security-events: write  # Upload security scan results
+      actions: read          # Read workflow artifacts if needed
+      checks: write          # Update check status
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: "1.6.0"
+        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+    
+    - name: Terraform Format Check
+      run: terraform fmt -check -recursive
+    
+    - name: Run TFSec
+      uses: tfsec/tfsec-sarif-action@master
+      with:
+         sarif_file: tfsec.sarif
+#      uses: aquasecurity/tfsec-action@v1.0.3
+#      with:
+#        soft_fail: true
+#        # Upload results to GitHub Security tab
+#        format: sarif
+#        additional_args: --sarif-file-output tfsec.sarif
+    
+    # Upload security scan results
+    - name: Upload TFSec results
+      uses: github/codeql-action/upload-sarif@v3
+      if: always()
+      with:
+        sarif_file: tfsec.sarif
+    
+    - name: Terraform Init
+      run: terraform init
+    
+    - name: Terraform Validate
+      run: terraform validate
+    
+    - name: Terraform Plan
+      id: plan
+      run: terraform plan -no-color -out=tfplan
+      continue-on-error: true
+    
+    # Comment the plan on the PR (requires pull-requests: write)
+    - name: Post Plan Comment
+      uses: actions/github-script@v7
+      if: github.event_name == 'pull_request'
+      with:
+        script: |
+          const output = `#### Terraform Plan 📋
+          
+          <details><summary>Show Plan</summary>
+          
+          \`\`\`
+          ${{ steps.plan.outputs.stdout }}
+          \`\`\`
+          
+          </details>
+          
+          *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workflow: \`${{ github.workflow }}\`*`;
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: output
+          })
+    
+    - name: Generate Documentation
+      uses: terraform-docs/gh-actions@v1.0.0
+      with:
+        working-dir: .
+        output-method: inject
+        git-push: false  # Don't auto-push changes
+    
+    # Check if docs were modified (alternative to auto-push)
+    - name: Check for documentation changes
+      run: |
+        if [[ -n $(git status --porcelain) ]]; then
+          echo "Documentation is out of date. Please run terraform-docs locally."
+          git diff
+          exit 1
+        fi
+
+#  # Separate job for apply (only on main branch)
+#  terraform-apply:
+#    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+#    runs-on: ubuntu-latest
+#    environment: production  # Require manual approval for applies
+#    permissions:
+#      contents: read
+#      id-token: write  # For OIDC if using AWS/Azure/GCP
+#    
+#    steps:
+#    - uses: actions/checkout@v4
+#    
+#    - uses: hashicorp/setup-terraform@v3
+#      with:
+#        terraform_version: "1.6.0"
+#        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+#    
+#    # Configure cloud credentials using OIDC (more secure than long-lived keys)
+#    - name: Configure AWS credentials
+#      uses: aws-actions/configure-aws-credentials@v4
+#      with:
+#        role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+#        aws-region: us-west-2
+#        role-session-name: GitHubActions-Terraform
+#    
+#    - name: Terraform Init
+#      run: terraform init
+#    
+#    - name: Terraform Apply
+#      run: terraform apply -auto-approve
