@@ -1,6 +1,8 @@
 name: Terraform CI
 on:
+  # There should be no main commits without a PR
   pull_request:
+    branches: [main]
     paths: ['**.tf', '**.tfvars']
 
 # Set minimal permissions at the workflow level
