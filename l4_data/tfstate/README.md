@@ -4,8 +4,8 @@
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
-| <a name="requirement_digitalocean"></a> [digitalocean](#requirement\_digitalocean) | ~> 2.0 |
+| terraform | >= 1.0 |
+| digitalocean | ~> 2.0 |
 
 ## Providers
 
@@ -23,13 +23,13 @@ No resources.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_do_token"></a> [do\_token](#input\_do\_token) | DigitalOcean API token | `string` | n/a | yes |
-| <a name="input_environment"></a> [environment](#input\_environment) | Environment name (e.g., dev, staging, prod) | `string` | `"dev"` | no |
-| <a name="input_region"></a> [region](#input\_region) | DigitalOcean region | `string` | `"nyc1"` | no |
+| do\_token | DigitalOcean API token | `string` | n/a | yes |
+| environment | Environment name (e.g., dev, staging, prod) | `string` | `"dev"` | no |
+| region | DigitalOcean region | `string` | `"nyc1"` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_environment"></a> [environment](#output\_environment) | Environment name |
-| <a name="output_region"></a> [region](#output\_region) | DigitalOcean region |
+| environment | Environment name |
+| region | DigitalOcean region |
