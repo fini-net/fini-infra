@@ -25,7 +25,7 @@ No resources.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | do\_token | DigitalOcean API token | `string` | n/a | yes |
-| environment | Environment name (e.g., dev, staging, prod) | `string` | `"dev"` | no |
+| environment | Environment name (dev, staging, prod) | `string` | `"dev"` | no |
 | region | DigitalOcean region | `string` | `"nyc1"` | no |
 
 ## Outputs
