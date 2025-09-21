@@ -32,12 +32,15 @@ jobs:
       run: terraform fmt -check -recursive
     
     - name: Run TFSec
-      uses: aquasecurity/tfsec-action@v1.0.3
+      uses: tfsec/tfsec-sarif-action@master
       with:
-        soft_fail: true
-        # Upload results to GitHub Security tab
-        format: sarif
-        additional_args: --sarif-file-output tfsec.sarif
+         sarif_file: tfsec.sarif
+#      uses: aquasecurity/tfsec-action@v1.0.3
+#      with:
+#        soft_fail: true
+#        # Upload results to GitHub Security tab
+#        format: sarif
+#        additional_args: --sarif-file-output tfsec.sarif
     
     # Upload security scan results
     - name: Upload TFSec results
