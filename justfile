@@ -27,6 +27,15 @@ tf-apply dir:
 	cd "{{dir}}"
 	tofu apply
 
+# tofu init
+[group('terraform')]
+tf-init dir:
+	#!/bin/bash
+	set -euo pipefail
+	. bin/do-creds.sh
+	cd "{{dir}}"
+	tofu init
+
 # terraform-docs
 [group('terraform')]
 tf-docs dir:
