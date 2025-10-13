@@ -7,10 +7,13 @@
 |------|---------|
 | terraform | >= 1.0 |
 | digitalocean | ~> 2.0 |
+| onepassword | ~> 2.0 |
 
 ## Providers
 
-No providers.
+| Name | Version |
+|------|---------|
+| onepassword | 2.1.2 |
 
 ## Modules
 
@@ -18,14 +21,16 @@ No modules.
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [onepassword_item.digocean_fini](https://registry.terraform.io/providers/1Password/onepassword/latest/docs/data-sources/item) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| do\_token | DigitalOcean API token | `string` | n/a | yes |
-| environment | Environment name (dev, staging, prod) | `string` | `"dev"` | no |
+| environment | Environment name (dev, staging, prod) | `string` | `"prod"` | no |
+| onepassword\_path | Path to the 1password op command. | `string` | `"op"` | no |
 | region | DigitalOcean region | `string` | `"nyc1"` | no |
 
 ## Outputs

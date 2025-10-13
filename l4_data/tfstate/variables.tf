@@ -1,8 +1,4 @@
-variable "do_token" {
-  description = "DigitalOcean API token"
-  type        = string
-  sensitive   = true
-}
+# tfstate variables
 
 variable "region" {
   description = "DigitalOcean region"
@@ -13,5 +9,12 @@ variable "region" {
 variable "environment" {
   description = "Environment name (dev, staging, prod)"
   type        = string
-  default     = "dev"
+  default     = "prod"
+}
+
+variable "onepassword_path" {
+  description = "Path to the 1password op command."
+  type        = string
+  default     = "op"
+  #default     = "/opt/homebrew/bin/op"
 }
