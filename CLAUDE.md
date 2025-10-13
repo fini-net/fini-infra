@@ -55,6 +55,7 @@ The justfile imports modules from `.just/` directory:
 - `tofu fmt` - Format Terraform files
 
 **1Password Integration**: The DigitalOcean provider uses 1Password CLI to fetch credentials:
+
 - Provider configured with `onepassword_path` variable (defaults to `op`)
 - Fetches token from vault "Private", item "digocean-fini"
 - `just tf-plan` automatically sets `OP_ACCOUNT` from `op account ls`
