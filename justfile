@@ -14,9 +14,8 @@ list:
 tf-plan dir:
 	#!/bin/bash
 	set -euo pipefail
-
+	. bin/do-creds.sh
 	cd "{{dir}}"
-	export OP_ACCOUNT=$(op account ls | grep chicks | awk '{print $3}')
 	tofu plan
 
 # tofu apply
@@ -24,9 +23,8 @@ tf-plan dir:
 tf-apply dir:
 	#!/bin/bash
 	set -euo pipefail
-
+	. bin/do-creds.sh
 	cd "{{dir}}"
-	export OP_ACCOUNT=$(op account ls | grep chicks | awk '{print $3}')
 	tofu apply
 
 # terraform-docs
