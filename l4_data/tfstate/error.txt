@@ -1,0 +1,8 @@
+│ Error: Client init failure
+│
+│   with provider["registry.opentofu.org/1password/onepassword"],
+│   on main.tf line 18, in provider "onepassword":
+│   18: provider "onepassword" {}
+│
+│ Client failed to initialize, got error: Invalid provider configuration. Either Connect credentials ("token"
+│ and "url") or Service Account ("service_account_token" or "account") credentials should be set.

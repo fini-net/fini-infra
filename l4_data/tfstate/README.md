@@ -5,12 +5,15 @@
 
 | Name | Version |
 |------|---------|
-| terraform | >= 1.0 |
-| digitalocean | ~> 2.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
+| <a name="requirement_digitalocean"></a> [digitalocean](#requirement\_digitalocean) | ~> 2.0 |
+| <a name="requirement_onepassword"></a> [onepassword](#requirement\_onepassword) | ~> 2.0 |
 
 ## Providers
 
-No providers.
+| Name | Version |
+|------|---------|
+| <a name="provider_onepassword"></a> [onepassword](#provider\_onepassword) | 2.1.2 |
 
 ## Modules
 
@@ -18,20 +21,21 @@ No modules.
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [onepassword_item.digocean_fini](https://registry.terraform.io/providers/1Password/onepassword/latest/docs/data-sources/item) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| do\_token | DigitalOcean API token | `string` | n/a | yes |
-| environment | Environment name (dev, staging, prod) | `string` | `"dev"` | no |
-| region | DigitalOcean region | `string` | `"nyc1"` | no |
+| <a name="input_environment"></a> [environment](#input\_environment) | Environment name (dev, staging, prod) | `string` | `"prod"` | no |
+| <a name="input_region"></a> [region](#input\_region) | DigitalOcean region | `string` | `"nyc1"` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| environment | Environment name |
-| region | DigitalOcean region |
+| <a name="output_environment"></a> [environment](#output\_environment) | Environment name |
+| <a name="output_region"></a> [region](#output\_region) | DigitalOcean region |
 <!-- END_TF_DOCS -->
