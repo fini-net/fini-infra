@@ -11,3 +11,9 @@ variable "environment" {
   type        = string
   default     = "prod"
 }
+
+variable "onepassword_path" {
+  description = "Path to the 1password op command."
+  type        = string
+  default     = "/opt/homebrew/bin/op"
+}

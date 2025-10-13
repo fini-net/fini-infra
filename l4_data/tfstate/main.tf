@@ -16,7 +16,7 @@ terraform {
 }
 
 provider "onepassword" {
-  op_cli_path = "/opt/homebrew/bin/op"
+  op_cli_path = var.onepassword_path
 }
 
 data "onepassword_item" "digocean_fini" {
