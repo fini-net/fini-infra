@@ -1,4 +1,0 @@
-# Copy this file to terraform.tfvars and fill in your values
-do_token    = "your-digitalocean-api-token"
-region      = "nyc1"
-environment = "dev"
