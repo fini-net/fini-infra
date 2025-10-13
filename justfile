@@ -13,6 +13,7 @@ list:
 [group('terraform')]
 tf-plan dir:
 	#!/bin/bash
+	set -euo pipefail
 
 	cd "{{dir}}"
 	export OP_ACCOUNT=$(op account ls | grep chicks | awk '{print $3}')
@@ -22,6 +23,7 @@ tf-plan dir:
 [group('terraform')]
 tf-apply dir:
 	#!/bin/bash
+	set -euo pipefail
 
 	cd "{{dir}}"
 	export OP_ACCOUNT=$(op account ls | grep chicks | awk '{print $3}')
