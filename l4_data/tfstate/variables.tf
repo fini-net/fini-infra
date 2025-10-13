@@ -3,7 +3,7 @@
 variable "region" {
   description = "DigitalOcean region"
   type        = string
-  default     = "nyc1"
+  default     = "nyc3"
 }
 
 variable "environment" {

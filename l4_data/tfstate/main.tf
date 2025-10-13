@@ -30,7 +30,7 @@ provider "digitalocean" {
 
 resource "digitalocean_spaces_bucket" "terraform_state_bucket" {
   name   = "fini-terraform-state"
-  region = "nyc3"
+  region = var.region
   acl    = "private"
   versioning {
     enabled = true
