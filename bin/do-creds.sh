@@ -1,3 +1,5 @@
+set -euo pipefail
+
 export OP_ACCOUNT=$(op account ls | awk 'NR==2 {print $3}')
 
 #export AWS_ACCESS_KEY_ID=$(op read op://Private/allbuckets-fini-2025/access_key)

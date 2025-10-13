@@ -13,6 +13,7 @@
 
 | Name | Version |
 |------|---------|
+| digitalocean | 2.68.0 |
 | onepassword | 2.1.2 |
 
 ## Modules
@@ -23,6 +24,7 @@ No modules.
 
 | Name | Type |
 |------|------|
+| [digitalocean_spaces_bucket.terraform_state_bucket](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/spaces_bucket) | resource |
 | [onepassword_item.digocean_fini](https://registry.terraform.io/providers/1Password/onepassword/latest/docs/data-sources/item) | data source |
 
 ## Inputs
@@ -31,7 +33,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | environment | Environment name (dev, staging, prod) | `string` | `"prod"` | no |
 | onepassword\_path | Path to the 1password op command. | `string` | `"op"` | no |
-| region | DigitalOcean region | `string` | `"nyc1"` | no |
+| region | DigitalOcean region | `string` | `"nyc3"` | no |
 
 ## Outputs
 
@@ -39,4 +41,6 @@ No modules.
 |------|-------------|
 | environment | Environment name |
 | region | DigitalOcean region |
+| tfstate\_bucket\_name | Name of the Terraform state bucket |
+| tfstate\_bucket\_urn | URN of the Terraform state bucket |
 <!-- END_TF_DOCS -->
