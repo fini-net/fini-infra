@@ -1,7 +1,7 @@
 # providers.tf
 
 terraform {
-  required_version = ">= 1.0"
+  required_version = ">= 1.10"
 
   required_providers {
     digitalocean = {
@@ -12,6 +12,26 @@ terraform {
       source  = "1Password/onepassword"
       version = "~> 2.0"
     }
+  }
+
+  backend "s3" {
+    endpoints = {
+      s3 = "https://nyc3.digitaloceanspaces.com"
+    }
+
+    bucket = "fini-terraform-state"
+    key    = "l4_data/tfstate"
+
+    # Deactivate a few AWS-specific checks
+    skip_credentials_validation = true
+    skip_requesting_account_id  = true
+    skip_metadata_api_check     = true
+    skip_region_validation      = true
+    skip_s3_checksum            = true
+    region                      = "us-east-1"
+
+    # Enable state locking with a lockfile
+    use_lockfile                = true
   }
 }
 
