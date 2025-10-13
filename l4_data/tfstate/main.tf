@@ -27,3 +27,12 @@ data "onepassword_item" "digocean_fini" {
 provider "digitalocean" {
   token = data.onepassword_item.digocean_fini.credential
 }
+
+resource "digitalocean_spaces_bucket" "terraform_state_bucket" {
+  name       = "fini-terraform-state"
+  region     = "nyc3"
+  acl        = "private"
+  versioning {
+    enabled = true
+  }
+}
