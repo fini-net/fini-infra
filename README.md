@@ -19,3 +19,6 @@ Following [Lee Brigg's Structure](https://leebriggs.co.uk/blog/2023/08/17/struct
 
 - [OpenTofu](https://opentofu.org/)
 - [digitalocean provider](https://search.opentofu.org/provider/opentofu/digitalocean/latest)
+- [onepassword provider](https://developer.1password.com/docs/terraform/)
+
+The 1Password CLI must be configured for the onepassword provider to function.
