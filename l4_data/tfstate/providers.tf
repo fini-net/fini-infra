@@ -31,7 +31,7 @@ terraform {
     region                      = "us-east-1"
 
     # Enable state locking with a lockfile
-    use_lockfile                = true
+    use_lockfile = true
   }
 }
 
