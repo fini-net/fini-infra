@@ -18,7 +18,7 @@ tf-plan dir:
 	export OP_ACCOUNT=$(op account ls | grep chicks | awk '{print $3}')
 	tofu plan
 
-# tofu plan
+# tofu apply
 [group('terraform')]
 tf-apply dir:
 	#!/bin/bash
