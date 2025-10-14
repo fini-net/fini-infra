@@ -24,3 +24,12 @@ Lee Briggs said:
 [do-database]: https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/database_cluster
 [do-spaces]: https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/spaces_bucket
 [do-spaces-object]: https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/spaces_bucket_object
+
+## DO Spaces notes
+
+- `nyc3` is the only `nyc` data center with Spaces, Container Registry, or Functions
+  at the time of the writing.  Check the
+  [official docs](https://docs.digitalocean.com/platform/regional-availability/#other-digitalocean-products)
+  for any updates.
+- `atl1` is the only no-nyc east coast of US data center for digital ocean.  So from
+  a latency minimization perspective it makes sense to stick with `nyc3`.
