@@ -1,9 +1,9 @@
-# tfstate variables
+# web-content variables
 
 variable "region" {
   description = "DigitalOcean region"
   type        = string
-  default     = "nyc3"
+  default     = "nyc3" # only nyc region for DO Spaces
 }
 
 variable "environment" {
@@ -16,5 +16,4 @@ variable "onepassword_path" {
   description = "Path to the 1password op command."
   type        = string
   default     = "op"
-  #default     = "/opt/homebrew/bin/op"
 }
