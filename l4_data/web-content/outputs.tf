@@ -8,12 +8,12 @@ output "region" {
   value       = var.region
 }
 
-output "tfstate_bucket_name" {
+output "web_bucket_name" {
   description = "Name of the Terraform state bucket"
   value       = digitalocean_spaces_bucket.web_content_bucket.name
 }
 
-output "tfstate_bucket_urn" {
+output "web_bucket_urn" {
   description = "URN of the Terraform state bucket"
   value       = digitalocean_spaces_bucket.web_content_bucket.urn
 }
