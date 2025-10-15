@@ -10,7 +10,7 @@ on:
 permissions: {}
 
 jobs:
-  lint:
+  markdownlint:
     runs-on: ubuntu-latest
     permissions:
       contents: read
