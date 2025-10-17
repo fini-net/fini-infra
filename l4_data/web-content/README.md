@@ -1,5 +1,9 @@
 # l4_data/web-content opentofu
 
+Intention: create a central bucket for static web content.
+But, it doesn't look like this melds well with the CDN from digital ocean.
+So, this will probably get deleted soon.
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
@@ -41,6 +45,6 @@ No modules.
 |------|-------------|
 | environment | Environment name |
 | region | DigitalOcean region |
-| web\_bucket\_name | Name of the Terraform state bucket |
-| web\_bucket\_urn | URN of the Terraform state bucket |
+| web\_bucket\_name | Name of the web-content bucket |
+| web\_bucket\_urn | URN of the web-content bucket |
 <!-- END_TF_DOCS -->
