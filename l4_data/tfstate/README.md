@@ -1,5 +1,9 @@
 # l4data/tfstate opentofu
 
+This creates our state bucket for opentofu - the libre fork of terraform.
+
+We are operating in digital ocean and the credential are retrieved from 1Password.
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
