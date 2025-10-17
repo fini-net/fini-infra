@@ -28,8 +28,12 @@ tf-apply dir:
 	cd "{{dir}}"
 	tofu apply
 
-	echo "{{BLUE}}tofu fmt...{{NORMAL}}"
-	tofu fmt
+	if ! tofu fmt -check >/dev/null; then
+		echo "{{BLUE}}tofu fmt...{{NORMAL}}"
+		tofu fmt
+	else
+		echo "{{GREEN}}tofu fmt is perfect{{NORMAL}}"
+	fi
 
 # tofu init
 [group('terraform')]
