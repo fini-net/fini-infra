@@ -45,6 +45,6 @@ No modules.
 |------|-------------|
 | environment | Environment name |
 | region | DigitalOcean region |
-| web\_bucket\_name | Name of the Terraform state bucket |
-| web\_bucket\_urn | URN of the Terraform state bucket |
+| web\_bucket\_name | Name of the web-content bucket |
+| web\_bucket\_urn | URN of the web-content bucket |
 <!-- END_TF_DOCS -->

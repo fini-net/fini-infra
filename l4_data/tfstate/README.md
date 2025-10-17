@@ -9,7 +9,7 @@ We are operating in digital ocean and the credentials are retrieved from 1Passwo
 
 | Name | Version |
 |------|---------|
-| terraform | >= 1.0 |
+| terraform | >= 1.10 |
 | digitalocean | ~> 2.0 |
 | onepassword | ~> 2.0 |
 
