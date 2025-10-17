@@ -1,4 +1,4 @@
-# l4data/tfstate opentofu
+# l4_data/tfstate opentofu
 
 This creates our state bucket for opentofu - the libre fork of terraform.
 
