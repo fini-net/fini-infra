@@ -18,14 +18,18 @@ tf-plan dir:
 	cd "{{dir}}"
 	tofu plan
 
-# tofu apply
+# tofu apply (also runs fmt and regens docs)
 [group('terraform')]
 tf-apply dir:
 	#!/bin/bash
 	set -euo pipefail
 	. bin/do-creds.sh
+	just tf-docs "{{dir}}"
 	cd "{{dir}}"
 	tofu apply
+
+	echo "{{BLUE}}tofu fmt...{{NORMAL}}"
+	tofu fmt
 
 # tofu init
 [group('terraform')]
@@ -36,7 +40,7 @@ tf-init dir:
 	cd "{{dir}}"
 	tofu init
 
-# terraform-docs
+# terraform-docs manually (tf-apply includes this)
 [group('terraform')]
 tf-docs dir:
 	terraform-docs markdown table --output-file README.md --output-mode inject  {{dir}}
