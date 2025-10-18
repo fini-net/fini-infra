@@ -45,7 +45,7 @@ No modules.
 | Name | Description |
 |------|-------------|
 | environment | Environment name |
-| logs\_cdn\_bucket\_name | Name of the CDN logs bucket |
+| logs\_cdn\_bucket\_id | ID/name of the CDN logs bucket |
 | logs\_cdn\_bucket\_urn | URN of the CDN logs bucket |
 | region | DigitalOcean region |
 <!-- END_TF_DOCS -->
