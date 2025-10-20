@@ -1,7 +1,7 @@
 # main.tf
 
-#checkov:skip=CKV_DIO_1:logs do not need versioning
 resource "digitalocean_spaces_bucket" "logs_cdn_bucket" {
+  #checkov:skip=CKV_DIO_1:logs do not need versioning
   name   = "fini-logs-cdn"
   region = var.region
   acl    = "private"
