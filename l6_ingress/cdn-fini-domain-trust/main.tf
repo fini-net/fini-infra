@@ -4,8 +4,9 @@ locals {
   web_host_name = "www.bettywalls.com"
 }
 
-#checkov:skip=CKV_DIO_3:public-read ACL required for CDN origin Spaces buckets
+# Origin bucket
 resource "digitalocean_spaces_bucket" "trust_origin_bucket" {
+  #checkov:skip=CKV_DIO_3:public-read ACL required for CDN origin Spaces buckets
   name   = "fini-origin-fini-domain-trust"
   region = var.region
   acl    = "public-read"
