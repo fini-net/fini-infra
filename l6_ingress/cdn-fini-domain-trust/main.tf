@@ -31,8 +31,8 @@ resource "digitalocean_spaces_bucket" "trust_origin_bucket" {
 
 # Add a CDN endpoint with a custom sub-domain to the Spaces Bucket
 resource "digitalocean_cdn" "trust_cdn" {
-  origin           = digitalocean_spaces_bucket.trust_origin_bucket.bucket_domain_name
-  custom_domain    = local.web_host_name
+  origin        = digitalocean_spaces_bucket.trust_origin_bucket.bucket_domain_name
+  custom_domain = local.web_host_name
   #certificate_name = digitalocean_certificate.cert.name
 }
 
