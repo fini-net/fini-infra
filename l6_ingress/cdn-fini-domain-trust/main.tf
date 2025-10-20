@@ -5,7 +5,7 @@ locals {
 }
 
 # Create a new Spaces Bucket
-# checkov:skip=CKV_DIO_2:public-read ACL required for CDN origin Spaces buckets
+# checkov:skip=CKV_DIO_3:public-read ACL required for CDN origin Spaces buckets
 resource "digitalocean_spaces_bucket" "trust_origin_bucket" {
   name   = "fini-origin-fini-domain-trust"
   region = var.region
