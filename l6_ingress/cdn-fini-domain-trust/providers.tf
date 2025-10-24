@@ -36,12 +36,12 @@ terraform {
 }
 
 provider "onepassword" {
-  op_cli_path = var.onepassword_path
+  op_cli_path = var.onepassword_path # path to the command
 }
 
 data "onepassword_item" "digocean_fini" {
   vault = "Private"
-  title = "digocean-fini"
+  title = "digocean-fini2"
 }
 
 provider "digitalocean" {
