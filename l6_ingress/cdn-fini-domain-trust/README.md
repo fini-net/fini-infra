@@ -29,7 +29,6 @@ No modules.
 | Name | Type |
 |------|------|
 | [digitalocean_cdn.trust_cdn](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/cdn) | resource |
-| [digitalocean_certificate.trust_cert](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/certificate) | resource |
 | [digitalocean_spaces_bucket.trust_origin_bucket](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/spaces_bucket) | resource |
 | [digitalocean_spaces_bucket_logging.trust_logging](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/spaces_bucket_logging) | resource |
 | [onepassword_item.digocean_fini](https://registry.terraform.io/providers/1Password/onepassword/latest/docs/data-sources/item) | data source |
