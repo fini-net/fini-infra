@@ -34,7 +34,7 @@ tf-plan dir comment="":
 
 		pr_number=$(gh pr view --json number | jq '.number')
 		gh pr comment "$pr_number" --body-file "$comment_file"
-		rm "$comment_file"
+		rm "$comment_file" "$plan_file"
 	else
 		tofu plan
 	fi
