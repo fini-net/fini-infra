@@ -8,7 +8,7 @@ Soon we hope to relaunch our retail domain registration business.
 This repo is our modernized infrastructure.  We used to build machines by hand.
 Then we toyed with ansible for a while.  We've skipped quite a few automation
 fads over the last few decades, but now we're rebuilding with opentofu
-(freed terraform), 1Password, and Digital Ocean.
+(freed terraform), 1Password, and DigitalOcean.
 
 ## Repo Structure
 
