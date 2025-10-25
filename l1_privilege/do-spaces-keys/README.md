@@ -9,6 +9,12 @@ Access keys for digital ocean spaces "buckets" (like S3).
 - Bucket-level access can be either `read` or `readwrite`.  You should
   specify a bucket for these.
 
+## Key retrieval
+
+There is a script [getkeys.sh](getkeys.sh) that will setup the permissions
+for tofu to access the state bucket and retrieve the decrypted keys
+that were created in here.
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
