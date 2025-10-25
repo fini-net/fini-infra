@@ -1,4 +1,4 @@
-# logs-cdn variables
+# input variables
 
 variable "region" {
   description = "DigitalOcean region"
