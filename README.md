@@ -1,9 +1,14 @@
 # fini-infra: FINI infrastructure as code
 
-FINI is a boutique consulting firm based in Williamsburg, VA.  Historically
+**FINI** is a boutique consulting firm based in Williamsburg, VA.  Historically
 we provided full service hosting and we still maintain some legacy customers
 for full hosting.
 Soon we hope to relaunch our retail domain registration business.
+
+This repo is our modernized infrastructure.  We used to build machines by hand.
+Then we toyed with ansible for a while.  We've skipped quite a few automation
+fads over the last few decades, but now we're rebuilding with opentofu
+(freed terraform), 1Password, and DigitalOcean.
 
 ## Repo Structure
 
