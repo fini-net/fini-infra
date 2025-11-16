@@ -35,19 +35,25 @@ The project follows a structured 7-layer approach:
 
 ### Build Automation (via justfile)
 
-The justfile imports modules from `.just/` directory:
+The justfile imports modules from `.just/` directory (`gh-process.just` for GitHub workflow automation):
+
+**Git/GitHub Workflow:**
 
 - `just list` - Show all available commands
-- `just sync` - Checkout main branch, pull latest changes, and sync
+- `just sync` - Checkout main branch, pull latest changes
 - `just branch <name>` - Create timestamped branch (format: `$USER/YYYY-MM-DD-<name>`)
-- `just pr` - Push current branch, create PR with last commit message as title, watch checks
+- `just pr` - Push branch, create PR (first commit message becomes title), watch checks, display Claude/Copilot review comments
+- `just pr_checks` - Watch GHA checks and display AI review comments (Claude and Copilot)
 - `just merge` - Merge PR with squash, delete branch, return to main
 - `just prweb` - View current PR in web browser
 - `just release <version>` - Create GitHub release with auto-generated notes
-- `just tf-init <dir>` - Initialize OpenTofu (loads credentials first)
-- `just tf-plan <dir> [comment]` - Run tofu plan; optionally post plan to PR comment
-- `just tf-apply <dir> [approve]` - Apply changes, regenerate docs; optionally auto-approve
-- `just tf-docs <dir>` - Generate Terraform docs and inject into README
+
+**Terraform Operations:**
+
+- `just tf-init <dir>` - Initialize OpenTofu (loads 1Password credentials first)
+- `just tf-plan <dir> [comment]` - Run tofu plan with validation; if comment provided, posts plan to PR
+- `just tf-apply <dir> [approve]` - Apply changes, run fmt, regenerate docs; optionally auto-approve
+- `just tf-docs <dir>` - Generate Terraform docs and inject into README (uses terraform-docs)
 - `just check-tf-init <dir>` - Conditionally initialize if .terraform dir missing
 
 ### Infrastructure Management
@@ -57,13 +63,15 @@ The justfile imports modules from `.just/` directory:
 - `tofu apply` - Apply infrastructure changes
 - `tofu fmt` - Format Terraform files
 
-**1Password Integration**: All Terraform commands use 1Password CLI via `bin/do-creds.sh`:
+**1Password Integration**: All Terraform commands source credentials via `bin/do-creds.sh`:
 
-- DigitalOcean provider fetches API token from vault "Private", item "digocean-fini"
-- DigitalOcean Spaces credentials from vault "Private", item "allbuckets-fini-2025"
-- Exports both `AWS_*` and `SPACES_*` environment variables (Spaces uses S3-compatible API)
-- All `just tf-*` commands automatically source credentials and set `OP_ACCOUNT`
-- Must be signed in to 1Password CLI (`op signin`) before running any Terraform commands
+- Reads DigitalOcean API token from vault "Private", item "digocean-fini"
+- Reads Spaces credentials from vault "Private", item "allbuckets-fini-2025"
+- Exports both `AWS_*` and `SPACES_*` environment variables (DigitalOcean Spaces is S3-compatible)
+- Sets `OP_ACCOUNT` automatically from `op account ls`
+- All `just tf-*` commands automatically source this script
+- Must be authenticated to 1Password CLI (`op signin`) before running Terraform operations
+- Provider configuration in `providers.tf` uses onepassword data source for DigitalOcean token
 
 ### Architecture Diagrams
 
@@ -98,27 +106,30 @@ The justfile imports modules from `.just/` directory:
 
 GitHub Actions workflows run on push/PR to main:
 
-- **terraform-lint.yml** - Terraform formatting and TFLint
-- **terraform-ci.yml** - Terraform plan validation
-- **checkov.yml** - Security scanning with SARIF upload
-- **markdownlint.yml** - Markdown standards enforcement
-- **actionlint.yml** - GitHub Actions validation
+- **terraform-lint.yml** - Terraform formatting and TFLint validation
+- **checkov.yml** - Security scanning with SARIF upload to GitHub Security tab
+- **markdownlint.yml** - Markdown standards enforcement (markdownlint-cli2)
+- **actionlint.yml** - GitHub Actions workflow validation
 - **claude.yml** - Claude Code integration
-- **claude-code-review.yml** - Automated code reviews
+- **claude-code-review.yml** - Automated AI code reviews (comments visible via `just pr_checks`)
+- **auto-assign.yml** - Auto-assign PRs to repository owner
 
 ## Configuration
 
-- **1Password CLI** - Required for accessing:
+- **1Password CLI** - Required for accessing secrets at runtime:
   - DigitalOcean API token (item "digocean-fini" in "Private" vault)
   - Spaces credentials (item "allbuckets-fini-2025" in "Private" vault)
+  - Used by both `bin/do-creds.sh` script and onepassword provider in Terraform
 - **Terraform variables** - The `onepassword_path` variable defaults to `op` but can be overridden
-- **Python dependencies** - Managed by uv with inline script metadata in diagram files
-- **Git configuration** - Requires GitHub CLI (`gh`) for automated PR workflows
-- **Git aliases** - Workflow assumes `git stp` (status) and `git pushup` (push with upstream) aliases
+- **Python dependencies** - Managed by uv with inline script metadata (PEP 723) in diagram files
+- **GitHub CLI** - Required for automated PR workflows (`gh` command)
+- **terraform-docs** - Used by `just tf-docs` to inject documentation into README files
 
 ## Key Architecture Decisions
 
-- **State Management**: Terraform state stored in DigitalOcean Spaces bucket `fini-terraform-state` with S3-compatible backend
-- **Credential Management**: All secrets retrieved dynamically from 1Password at runtime - never stored in code
-- **Layer Structure**: Following Lee Briggs' 7-layer architecture for clear separation of concerns
-- **Automation**: Extensive use of `just` for workflow automation and standardization
+- **State Management**: Remote state in DigitalOcean Spaces bucket `fini-terraform-state` using S3-compatible backend with lockfile-based state locking (configured in `providers.tf` backend block)
+- **Credential Management**: All secrets retrieved dynamically from 1Password at runtime - never stored in code or version control
+- **Layer Structure**: Following Lee Briggs' 7-layer IaC architecture for clear separation of concerns and dependency management
+- **Provider Configuration**: Standard `providers.tf` pattern in each module with onepassword data source fetching DigitalOcean token
+- **Automation**: Extensive use of `just` for workflow automation, standardization, and GitOps integration
+- **PR Workflow**: First commit message becomes PR title; PR body auto-generated from commit list; AI reviews from Claude and Copilot displayed after checks complete
