@@ -11,6 +11,21 @@ Lee Briggs said:
 > - Azure: Virtual Networks, Subnets, Route Tables, VPN Gateways
 > - Google Cloud: VPC Networks, Subnets, Cloud Router, Cloud VPN
 
+## Don't forget DNS
+
+Somehow Lee Briggs forgot about DNS!  But it belongs at the network layer
+in our opinion.
+
+Yet you're not going to see any of our DNS here, because we're currently
+managing that in a private repo.  We hope to open that up someday, but
+in the mean time we can show you how we do it by looking at the
+[fini-coredns-example](https://github.com/fini-net/fini-coredns-example)
+repository.  There we demonstrate how powerful and painless
+[DNSControl](https://github.com/StackExchange/dnscontrol) can be.
+That is the same tooling we are using internally and we will be updating
+the [fini-coredns-example](https://github.com/fini-net/fini-coredns-example)
+with new discoveries from the private repo.
+
 ## DigitalOcean Resources
 
 - [VPCs][do-vpc] - Virtual Private Clouds
