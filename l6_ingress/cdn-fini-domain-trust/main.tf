@@ -35,7 +35,7 @@ resource "digitalocean_spaces_bucket_policy" "trust_public_read" {
         Effect    = "Allow"
         Principal = "*"
         Action    = "s3:GetObject"
-        Resource  = "${digitalocean_spaces_bucket.trust_origin_bucket.urn}/*"
+        Resource  = "arn:aws:s3:::${digitalocean_spaces_bucket.trust_origin_bucket.name}/*"
       }
     ]
   })
