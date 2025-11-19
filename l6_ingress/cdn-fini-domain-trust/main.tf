@@ -22,6 +22,25 @@ resource "digitalocean_spaces_bucket" "trust_origin_bucket" {
   }
 }
 
+# Bucket policy for public read access to objects
+resource "digitalocean_spaces_bucket_policy" "trust_public_read" {
+  region = var.region
+  bucket = digitalocean_spaces_bucket.trust_origin_bucket.name
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid       = "PublicReadGetObject"
+        Effect    = "Allow"
+        Principal = "*"
+        Action    = "s3:GetObject"
+        Resource  = "arn:aws:s3:::${digitalocean_spaces_bucket.trust_origin_bucket.name}/*"
+      }
+    ]
+  })
+}
+
 #TODO: enable certificate
 # Create a DigitalOcean managed Let's Encrypt Certificate
 #resource "digitalocean_certificate" "trust_cert" {

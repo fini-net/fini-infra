@@ -31,6 +31,7 @@ No modules.
 | [digitalocean_cdn.trust_cdn](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/cdn) | resource |
 | [digitalocean_spaces_bucket.trust_origin_bucket](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/spaces_bucket) | resource |
 | [digitalocean_spaces_bucket_logging.trust_logging](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/spaces_bucket_logging) | resource |
+| [digitalocean_spaces_bucket_policy.trust_public_read](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/spaces_bucket_policy) | resource |
 | [onepassword_item.digocean_fini](https://registry.terraform.io/providers/1Password/onepassword/latest/docs/data-sources/item) | data source |
 | [terraform_remote_state.logs_cdn](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
 
