@@ -3,6 +3,8 @@
 Intention: create a CDN with associated bucket and certificate for
 serving a set of sites.
 
+TODO: insert diagram here
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
@@ -29,6 +31,7 @@ No modules.
 | Name | Type |
 |------|------|
 | [digitalocean_cdn.trust_cdn](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/cdn) | resource |
+| [digitalocean_certificate.trust_cert](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/certificate) | resource |
 | [digitalocean_spaces_bucket.trust_origin_bucket](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/spaces_bucket) | resource |
 | [digitalocean_spaces_bucket_logging.trust_logging](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/spaces_bucket_logging) | resource |
 | [digitalocean_spaces_bucket_policy.trust_public_read](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/spaces_bucket_policy) | resource |
@@ -48,6 +51,7 @@ No modules.
 | Name | Description |
 |------|-------------|
 | cdn\_endpoint | CDN endpoint |
+| certificate\_id | Certificate ID |
 | environment | Environment name |
 | origin\_bucket\_name | Name of the origin bucket |
 | origin\_bucket\_urn | URN of the origin bucket |

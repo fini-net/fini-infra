@@ -23,7 +23,7 @@ output "cdn_endpoint" {
   value       = digitalocean_cdn.trust_cdn.endpoint
 }
 
-# output "certificate_id" {
-#   description = "Certificate ID"
-#   value       = digitalocean_certificate.trust_cert.id
-# }
+output "certificate_id" {
+  description = "Certificate ID"
+  value       = digitalocean_certificate.trust_cert.id
+}
