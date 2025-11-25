@@ -41,7 +41,6 @@ resource "digitalocean_spaces_bucket_policy" "trust_public_read" {
   })
 }
 
-#TODO: enable certificate
 # Create a DigitalOcean managed Let's Encrypt Certificate
 resource "digitalocean_certificate" "trust_cert" {
   name    = "cdn-cert-fini-domain-trust"
