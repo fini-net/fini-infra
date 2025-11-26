@@ -5,7 +5,7 @@ serving a set of sites.
 
 ## Architecture diagram
 
-![architecture diagram](../../architecture/diagrams/fini_static_web_serving.png)
+![FINI Static Web Serving architecture diagram](../../architecture/diagrams/fini_static_web_serving.png)
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
