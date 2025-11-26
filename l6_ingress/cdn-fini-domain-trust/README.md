@@ -3,7 +3,9 @@
 Intention: create a CDN with associated bucket and certificate for
 serving a set of sites.
 
-TODO: insert diagram here
+## Architecture diagram
+
+![architecture diagram](../../architecture/diagrams/fini_static_web_serving.png)
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
