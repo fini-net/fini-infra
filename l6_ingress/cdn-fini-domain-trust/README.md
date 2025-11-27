@@ -1,7 +1,12 @@
 # l6_ingress/cdn-fini-domain-trust opentofu
 
 Intention: create a CDN with associated bucket and certificate for
-serving a set of sites.
+serving a set of sites. This turned out to be a bad idea because
+of the current limitations with Digital Ocean for their CDN
+product. I'm going to try Digital Ocean's App Platform for
+this use case and hopefully migrate this site eventually over to
+that if it works.  Failing that, I'm going to look at other CDN
+vendors such as AWS, GCP, and Fastly.
 
 ## Architecture diagram
 
