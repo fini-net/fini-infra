@@ -21,7 +21,6 @@ variable "onepassword_path" {
 variable "github_repo" {
   description = "GitHub repository in owner/repo format"
   type        = string
-  default     = "fini-net/fini-domain-trust"
 }
 
 variable "github_branch" {
@@ -33,20 +32,14 @@ variable "github_branch" {
 variable "domain_name" {
   description = "Custom domain for the app"
   type        = string
-  default     = "vccinc.net"
 }
 
 variable "source_dir" {
   description = "Directory containing the static site source"
   type        = string
-  default     = "trust/public"
 }
 
 variable "alias_domains" {
   description = "List of alias domains for the app"
   type        = list(string)
-  default = [
-    "perlclass.org",
-    "perlclasses.org"
-  ]
 }

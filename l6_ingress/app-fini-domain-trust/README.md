@@ -29,14 +29,14 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| alias\_domains | List of alias domains for the app | `list(string)` | ```[ "perlclass.org", "perlclasses.org" ]``` | no |
-| domain\_name | Custom domain for the app | `string` | `"vccinc.net"` | no |
+| alias\_domains | List of alias domains for the app | `list(string)` | n/a | yes |
+| domain\_name | Custom domain for the app | `string` | n/a | yes |
 | environment | Environment name (dev, staging, prod) | `string` | `"prod"` | no |
 | github\_branch | GitHub branch to deploy from | `string` | `"main"` | no |
-| github\_repo | GitHub repository in owner/repo format | `string` | `"fini-net/fini-domain-trust"` | no |
+| github\_repo | GitHub repository in owner/repo format | `string` | n/a | yes |
 | onepassword\_path | Path to the 1password op command. | `string` | `"op"` | no |
 | region | DigitalOcean region for the App Platform app | `string` | `"nyc"` | no |
-| source\_dir | Directory containing the static site source | `string` | `"trust/public"` | no |
+| source\_dir | Directory containing the static site source | `string` | n/a | yes |
 
 ## Outputs
 
