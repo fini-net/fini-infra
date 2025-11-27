@@ -16,6 +16,15 @@ resource "digitalocean_app" "trust_static_site" {
       type = "PRIMARY"
     }
 
+    # Alias domains
+    dynamic "domain" {
+      for_each = var.alias_domains
+      content {
+        name = domain.value
+        type = "ALIAS"
+      }
+    }
+
     # Static site component
     static_site {
       name = "trust-public"

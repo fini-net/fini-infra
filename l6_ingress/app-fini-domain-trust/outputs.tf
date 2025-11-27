@@ -25,9 +25,9 @@ output "active_deployment_id" {
   value       = digitalocean_app.trust_static_site.active_deployment_id
 }
 
-output "custom_domain" {
-  description = "The custom domain configured for the app"
-  value       = var.domain_name
+output "custom_domains" {
+  description = "All custom domains configured for the app"
+  value       = concat([var.domain_name], var.alias_domains)
 }
 
 output "github_repo" {

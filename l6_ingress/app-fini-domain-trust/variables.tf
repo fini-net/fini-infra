@@ -41,3 +41,12 @@ variable "source_dir" {
   type        = string
   default     = "trust/public"
 }
+
+variable "alias_domains" {
+  description = "List of alias domains for the app"
+  type        = list(string)
+  default = [
+    "perlclass.org",
+    "perlclasses.org"
+  ]
+}

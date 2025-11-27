@@ -11,8 +11,8 @@
 
 | Name | Version |
 |------|---------|
-| digitalocean | ~> 2.0 |
-| onepassword | ~> 2.0 |
+| digitalocean | 2.69.0 |
+| onepassword | 2.2.1 |
 
 ## Modules
 
@@ -29,6 +29,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| alias\_domains | List of alias domains for the app | `list(string)` | ```[ "perlclass.org", "perlclasses.org" ]``` | no |
 | domain\_name | Custom domain for the app | `string` | `"vccinc.net"` | no |
 | environment | Environment name (dev, staging, prod) | `string` | `"prod"` | no |
 | github\_branch | GitHub branch to deploy from | `string` | `"main"` | no |
@@ -44,7 +45,7 @@ No modules.
 | active\_deployment\_id | The ID of the currently active deployment |
 | app\_id | The ID of the app |
 | app\_urn | The URN of the app |
-| custom\_domain | The custom domain configured for the app |
+| custom\_domains | All custom domains configured for the app |
 | default\_ingress | The default URL to access the app |
 | github\_branch | The GitHub branch being deployed |
 | github\_repo | The GitHub repository used as source |
