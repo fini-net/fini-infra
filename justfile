@@ -12,11 +12,10 @@ list:
 
 # tofu plan
 [group('terraform')]
-tf-plan dir comment="":
+tf-plan dir comment="": (check-tf-init dir)
 	#!/usr/bin/env bash
 	set -euo pipefail
 	. bin/do-creds.sh
-	just check-tf-init "{{dir}}"
 	cd "{{dir}}"
 	tofu validate
 	if [[ -n "{{comment}}" ]]; then
@@ -42,7 +41,7 @@ tf-plan dir comment="":
 
 # tofu apply (also runs fmt and regens docs)
 [group('terraform')]
-tf-apply dir approve="":
+tf-apply dir approve="": (check-tf-init dir)
 	#!/usr/bin/env bash
 	set -euo pipefail
 	. bin/do-creds.sh
@@ -95,11 +94,10 @@ check-tf-init dir:
 
 # tofu state
 [group('terraform')]
-tf-state dir subcommand="list":
+tf-state dir subcommand="list": (check-tf-init dir)
 	#!/usr/bin/env bash
 	set -euo pipefail
 	. bin/do-creds.sh
-	just check-tf-init "{{dir}}"
 	cd "{{dir}}"
 	tofu validate
 	if [[ -n "{{subcommand}}" ]]; then
@@ -111,11 +109,10 @@ tf-state dir subcommand="list":
 
 # tofu output
 [group('terraform')]
-tf-output dir:
+tf-output dir: (check-tf-init dir)
 	#!/usr/bin/env bash
 	set -euo pipefail
 	. bin/do-creds.sh
-	just check-tf-init "{{dir}}"
 	cd "{{dir}}"
 	tofu validate
 	tofu output
