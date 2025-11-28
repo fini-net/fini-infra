@@ -29,7 +29,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| alias\_domains | List of alias domains for the app | `list(string)` | n/a | yes |
+| alias\_domains | List of base alias domains for the app (both apex and www will be automatically added) | `list(string)` | n/a | yes |
 | domain\_name | Custom domain for the app | `string` | n/a | yes |
 | environment | Environment name (dev, staging, prod) | `string` | `"prod"` | no |
 | github\_branch | GitHub branch to deploy from | `string` | `"main"` | no |
@@ -45,7 +45,7 @@ No modules.
 | active\_deployment\_id | The ID of the currently active deployment |
 | app\_id | The ID of the app |
 | app\_urn | The URN of the app |
-| custom\_domains | All custom domains configured for the app |
+| custom\_domains | All custom domains configured for the app (includes primary domain and all aliases with www) |
 | default\_ingress | The default URL to access the app |
 | github\_branch | The GitHub branch being deployed |
 | github\_repo | The GitHub repository used as source |

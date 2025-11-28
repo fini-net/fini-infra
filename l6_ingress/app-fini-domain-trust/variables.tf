@@ -40,6 +40,6 @@ variable "source_dir" {
 }
 
 variable "alias_domains" {
-  description = "List of alias domains for the app"
+  description = "List of base alias domains for the app (both apex and www will be automatically added)"
   type        = list(string)
 }

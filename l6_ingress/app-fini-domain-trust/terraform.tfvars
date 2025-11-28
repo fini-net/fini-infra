@@ -5,9 +5,6 @@ domain_name = "vccinc.net"
 source_dir  = "trust/public"
 
 alias_domains = [
-  "www.vccinc.net",
   "perlclass.org",
-  "www.perlclass.org",
-  "perlclasses.org",
-  "www.perlclasses.org"
+  "perlclasses.org"
 ]

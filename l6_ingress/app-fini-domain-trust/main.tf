@@ -2,6 +2,14 @@
 
 locals {
   app_name = "fini-domain-trust"
+
+  # Transform alias domains to include both apex and www subdomain
+  all_alias_domains = flatten([
+    for domain in var.alias_domains : [
+      domain,
+      "www.${domain}"
+    ]
+  ])
 }
 
 # DigitalOcean App Platform app for serving static site from GitHub
@@ -16,9 +24,9 @@ resource "digitalocean_app" "trust_static_site" {
       type = "PRIMARY"
     }
 
-    # Alias domains
+    # Alias domains (includes both apex and www for each domain)
     dynamic "domain" {
-      for_each = var.alias_domains
+      for_each = local.all_alias_domains
       content {
         name = domain.value
         type = "ALIAS"
