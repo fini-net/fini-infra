@@ -55,6 +55,8 @@ The justfile imports modules from `.just/` directory (`gh-process.just` for GitH
 - `just tf-apply <dir> [approve]` - Apply changes, run fmt, regenerate docs; optionally auto-approve
 - `just tf-docs <dir>` - Generate Terraform docs and inject into README (uses terraform-docs)
 - `just check-tf-init <dir>` - Conditionally initialize if .terraform dir missing
+- `just tf-state <dir> [subcommand]` - View or manipulate Terraform state (default: list)
+- `just tf-output <dir>` - Display Terraform outputs
 
 ### Infrastructure Management
 
@@ -65,7 +67,7 @@ The justfile imports modules from `.just/` directory (`gh-process.just` for GitH
 
 **1Password Integration**: All Terraform commands source credentials via `bin/do-creds.sh`:
 
-- Reads DigitalOcean API token from vault "Private", item "digocean-fini"
+- Reads DigitalOcean API token from vault "Private", item "digocean-fini2"
 - Reads Spaces credentials from vault "Private", item "allbuckets-fini-2025"
 - Exports both `AWS_*` and `SPACES_*` environment variables (DigitalOcean Spaces is S3-compatible)
 - Sets `OP_ACCOUNT` automatically from `op account ls`
