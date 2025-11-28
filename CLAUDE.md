@@ -65,7 +65,7 @@ The justfile imports modules from `.just/` directory (`gh-process.just` for GitH
 
 **1Password Integration**: All Terraform commands source credentials via `bin/do-creds.sh`:
 
-- Reads DigitalOcean API token from vault "Private", item "digocean-fini"
+- Reads DigitalOcean API token from vault "Private", item "digocean-fini2"
 - Reads Spaces credentials from vault "Private", item "allbuckets-fini-2025"
 - Exports both `AWS_*` and `SPACES_*` environment variables (DigitalOcean Spaces is S3-compatible)
 - Sets `OP_ACCOUNT` automatically from `op account ls`
