@@ -92,3 +92,30 @@ check-tf-init dir:
 	fi
 
 	echo "{{GREEN}}no init needed in {{dir}}{{NORMAL}}";
+
+# tofu state
+[group('terraform')]
+tf-state dir subcommand="list":
+	#!/usr/bin/env bash
+	set -euo pipefail
+	. bin/do-creds.sh
+	just check-tf-init "{{dir}}"
+	cd "{{dir}}"
+	tofu validate
+	if [[ -n "{{subcommand}}" ]]; then
+		set -x
+		tofu state {{subcommand}}
+	else
+		tofu state
+	fi
+
+# tofu output
+[group('terraform')]
+tf-output dir:
+	#!/usr/bin/env bash
+	set -euo pipefail
+	. bin/do-creds.sh
+	just check-tf-init "{{dir}}"
+	cd "{{dir}}"
+	tofu validate
+	tofu output
