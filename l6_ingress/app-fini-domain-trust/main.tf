@@ -1,5 +1,8 @@
 # main.tf
 
+# TODO env-based tfvars
+# TODO alerts?
+
 locals {
   app_name = "fini-domain-trust"
 
@@ -22,6 +25,12 @@ resource "digitalocean_app" "trust_static_site" {
     domain {
       name = var.domain_name
       type = "PRIMARY"
+    }
+
+    # Add www subdomain for primary domain as alias
+    domain {
+      name = "www.${var.domain_name}"
+      type = "ALIAS"
     }
 
     # Alias domains (includes both apex and www for each domain)
