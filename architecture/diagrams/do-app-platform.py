@@ -9,6 +9,7 @@ from diagrams import Cluster, Diagram, Edge
 from diagrams.azure.general import Usericon
 from diagrams.digitalocean.compute import Droplet
 from diagrams.digitalocean.network import Firewall, LoadBalancer
+from diagrams.saas.cdn import Cloudflare
 from diagrams.onprem.vcs import Github
 from diagrams.programming.framework import React
 
@@ -38,6 +39,9 @@ with Diagram(
     user = Usericon("web user")
     github = Github("GitHub Repo\n(Static Site Source)")
 
+    with Cluster("Cloudflare CDN\n(White-label Provider)", graph_attr={"style": "dashed", "color": "orange"}):
+        cdn = Cloudflare("Global CDN\nEdge Network")
+
     with Cluster("DigitalOcean App Platform"):
         lb = LoadBalancer("App Platform\nLoad Balancer")
 
@@ -54,16 +58,17 @@ with Diagram(
     # Deployment flow
     github >> Edge(label="deploy", color="blue", style="bold") >> [app1, app2, app3]
 
-    # User traffic flow
-    user >> Edge(label="https") >> lb
+    # User traffic flow through Cloudflare CDN
+    user >> Edge(label="https") >> cdn
+    cdn >> Edge(label="cache/proxy", color="orange") >> lb
     lb >> Edge(label="route") >> [app1, app2, app3]
 
     # Security
     firewall >> Edge(label="protects", style="dashed") >> lb
 
     # Logs to unknown destination
-    app1 >> Edge(label="logs", style="dotted", color="orange") >> unknown
-    app2 >> Edge(label="logs", style="dotted", color="orange") >> unknown
-    app3 >> Edge(label="logs", style="dotted", color="orange") >> unknown
+    app1 >> Edge(label="logs", style="dotted", color="grey") >> unknown
+    app2 >> Edge(label="logs", style="dotted", color="grey") >> unknown
+    app3 >> Edge(label="logs", style="dotted", color="grey") >> unknown
 
 print("Done generating DigitalOcean App Platform static site diagram.")
