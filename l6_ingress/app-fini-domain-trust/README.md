@@ -1,3 +1,9 @@
+# l6_ingress/app-fini-domain-trust
+
+<https://perlclass.org/> and other sites are held in
+reserve against spammers and could be used for future
+projects.
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
