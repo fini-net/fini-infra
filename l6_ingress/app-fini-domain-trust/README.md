@@ -4,6 +4,10 @@
 reserve against spammers and could be used for future
 projects.
 
+## Architecture
+
+![app platform architecture](../../architecture/diagrams/digitalocean_app_platform_static_site.png)
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
