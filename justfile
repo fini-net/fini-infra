@@ -89,8 +89,9 @@ check-tf-init dir:
 		just tf-init "{{dir}}"
 	fi
 
-	echo "{{GREEN}}no init needed in {{dir}}{{NORMAL}}";
+	echo "{{GREEN}}no init needed{{NORMAL}} in {{BLUE}}{{dir}}{{NORMAL}}";
 
+	cd "{{dir}}"
 	tofu validate
 
 # tofu state
