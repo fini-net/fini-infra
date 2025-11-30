@@ -6,7 +6,7 @@ of the current limitations with Digital Ocean for their CDN
 and Spaces products. The Digital Ocean App Platform
 [worked out much better for me](../app-fini-domain-trust).
 
-Current state: these resource have been destroyed and this code
+Current state: these resources have been destroyed and this code
 is just preserved in case someone else tries this and wants a
 starting point.
 
