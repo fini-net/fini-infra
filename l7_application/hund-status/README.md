@@ -7,7 +7,7 @@ This module manages the Hund.io status page configuration for status.fini.net.
 Hund.io provides status page hosting and incident management. This Terraform
 configuration manages the status page components, metrics, and integrations.
 
-STATUS: on hold due to https://github.com/hundio/terraform-provider-hund/issues/13
+STATUS: on hold due to <https://github.com/hundio/terraform-provider-hund/issues/13>
 so we keep updating hund by hand for now.
 
 ## Prerequisites
