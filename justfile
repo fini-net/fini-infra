@@ -131,3 +131,13 @@ tf-destroy dir approve="": (check-tf-init dir)
 	else
 		tofu apply -destroy
 	fi
+
+# tofu import
+[group('terraform')]
+tf-import dir addr id: (check-tf-init dir)
+	#!/usr/bin/env bash
+	set -euo pipefail
+	. bin/do-creds.sh
+	cd "{{dir}}"
+	set -x
+	tofu import "{{addr}}" "{{id}}"
