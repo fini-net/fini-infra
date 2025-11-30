@@ -3,10 +3,12 @@
 Intention: create a CDN with associated bucket and certificate for
 serving a set of sites. This turned out to be a bad idea because
 of the current limitations with Digital Ocean for their CDN
-product. I'm going to try Digital Ocean's App Platform for
-this use case and hopefully migrate this site eventually over to
-that if it works.  Failing that, I'm going to look at other CDN
-vendors such as AWS, GCP, and Fastly.
+and Spaces products. The Digital Ocean App Platform
+[worked out much better for me](../app-fini-domain-trust).
+
+Current state: these resource have been destroyed and this code
+is just preserved in case someone else tries this and wants a
+starting point.
 
 ## Architecture diagram
 
