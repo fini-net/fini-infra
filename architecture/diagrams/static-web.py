@@ -1,4 +1,9 @@
 #!/usr/bin/env -S uv run --script
+# /// script
+# dependencies = [
+#   "diagrams",
+# ]
+# ///
 
 from diagrams import Cluster, Diagram, Edge
 from diagrams.azure.general import Usericon
