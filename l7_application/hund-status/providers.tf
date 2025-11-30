@@ -45,7 +45,7 @@ provider "onepassword" {
 
 data "onepassword_item" "digocean_fini" {
   vault = "Private"
-  title = "digocean-fini"
+  title = "digocean-fini2"
 }
 
 data "onepassword_item" "hund_api" {
