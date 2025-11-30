@@ -124,6 +124,8 @@ tf-destroy dir approve="": (check-tf-init dir)
 	set -euo pipefail
 	. bin/do-creds.sh
 	cd "{{dir}}"
+	echo "{{RED}}⚠️   WARNING: About to destroy resources in {{dir}}{{NORMAL}}"
+	sleep 3
 	if [[ -n "{{approve}}" ]]; then
 		tofu apply -destroy -auto-approve
 	else
