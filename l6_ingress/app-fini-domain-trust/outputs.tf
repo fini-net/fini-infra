@@ -27,7 +27,7 @@ output "active_deployment_id" {
 
 output "custom_domains" {
   description = "All custom domains configured for the app (includes primary domain and all aliases with www)"
-  value       = concat([var.domain_name], local.all_alias_domains)
+  value       = concat([var.domain_name, "www.${var.domain_name}"], local.all_alias_domains)
 }
 
 output "github_repo" {
