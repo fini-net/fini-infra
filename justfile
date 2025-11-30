@@ -17,7 +17,6 @@ tf-plan dir comment="": (check-tf-init dir)
 	set -euo pipefail
 	. bin/do-creds.sh
 	cd "{{dir}}"
-	tofu validate
 	if [[ -n "{{comment}}" ]]; then
 		set -x
 		plan_file=just.tfplan
@@ -90,7 +89,10 @@ check-tf-init dir:
 		just tf-init "{{dir}}"
 	fi
 
-	echo "{{GREEN}}no init needed in {{dir}}{{NORMAL}}";
+	echo "{{GREEN}}no init needed{{NORMAL}} in {{BLUE}}{{dir}}{{NORMAL}}";
+
+	cd "{{dir}}"
+	tofu validate
 
 # tofu state
 [group('terraform')]
@@ -99,7 +101,6 @@ tf-state dir subcommand="list": (check-tf-init dir)
 	set -euo pipefail
 	. bin/do-creds.sh
 	cd "{{dir}}"
-	tofu validate
 	if [[ -n "{{subcommand}}" ]]; then
 		set -x
 		tofu state {{subcommand}}
@@ -114,5 +115,19 @@ tf-output dir: (check-tf-init dir)
 	set -euo pipefail
 	. bin/do-creds.sh
 	cd "{{dir}}"
-	tofu validate
 	tofu output
+
+# tofu destroy
+[group('terraform')]
+tf-destroy dir approve="": (check-tf-init dir)
+	#!/usr/bin/env bash
+	set -euo pipefail
+	. bin/do-creds.sh
+	cd "{{dir}}"
+	echo "{{RED}}⚠️   WARNING: About to destroy resources in {{dir}}{{NORMAL}}"
+	sleep 3
+	if [[ -n "{{approve}}" ]]; then
+		tofu apply -destroy -auto-approve
+	else
+		tofu apply -destroy
+	fi
