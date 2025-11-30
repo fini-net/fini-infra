@@ -7,21 +7,21 @@ This module manages the Hund.io status page configuration for status.fini.net.
 Hund.io provides status page hosting and incident management. This Terraform
 configuration manages the status page components, metrics, and integrations.
 
+STATUS: on hold due to https://github.com/hundio/terraform-provider-hund/issues/13
+so we keep updating hund by hand for now.
+
 ## Prerequisites
 
 - 1Password CLI authentication (`op signin`)
 - API credentials stored in 1Password vault "Private", item "fini-terraform-hund"
-- DigitalOcean credentials stored in 1Password vault "Private", item "digocean-fini"
+- DigitalOcean credentials stored in 1Password vault "Private", item "digocean-fini2"
 
 ## Configuration
 
 The module uses the Hund.io Terraform provider to manage:
 
-- Status page configuration
 - Service components and groups
-- Metrics and monitoring
 - Incident templates
-- Subscriber management
 
 ## Usage
 
