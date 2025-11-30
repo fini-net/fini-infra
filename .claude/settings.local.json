@@ -20,7 +20,8 @@
       "Bash(just tf-state:*)",
       "Bash(just tf-output:*)",
       "Bash(tofu state list:*)",
-      "Bash(dig:*)"
+      "Bash(dig:*)",
+      "Bash(uv run:*)"
     ],
     "deny": [],
     "ask": []
