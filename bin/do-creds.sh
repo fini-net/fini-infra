@@ -14,7 +14,7 @@ echo "= creds DONE in ${SECONDS} seconds."
 
 if [[ -n "$1" ]]; then
 	if [[ -d "$1" ]]; then
-		cd "$1" || exit 1
+		cd "$1" # strict traps failed cd's
 		#echo "cd success"
 	else
 		# just should prevent us from getting here
