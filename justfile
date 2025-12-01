@@ -64,7 +64,6 @@ tf-init dir options="":
 	#!/usr/bin/env bash
 	set -euo pipefail
 	source bin/do-creds.sh "{{dir}}" # also chdir's
-	cd "{{dir}}"
 	tofu init {{options}}
 
 # terraform-docs manually (tf-apply includes this)
