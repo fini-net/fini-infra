@@ -14,9 +14,9 @@ list:
 [group('terraform')]
 tf-plan dir comment="": (check-tf-init dir)
 	#!/usr/bin/env bash
-	set -euo pipefail
-	. bin/do-creds.sh
-	cd "{{dir}}"
+	set -euo pipefail # strict
+	source bin/do-creds.sh "{{dir}}" # also chdir's
+
 	if [[ -n "{{comment}}" ]]; then
 		set -x
 		plan_file=just.tfplan
@@ -42,10 +42,9 @@ tf-plan dir comment="": (check-tf-init dir)
 [group('terraform')]
 tf-apply dir approve="": (check-tf-init dir)
 	#!/usr/bin/env bash
-	set -euo pipefail
-	. bin/do-creds.sh
+	set -euo pipefail # strict
+	source bin/do-creds.sh "{{dir}}" # also chdir's
 	just tf-docs "{{dir}}"
-	cd "{{dir}}"
 	if [[ -n "{{approve}}" ]]; then
 		tofu apply -auto-approve
 	else
@@ -61,12 +60,11 @@ tf-apply dir approve="": (check-tf-init dir)
 
 # tofu init
 [group('terraform')]
-tf-init dir:
+tf-init dir options="":
 	#!/usr/bin/env bash
 	set -euo pipefail
-	. bin/do-creds.sh
-	cd "{{dir}}"
-	tofu init
+	source bin/do-creds.sh "{{dir}}" # also chdir's
+	tofu init {{options}}
 
 # terraform-docs manually (tf-apply includes this)
 [group('terraform')]
@@ -99,8 +97,7 @@ check-tf-init dir:
 tf-state dir subcommand="list": (check-tf-init dir)
 	#!/usr/bin/env bash
 	set -euo pipefail
-	. bin/do-creds.sh
-	cd "{{dir}}"
+	source bin/do-creds.sh "{{dir}}" # also chdir's
 	if [[ -n "{{subcommand}}" ]]; then
 		set -x
 		tofu state {{subcommand}}
@@ -113,8 +110,7 @@ tf-state dir subcommand="list": (check-tf-init dir)
 tf-output dir: (check-tf-init dir)
 	#!/usr/bin/env bash
 	set -euo pipefail
-	. bin/do-creds.sh
-	cd "{{dir}}"
+	source bin/do-creds.sh "{{dir}}" # also chdir's
 	tofu output
 
 # tofu destroy
@@ -122,8 +118,7 @@ tf-output dir: (check-tf-init dir)
 tf-destroy dir approve="": (check-tf-init dir)
 	#!/usr/bin/env bash
 	set -euo pipefail
-	. bin/do-creds.sh
-	cd "{{dir}}"
+	source bin/do-creds.sh "{{dir}}" # also chdir's
 	echo "{{RED}}⚠️   WARNING: About to destroy resources in {{dir}}{{NORMAL}}"
 	sleep 3
 	if [[ -n "{{approve}}" ]]; then
@@ -137,7 +132,6 @@ tf-destroy dir approve="": (check-tf-init dir)
 tf-import dir addr id: (check-tf-init dir)
 	#!/usr/bin/env bash
 	set -euo pipefail
-	. bin/do-creds.sh
-	cd "{{dir}}"
+	source bin/do-creds.sh "{{dir}}" # also chdir's
 	set -x
 	tofu import "{{addr}}" "{{id}}"
