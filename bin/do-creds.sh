@@ -13,6 +13,12 @@ export SPACES_SECRET_ACCESS_KEY=$(op read op://Private/allbuckets-fini-2025/secr
 echo "= creds DONE in ${SECONDS} seconds."
 
 if [[ -n "$1" ]]; then
-	cd "$1" || exit 1
-	#echo "cd success"
+	if [[ -d "$1" ]]; then
+		cd "$1" || exit 1
+		#echo "cd success"
+	else
+		# just should prevent us from getting here
+		echo "$1 is not a directory!"
+		exit 2
+	fi
 fi
