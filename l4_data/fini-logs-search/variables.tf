@@ -52,10 +52,18 @@ variable "allowed_ips" {
   description = "List of IP addresses allowed to connect to the OpenSearch cluster (only used if enable_firewall=true)"
   type        = list(string)
   default     = []
+  validation {
+    condition     = !var.enable_firewall || length(var.allowed_ips) > 0
+    error_message = "allowed_ips must contain at least one IP when enable_firewall is true"
+  }
 }
 
 variable "log_retention_days" {
   description = "Number of days to retain logs before deletion"
   type        = number
   default     = 30
+  validation {
+    condition     = var.log_retention_days > 0
+    error_message = "log_retention_days must be greater than 0"
+  }
 }
