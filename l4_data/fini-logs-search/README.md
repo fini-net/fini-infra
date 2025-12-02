@@ -75,6 +75,7 @@ To scale the cluster:
 - Change `node_size` to a larger plan for vertical scaling
 
 Available sizes include:
+
 - `db-s-1vcpu-2gb` (current)
 - `db-s-2vcpu-4gb`
 - `db-s-4vcpu-8gb`
