@@ -21,7 +21,8 @@
       "Bash(just tf-output:*)",
       "Bash(tofu state list:*)",
       "Bash(dig:*)",
-      "Bash(uv run:*)"
+      "Bash(uv run:*)",
+      "Bash(tofu fmt:*)"
     ],
     "deny": [],
     "ask": []

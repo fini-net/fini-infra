@@ -44,19 +44,23 @@ The justfile imports modules from `.just/` directory (`gh-process.just` for GitH
 - `just branch <name>` - Create timestamped branch (format: `$USER/YYYY-MM-DD-<name>`)
 - `just pr` - Push branch, create PR (first commit message becomes title), watch checks, display Claude/Copilot review comments
 - `just pr_checks` - Watch GHA checks and display AI review comments (Claude and Copilot)
+- `just pr_update` - Update the "Done" section of PR description with current commits
+- `just pr_verify` - Add or append to "Verify" section from stdin (with timestamp)
 - `just merge` - Merge PR with squash, delete branch, return to main
 - `just prweb` - View current PR in web browser
 - `just release <version>` - Create GitHub release with auto-generated notes
 
 **Terraform Operations:**
 
-- `just tf-init <dir>` - Initialize OpenTofu (loads 1Password credentials first)
+- `just tf-init <dir> [options]` - Initialize OpenTofu (loads 1Password credentials first)
 - `just tf-plan <dir> [comment]` - Run tofu plan with validation; if comment provided, posts plan to PR
 - `just tf-apply <dir> [approve]` - Apply changes, run fmt, regenerate docs; optionally auto-approve
 - `just tf-docs <dir>` - Generate Terraform docs and inject into README (uses terraform-docs)
 - `just check-tf-init <dir>` - Conditionally initialize if .terraform dir missing
 - `just tf-state <dir> [subcommand]` - View or manipulate Terraform state (default: list)
 - `just tf-output <dir>` - Display Terraform outputs
+- `just tf-destroy <dir> [approve]` - Destroy infrastructure (with 3-second warning); optionally auto-approve
+- `just tf-import <dir> <addr> <id>` - Import existing resource into Terraform state
 
 ### Infrastructure Management
 
@@ -84,6 +88,7 @@ The justfile imports modules from `.just/` directory (`gh-process.just` for GitH
 
 ### Quality Assurance
 
+- `just shellcheck` - Extract and lint all bash scripts from justfiles
 - `markdownlint-cli2 **/*.md` - Lint markdown files
 - `tofu fmt -check -recursive` - Check Terraform formatting
 - `tflint` - Lint Terraform code
@@ -101,6 +106,8 @@ The justfile imports modules from `.just/` directory (`gh-process.just` for GitH
    - `l4_data/logs-cdn/` - CDN logging storage
    - `l4_data/web-content/` - Static web content storage
    - `l6_ingress/cdn-fini-domain-trust/` - CDN configuration and domain trust setup
+   - `l6_ingress/app-fini-domain-trust/` - DigitalOcean App Platform domain configuration
+   - `l7_application/hund-status/` - Hund.io status page integration (experimental)
 6. **Terraform State Backend**: Uses DigitalOcean Spaces (S3-compatible) with state locking via lockfile
 7. DigitalOcean and 1Password providers are pre-configured in all layer directories
 
@@ -119,7 +126,7 @@ GitHub Actions workflows run on push/PR to main:
 ## Configuration
 
 - **1Password CLI** - Required for accessing secrets at runtime:
-  - DigitalOcean API token (item "digocean-fini" in "Private" vault)
+  - DigitalOcean API token (item "digocean-fini2" in "Private" vault)
   - Spaces credentials (item "allbuckets-fini-2025" in "Private" vault)
   - Used by both `bin/do-creds.sh` script and onepassword provider in Terraform
 - **Terraform variables** - The `onepassword_path` variable defaults to `op` but can be overridden
