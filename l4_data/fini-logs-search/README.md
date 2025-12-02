@@ -21,7 +21,7 @@ ingress layer application.
 ### Initialize and Apply
 
 ```bash
-# From the project root
+# From anywhere in the project
 just tf-init l4_data/fini-logs-search
 just tf-plan l4_data/fini-logs-search
 just tf-apply l4_data/fini-logs-search
@@ -55,17 +55,6 @@ By default, the cluster has restrictive firewall rules. To allow access:
 
 1. Add IP addresses to `allowed_ips` variable in `terraform.tfvars`
 2. Configure App Platform to forward logs (see below)
-
-### Log Forwarding from App Platform
-
-DigitalOcean App Platform does not natively support forwarding logs to OpenSearch.
-Common approaches include:
-
-1. **Sidecar Container**: Deploy a log shipper (Fluent Bit, Filebeat) as a sidecar
-2. **External Service**: Use an intermediate log aggregator (Logstash, Vector)
-3. **API Integration**: Configure application to send logs directly to OpenSearch
-
-See the TODO comments in `main.tf` for implementation tasks.
 
 ## Scaling
 
