@@ -73,9 +73,9 @@ resource "opensearch_index_template" "app_logs_template" {
         number_of_replicas       = 0
         "index.refresh_interval" = "30s"
 
-        # Enable ISM policy
-        "opendistro.index_state_management.policy_id"      = opensearch_ism_policy.app_logs_policy.policy_id
-        "opendistro.index_state_management.rollover_alias" = "app-logs"
+        # Enable ISM policy (using plugins namespace for OpenSearch 2.x)
+        "plugins.index_state_management.policy_id"      = opensearch_ism_policy.app_logs_policy.policy_id
+        "plugins.index_state_management.rollover_alias" = "app-logs"
       }
       mappings = {
         properties = {
