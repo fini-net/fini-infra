@@ -65,17 +65,6 @@ resource "digitalocean_app" "trust_static_site" {
       }
     }
 
-    # Log forwarding to OpenSearch cluster
-    log_destination {
-      name = "fini-logs-search"
-      open_search {
-        cluster_name        = data.terraform_remote_state.logs_search.outputs.cluster_id
-        index_name          = data.terraform_remote_state.logs_search.outputs.app_platform_index
-        basic_auth_user     = data.terraform_remote_state.logs_search.outputs.ingest_user
-        basic_auth_password = data.terraform_remote_state.logs_search.outputs.ingest_user_password
-      }
-    }
-
     # Static site component
     static_site {
       name = "trust-public"
@@ -95,6 +84,24 @@ resource "digitalocean_app" "trust_static_site" {
 
       # Environment configuration
       environment_slug = "html"
+
+      # Log forwarding to OpenSearch cluster
+      # NOTE: log_destination is not yet supported in the Terraform provider
+      # This configuration is shown as an example for future support
+      # To configure now, use the DigitalOcean Control Panel or doctl CLI
+      # Configuration values are available via terraform outputs
+      #
+      # log_destination {
+      #   name = "fini-logs-search"
+      #   opensearch {
+      #     cluster_name = data.terraform_remote_state.logs_search.outputs.cluster_id
+      #     index_name   = data.terraform_remote_state.logs_search.outputs.app_platform_index
+      #     basic_auth {
+      #       user     = data.terraform_remote_state.logs_search.outputs.ingest_user
+      #       password = data.terraform_remote_state.logs_search.outputs.ingest_user_password
+      #     }
+      #   }
+      # }
     }
   }
 }
