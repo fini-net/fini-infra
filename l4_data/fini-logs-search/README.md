@@ -196,7 +196,7 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| app\_platform\_endpoint | Endpoint URL for App Platform log forwarding (format: https://hostname:port) |
+| app\_platform\_endpoint | Endpoint URL for App Platform log forwarding |
 | app\_platform\_index | Index name to use in App Platform log forwarding configuration |
 | cluster\_host | The hostname of the OpenSearch cluster |
 | cluster\_id | The ID of the OpenSearch cluster |
