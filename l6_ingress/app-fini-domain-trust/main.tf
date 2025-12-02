@@ -2,8 +2,29 @@
 
 # TODO env-based tfvars
 # TODO alerts?
-# TODO: Configure log forwarding to l4_data/fini-logs-search OpenSearch cluster
-#       Options: Fluent Bit sidecar, external log aggregator, or direct API integration
+
+# Remote state data source for fini-logs-search OpenSearch cluster
+data "terraform_remote_state" "logs_search" {
+  backend = "s3"
+
+  config = {
+    endpoints = {
+      s3 = "https://nyc3.digitaloceanspaces.com"
+    }
+
+    bucket = "fini-terraform-state"
+    key    = "l4_data/fini-logs-search"
+
+    skip_credentials_validation = true
+    skip_requesting_account_id  = true
+    skip_metadata_api_check     = true
+    skip_region_validation      = true
+    skip_s3_checksum            = true
+    region                      = "us-east-1"
+
+    use_lockfile = true
+  }
+}
 
 locals {
   app_name = "fini-domain-trust"
@@ -41,6 +62,17 @@ resource "digitalocean_app" "trust_static_site" {
       content {
         name = domain.value
         type = "ALIAS"
+      }
+    }
+
+    # Log forwarding to OpenSearch cluster
+    log_destination {
+      name = "fini-logs-search"
+      open_search {
+        cluster_name        = data.terraform_remote_state.logs_search.outputs.cluster_id
+        index_name          = data.terraform_remote_state.logs_search.outputs.app_platform_index
+        basic_auth_user     = data.terraform_remote_state.logs_search.outputs.ingest_user
+        basic_auth_password = data.terraform_remote_state.logs_search.outputs.ingest_user_password
       }
     }
 

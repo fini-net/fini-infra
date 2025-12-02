@@ -23,6 +23,7 @@ projects.
 |------|---------|
 | digitalocean | 2.69.0 |
 | onepassword | 2.2.1 |
+| terraform | n/a |
 
 ## Modules
 
@@ -34,6 +35,7 @@ No modules.
 |------|------|
 | [digitalocean_app.trust_static_site](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/app) | resource |
 | [onepassword_item.digocean_fini](https://registry.terraform.io/providers/1Password/onepassword/latest/docs/data-sources/item) | data source |
+| [terraform_remote_state.logs_search](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
 
 ## Inputs
 
@@ -60,4 +62,6 @@ No modules.
 | github\_branch | The GitHub branch being deployed |
 | github\_repo | The GitHub repository used as source |
 | live\_url | The live URL of the app |
+| log\_destination\_cluster | OpenSearch cluster name for log forwarding |
+| log\_destination\_index | OpenSearch index name for log forwarding |
 <!-- END_TF_DOCS -->
