@@ -1,0 +1,28 @@
+# Example App Platform log forwarding configuration
+# Add this to your app spec in l6_ingress/app-fini-domain-trust/
+
+# Option 1: Using cluster_name (for DigitalOcean Managed OpenSearch)
+log_destinations:
+  - name: fini-logs-search
+    open_search:
+      cluster_name: fini-logs-search  # Must match your cluster name
+      index_name: app-logs            # Optional: defaults to "logs"
+
+# Option 2: Using endpoint (for any OpenSearch cluster with basic auth)
+# log_destinations:
+#   - name: fini-logs-search
+#     open_search:
+#       basic_auth:
+#         user: <username from terraform output: ingest_user>
+#         password: <password from terraform output: ingest_user_password>
+#       endpoint: <endpoint from terraform output: app_platform_endpoint>
+#       index_name: app-logs
+
+# To get the required values, run:
+# just tf-output l4_data/fini-logs-search app_platform_endpoint
+# just tf-output l4_data/fini-logs-search app_platform_index
+# just tf-output l4_data/fini-logs-search ingest_user
+# just tf-output l4_data/fini-logs-search ingest_user_password
+
+# IMPORTANT: The OpenSearch cluster MUST NOT have trusted sources/firewall enabled
+# This is configured in terraform.tfvars with enable_firewall = false

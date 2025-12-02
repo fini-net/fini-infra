@@ -42,8 +42,20 @@ variable "node_count" {
   default     = 1
 }
 
+variable "enable_firewall" {
+  description = "Enable firewall/trusted sources (WARNING: disables App Platform log forwarding)"
+  type        = bool
+  default     = false
+}
+
 variable "allowed_ips" {
-  description = "List of IP addresses allowed to connect to the OpenSearch cluster"
+  description = "List of IP addresses allowed to connect to the OpenSearch cluster (only used if enable_firewall=true)"
   type        = list(string)
   default     = []
+}
+
+variable "log_retention_days" {
+  description = "Number of days to retain logs before deletion"
+  type        = number
+  default     = 30
 }

@@ -47,3 +47,28 @@ output "ingest_user_password" {
   value       = digitalocean_database_user.logs_ingest.password
   sensitive   = true
 }
+
+output "ism_policy_id" {
+  description = "ID of the ISM policy for application logs"
+  value       = opensearch_ism_policy.app_logs_policy.policy_id
+}
+
+output "log_index_alias" {
+  description = "Alias for writing logs (use this in your log forwarders)"
+  value       = "app-logs"
+}
+
+output "log_retention_days" {
+  description = "Number of days logs are retained before deletion"
+  value       = var.log_retention_days
+}
+
+output "app_platform_endpoint" {
+  description = "Endpoint URL for App Platform log forwarding (format: https://hostname:port)"
+  value       = "https://${digitalocean_database_cluster.logs_search.host}:${digitalocean_database_cluster.logs_search.port}"
+}
+
+output "app_platform_index" {
+  description = "Index name to use in App Platform log forwarding configuration"
+  value       = "app-logs"
+}

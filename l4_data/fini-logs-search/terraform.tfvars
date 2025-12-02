@@ -9,5 +9,10 @@ region             = "nyc3"
 environment        = "prod"
 
 # Network access control
-# TODO: Add specific IP addresses that should have access to the cluster
-allowed_ips = []
+# WARNING: App Platform log forwarding does NOT work with firewall/trusted sources enabled
+# Keep enable_firewall = false to allow App Platform log forwarding
+enable_firewall = false
+allowed_ips     = []
+
+# Log retention configuration
+log_retention_days = 30

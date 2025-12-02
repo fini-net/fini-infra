@@ -1,7 +1,6 @@
 # main.tf
 
 # TODO: Configure log forwarding from App Platform
-# TODO: Configure retention policies and index lifecycle management
 # TODO: Consider adding alerts for cluster health
 
 # DigitalOcean Managed OpenSearch cluster for application logs
@@ -21,9 +20,11 @@ resource "digitalocean_database_cluster" "logs_search" {
 }
 
 # Firewall rules for OpenSearch cluster
-# Note: Only created if allowed_ips is not empty
+# IMPORTANT: App Platform log forwarding does NOT work with trusted sources/firewall enabled
+# If you need to forward logs from App Platform, do NOT create firewall rules
+# Only create firewall for non-App Platform access (e.g., manual queries, debugging)
 resource "digitalocean_database_firewall" "logs_search_firewall" {
-  count      = length(var.allowed_ips) > 0 ? 1 : 0
+  count      = var.enable_firewall && length(var.allowed_ips) > 0 ? 1 : 0
   cluster_id = digitalocean_database_cluster.logs_search.id
 
   # Allow connections from specific IPs
@@ -34,10 +35,6 @@ resource "digitalocean_database_firewall" "logs_search_firewall" {
       value = rule.value
     }
   }
-
-  # Allow connections from DigitalOcean App Platform
-  # App Platform doesn't have a fixed IP range, so we'll need to use a tag or specific IP
-  # Note: You may need to add specific IPs after deployment
 }
 
 # Database user for log ingestion

@@ -12,6 +12,10 @@ terraform {
       source  = "1Password/onepassword"
       version = "~> 2.0"
     }
+    opensearch = {
+      source  = "opensearch-project/opensearch"
+      version = "~> 2.0"
+    }
   }
 
   backend "s3" {
@@ -46,4 +50,17 @@ data "onepassword_item" "digocean_fini" {
 
 provider "digitalocean" {
   token = data.onepassword_item.digocean_fini.credential
+}
+
+# OpenSearch provider for managing indices, ISM policies, and index templates
+# Note: This provider connects to the OpenSearch cluster after it's created
+provider "opensearch" {
+  url               = "https://${digitalocean_database_cluster.logs_search.host}:${digitalocean_database_cluster.logs_search.port}"
+  username          = digitalocean_database_cluster.logs_search.user
+  password          = digitalocean_database_cluster.logs_search.password
+  sign_aws_requests = false
+  insecure          = false
+
+  # The cluster must exist before this provider can connect
+  # This creates a dependency on the database cluster resource
 }
