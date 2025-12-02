@@ -2,6 +2,8 @@
 
 # TODO env-based tfvars
 # TODO alerts?
+# TODO: Configure log forwarding to l4_data/fini-logs-search OpenSearch cluster
+#       Options: Fluent Bit sidecar, external log aggregator, or direct API integration
 
 locals {
   app_name = "fini-domain-trust"
