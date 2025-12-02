@@ -66,6 +66,7 @@ output "log_retention_days" {
 output "app_platform_endpoint" {
   description = "Endpoint URL for App Platform log forwarding (format: https://hostname:port)"
   value       = "https://${digitalocean_database_cluster.logs_search.host}:${digitalocean_database_cluster.logs_search.port}"
+  sensitive   = true
 }
 
 output "app_platform_index" {
