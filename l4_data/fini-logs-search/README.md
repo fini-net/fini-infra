@@ -6,8 +6,8 @@ from the App Platform applications.
 ## Overview
 
 This module provisions a small OpenSearch cluster designed to receive and index logs
-from DigitalOcean App Platform applications, particularly from the `app-fini-domain-trust`
-ingress layer application.
+from DigitalOcean App Platform applications, particularly from the
+[`app-fini-domain-trust`](../../l6_ingress/app-fini-domain-trust) ingress layer application.
 
 ## Architecture
 

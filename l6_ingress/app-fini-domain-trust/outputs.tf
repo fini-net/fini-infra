@@ -39,3 +39,13 @@ output "github_branch" {
   description = "The GitHub branch being deployed"
   value       = var.github_branch
 }
+
+output "log_destination_cluster" {
+  description = "OpenSearch cluster name for log forwarding"
+  value       = data.terraform_remote_state.logs_search.outputs.cluster_id
+}
+
+output "log_destination_index" {
+  description = "OpenSearch index name for log forwarding"
+  value       = data.terraform_remote_state.logs_search.outputs.app_platform_index
+}
