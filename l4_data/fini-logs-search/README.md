@@ -55,6 +55,7 @@ See `app-platform-log-config.example.yaml` for configuration examples. You can e
 - **Option 2**: Use `endpoint` with basic auth for any OpenSearch cluster
 
 **Via Control Panel**:
+
 1. Go to Apps > Your App > Settings > Log Forwarding
 2. Click Edit and select "Managed OpenSearch"
 3. Enter the endpoint, username, password, and index name from the outputs above
@@ -97,6 +98,7 @@ sources/firewall enabled. The configuration defaults to `enable_firewall = false
 to support App Platform native log forwarding.
 
 If you need to restrict access for manual queries:
+
 1. Set `enable_firewall = true` in `terraform.tfvars`
 2. Add IP addresses to `allowed_ips`
 3. **WARNING**: This will break App Platform log forwarding
