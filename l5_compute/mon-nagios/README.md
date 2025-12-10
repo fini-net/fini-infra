@@ -8,10 +8,6 @@ This module manages the DigitalOcean droplet that hosts the Nagios monitoring
 infrastructure. The droplet was originally created manually and has been
 imported into Terraform for infrastructure-as-code management.
 
-## Resources
-
-- **digitalocean_droplet.mon_nagios** - Monitoring server droplet
-
 ## Usage
 
 ### Initialize
@@ -64,7 +60,7 @@ just tf-import l5_compute/mon-nagios digitalocean_droplet.mon_nagios <droplet-id
 - `droplet_name` - Name of the droplet (default: "mon00")
 - `hostname` - FQDN for the server (default: "mon00.fini.net")
 
-### Outputs
+### Output Variables
 
 - `droplet_id` - Droplet ID
 - `droplet_urn` - Droplet URN
