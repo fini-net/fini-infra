@@ -1,5 +1,7 @@
 # fini-infra: FINI infrastructure as code
 
+![fini-infra banner](docs/fini-infra-banner.png)
+
 **FINI** is a boutique consulting firm based in Williamsburg, VA.  Historically
 we provided full service hosting and we still maintain some legacy customers
 for full hosting.
