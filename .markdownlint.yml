@@ -3,6 +3,11 @@ default: True
 MD013: False
 MD041: False
 MD042: False
+# MD060 (table-column-style) - Disabled because terraform-docs generates tables
+# that don't conform to any of the three styles (aligned, compact, tight) due to
+# long URLs in resource links and center-aligned columns. See:
+# https://github.com/DavidAnson/markdownlint/blob/main/doc/md060.md
+MD060: False
 MD004:
   style: dash
 MD010:
