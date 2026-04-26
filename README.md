@@ -1,5 +1,7 @@
 # fini-infra: FINI infrastructure as code
 
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/fini-net/fini-infra/badge)](https://scorecard.dev/viewer/?uri=github.com/fini-net/fini-infra)
+
 ![fini-infra banner](docs/fini-infra-banner.png)
 
 **FINI** is a boutique consulting firm based in Williamsburg, VA.  Historically
