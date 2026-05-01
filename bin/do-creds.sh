@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
+command -v jq &>/dev/null || { echo "ERROR: jq is required but not installed." >&2; exit 1; }
 
+# Uses first listed account; set OP_ACCOUNT in environment to override
 if [[ -z "${OP_ACCOUNT:-}" ]]; then
 	OP_ACCOUNT=$(op account ls --format=json | jq -r '.[0].account_uuid // empty')
 	if [[ -z "$OP_ACCOUNT" ]]; then
