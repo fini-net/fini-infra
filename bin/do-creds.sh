@@ -1,16 +1,26 @@
+#!/usr/bin/env bash
 set -euo pipefail
 
 if [[ -z "${OP_ACCOUNT:-}" ]]; then
-	export OP_ACCOUNT=$(op account ls --format=json 2>/dev/null | jq -r '.[0].account_uuid')
+	OP_ACCOUNT=$(op account ls --format=json | jq -r '.[0].account_uuid // empty')
+	if [[ -z "$OP_ACCOUNT" ]]; then
+		echo "ERROR: No 1Password account detected. Run 'op signin' first." >&2
+		exit 1
+	fi
+	export OP_ACCOUNT
 fi
 
 echo "Reading creds from 1password...."
 
-export AWS_ACCESS_KEY_ID=$(op read op://Private/allbuckets-fini-2025/access_key)
-export AWS_SECRET_ACCESS_KEY=$(op read op://Private/allbuckets-fini-2025/secret_key)
+AWS_ACCESS_KEY_ID=$(op read op://Private/allbuckets-fini-2025/access_key)
+export AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY=$(op read op://Private/allbuckets-fini-2025/secret_key)
+export AWS_SECRET_ACCESS_KEY
 
-export SPACES_ACCESS_KEY_ID=$(op read op://Private/allbuckets-fini-2025/access_key)
-export SPACES_SECRET_ACCESS_KEY=$(op read op://Private/allbuckets-fini-2025/secret_key)
+SPACES_ACCESS_KEY_ID=$(op read op://Private/allbuckets-fini-2025/access_key)
+export SPACES_ACCESS_KEY_ID
+SPACES_SECRET_ACCESS_KEY=$(op read op://Private/allbuckets-fini-2025/secret_key)
+export SPACES_SECRET_ACCESS_KEY
 
 echo "= creds DONE in ${SECONDS} seconds."
 
