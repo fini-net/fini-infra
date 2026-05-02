@@ -1,5 +1,3 @@
-# variables.tf
-
 variable "onepassword_path" {
   description = "Path to the 1password op command."
   type        = string
