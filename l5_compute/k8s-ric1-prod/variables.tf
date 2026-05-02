@@ -14,6 +14,11 @@ variable "environment" {
   description = "Environment name (dev, staging, prod)"
   type        = string
   default     = "prod"
+
+  validation {
+    condition     = contains(["dev", "staging", "prod"], var.environment)
+    error_message = "environment must be one of: dev, staging, prod."
+  }
 }
 
 variable "cluster_name" {
@@ -29,19 +34,25 @@ variable "node_pool_size" {
 }
 
 variable "node_pool_min_nodes" {
-  description = "Minimum number of nodes in the default node pool"
+  description = "Minimum (and initial) number of nodes in the default node pool"
   type        = number
   default     = 2
+
+  validation {
+    condition     = var.node_pool_min_nodes >= 1
+    error_message = "Minimum node count must be at least 1."
+  }
 }
 
 variable "node_pool_max_nodes" {
   description = "Maximum number of nodes in the default node pool"
   type        = number
   default     = 5
+
+  validation {
+    condition     = var.node_pool_max_nodes >= var.node_pool_min_nodes
+    error_message = "Maximum node count must be greater than or equal to minimum node count."
+  }
 }
 
-variable "node_pool_default_nodes" {
-  description = "Default number of nodes in the default node pool"
-  type        = number
-  default     = 2
-}
+

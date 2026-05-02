@@ -87,9 +87,8 @@ No modules.
 | ---- | ----------- | ---- | ------- | :------: |
 | cluster\_name | Name of the DOKS cluster | `string` | `"k8s-ric1-prod"` | no |
 | environment | Environment name (dev, staging, prod) | `string` | `"prod"` | no |
-| node\_pool\_default\_nodes | Default number of nodes in the default node pool | `number` | `2` | no |
 | node\_pool\_max\_nodes | Maximum number of nodes in the default node pool | `number` | `5` | no |
-| node\_pool\_min\_nodes | Minimum number of nodes in the default node pool | `number` | `2` | no |
+| node\_pool\_min\_nodes | Minimum (and initial) number of nodes in the default node pool | `number` | `2` | no |
 | node\_pool\_size | Droplet size for the default node pool | `string` | `"s-2vcpu-4gb"` | no |
 | onepassword\_path | Path to the 1password op command. | `string` | `"op"` | no |
 | region | DigitalOcean region for the DOKS cluster | `string` | `"ric1"` | no |

@@ -21,7 +21,7 @@ resource "digitalocean_kubernetes_cluster" "k8s_ric1_prod" {
     auto_scale = true
     min_nodes  = var.node_pool_min_nodes
     max_nodes  = var.node_pool_max_nodes
-    node_count = var.node_pool_default_nodes
+    node_count = var.node_pool_min_nodes
     tags       = ["env:${var.environment}", "k8s:${var.cluster_name}"]
   }
 
