@@ -23,7 +23,8 @@ ssh-key-setup:
         exit 1
     fi
 
-    if ! op account list --format=json &>/dev/null || [[ -z "$(op account list --format=json 2>/dev/null)" ]]; then
+    ACCOUNTS=$(op account list --format=json 2>/dev/null) || true
+    if [[ -z "$ACCOUNTS" ]]; then
         echo "{{RED}}ERROR: Not authenticated to 1Password. Run 'op signin' first.{{NORMAL}}"
         exit 1
     fi
@@ -92,7 +93,7 @@ ssh-key-setup:
     echo "  2. {{BLUE}}just tf-plan l3_permissions/deploy-ssh-key{{NORMAL}}"
     echo "  3. {{BLUE}}just tf-apply l3_permissions/deploy-ssh-key{{NORMAL}}"
 
-# rotate the deploy SSH key pair (regenerates key and updates 1Password items)
+# rotate the deploy SSH key pair (regenerates key via 1Password — private key never touches disk)
 [group('ssh-keys')]
 ssh-key-rotate:
     #!/usr/bin/env bash
@@ -111,69 +112,53 @@ ssh-key-rotate:
         exit 1
     fi
 
-    # generate a new ed25519 key pair locally for rotation
-    KEYDIR=$(mktemp -d)
-    # shellcheck disable=SC2064
-    trap "rm -rf $KEYDIR" EXIT
+    OLD_FINGERPRINT=$(op read "op://{{op_vault}}/{{pubkey_item}}/credential" 2>/dev/null | ssh-keygen -lf - 2>/dev/null || echo "unknown")
+    echo "{{BLUE}}Old fingerprint: $OLD_FINGERPRINT{{NORMAL}}"
 
-    echo "{{BLUE}}Generating new ed25519 SSH key pair...{{NORMAL}}"
-    ssh-keygen -t ed25519 -C "deploy@fini.net" -f "$KEYDIR/deploy-fini" -N ""
+    # delete both items so we can recreate via --ssh-generate-key (keeps private key inside 1Password)
+    echo "{{BLUE}}Deleting old 1Password items...{{NORMAL}}"
+    op item delete "{{privkey_item}}" --vault="{{op_vault}}" --archive >/dev/null
+    op item delete "{{pubkey_item}}" --vault="{{op_vault}}" --archive >/dev/null
 
-    PUB_KEY=$(cat "$KEYDIR/deploy-fini.pub")
-    PRIV_KEY=$(cat "$KEYDIR/deploy-fini")
+    echo "{{BLUE}}Creating new SSH Key item in 1Password (key pair generated inside 1Password)...{{NORMAL}}"
 
-    # update the SSH Key item using a JSON template
-    # (private key field is reserved and cannot be set via assignment)
-    echo "{{BLUE}}Updating 1Password SSH Key item...{{NORMAL}}"
-
-    TEMPLATE=$(mktemp /tmp/ssh-template.XXXXXX.json)
-
-    # build the JSON template with jq to avoid shellcheck issues
-    jq -n \
-        --arg priv_key "$PRIV_KEY" \
-        '{
-            "title": "deploy-ssh-key-fini-priv",
-            "category": "SSH_KEY",
-            "fields": [
-                {
-                    "id": "notesPlain",
-                    "type": "STRING",
-                    "purpose": "NOTES",
-                    "label": "notesPlain",
-                    "value": "Deploy key for fini-infra (rotated)"
-                },
-                {
-                    "id": "private_key",
-                    "type": "SSHKEY",
-                    "label": "private key",
-                    "value": $priv_key
-                }
-            ]
-        }' > "$TEMPLATE"
-
-    # shellcheck disable=SC2064
-    trap "rm -f $TEMPLATE; rm -rf $KEYDIR" EXIT
-
-    op item edit "{{privkey_item}}" \
+    op item create \
+        --category="SSH Key" \
+        --title="{{privkey_item}}" \
         --vault="{{op_vault}}" \
-        --template="$TEMPLATE" \
+        --ssh-generate-key=ed25519 \
+        "notesPlain=Deploy key for fini-infra (rotated)" \
         --format=json >/dev/null
 
-    echo "{{GREEN}}Updated '{{privkey_item}}' (private key){{NORMAL}}"
+    echo "{{GREEN}}Created '{{privkey_item}}' (SSH Key with private + public key){{NORMAL}}"
 
-    # update the API Credential item with the new public key
-    op item edit "{{pubkey_item}}" \
+    PUB_KEY=$(op read "op://{{op_vault}}/{{privkey_item}}/public key" 2>/dev/null)
+
+    if [[ -z "$PUB_KEY" ]]; then
+        echo "{{RED}}ERROR: Could not read public key from newly created 1Password item.{{NORMAL}}"
+        echo "The private key item was created but the public key item was not."
+        echo "Run 'just ssh-key-setup' to create the public key item manually."
+        exit 1
+    fi
+
+    echo "{{BLUE}}Creating API Credential item for the new public key...{{NORMAL}}"
+
+    op item create \
+        --category="API Credential" \
+        --title="{{pubkey_item}}" \
         --vault="{{op_vault}}" \
+        "username=deploy@fini.net" \
         "credential=${PUB_KEY}" \
+        "type=ssh" \
         --format=json >/dev/null
 
-    echo "{{GREEN}}Updated '{{pubkey_item}}' (public key){{NORMAL}}"
+    echo "{{GREEN}}Created '{{pubkey_item}}' (public key) as API Credential{{NORMAL}}"
 
-    # display the new fingerprint
     FINGERPRINT=$(echo "$PUB_KEY" | ssh-keygen -lf - 2>/dev/null || echo "unknown")
 
     echo ""
     echo "{{GREEN}}SSH key rotation complete!{{NORMAL}}"
+    echo "  Old fingerprint: $OLD_FINGERPRINT"
     echo "  New fingerprint: $FINGERPRINT"
     echo ""
     echo "Next steps:"
