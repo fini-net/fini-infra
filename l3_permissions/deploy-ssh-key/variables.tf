@@ -1,0 +1,19 @@
+# input variables
+
+variable "onepassword_path" {
+  description = "Path to the 1password op command."
+  type        = string
+  default     = "op"
+}
+
+variable "region" {
+  description = "DigitalOcean region"
+  type        = string
+  default     = "nyc3"
+}
+
+variable "environment" {
+  description = "Environment name (dev, staging, prod)"
+  type        = string
+  default     = "prod"
+}

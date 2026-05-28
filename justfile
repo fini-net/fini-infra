@@ -8,6 +8,7 @@ import? '.just/copilot.just'
 import? '.just/claude.just'
 import? '.just/shellcheck.just'
 import? '.just/compliance.just'
+import? '.just/deploy-ssh.just'
 import? '.just/gh-process.just'
 
 # list recipes (default works without naming it)

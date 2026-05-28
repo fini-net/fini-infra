@@ -17,5 +17,14 @@ Lee Briggs said:
 - [Team][do-team] - Team management (Business/Team plans)
 - API Tokens - Managed through DigitalOcean Control Panel
 
+## Active Modules
+
+- **deploy-ssh-key** - Registers the deploy user's ed25519 SSH public key
+  with DigitalOcean. The public key is stored in 1Password as an
+  `API_CREDENTIAL` item (`deploy-ssh-key-fini`) and the private key as an
+  `SSH_KEY` item (`deploy-ssh-key-fini-priv`). Use `just ssh-key-setup`
+  to generate and store the key pair, then `just tf-apply
+  l3_permissions/deploy-ssh-key` to register it with DigitalOcean.
+
 [do-ssh-key]: https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/ssh_key
 [do-team]: https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/team
