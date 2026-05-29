@@ -2,14 +2,15 @@
 set -euo pipefail
 command -v jq &>/dev/null || { echo "ERROR: jq is required but not installed." >&2; exit 1; }
 
-# Uses first listed account; set OP_ACCOUNT in environment to override
+# Picks account whose user_uuid starts with "GBQ"; set OP_ACCOUNT in environment to override
 if [[ -z "${OP_ACCOUNT:-}" ]]; then
-	OP_ACCOUNT=$(op account ls --format=json | jq -r '.[0].account_uuid // empty')
+	OP_ACCOUNT=$(op account ls --format=json | jq -r '[.[] | select(.user_uuid | startswith("GBQ")).account_uuid][0] // empty')
 	if [[ -z "$OP_ACCOUNT" ]]; then
 		echo "ERROR: No 1Password account detected. Run 'op signin' first." >&2
 		exit 1
 	fi
 	export OP_ACCOUNT
+	#echo "assigned OP_ACCOUNT=$OP_ACCOUNT"
 fi
 
 echo "Reading creds from 1password...."
