@@ -32,14 +32,12 @@ No modules.
 | ---- | ----------- | ---- | ------- | :------: |
 | environment | Environment name (dev, staging, prod) | `string` | `"prod"` | no |
 | onepassword\_path | Path to the 1password op command. | `string` | `"op"` | no |
-| region | DigitalOcean region | `string` | `"nyc3"` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
 | environment | Environment name |
-| region | DigitalOcean region |
 | ssh\_key\_fingerprint | The fingerprint of the deploy SSH key (use in droplet ssh\_keys) |
 | ssh\_key\_id | The ID of the deploy SSH key in DigitalOcean |
 | ssh\_key\_name | The name of the deploy SSH key in DigitalOcean |
