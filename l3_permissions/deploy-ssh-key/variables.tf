@@ -6,11 +6,6 @@ variable "onepassword_path" {
   default     = "op"
 }
 
-variable "region" {
-  description = "DigitalOcean region"
-  type        = string
-  default     = "nyc3"
-}
 
 variable "environment" {
   description = "Environment name (dev, staging, prod)"

@@ -189,6 +189,6 @@ ssh-key-info:
     echo "{{BLUE}}Deploy SSH Key Information:{{NORMAL}}"
     echo "  Item:       {{pubkey_item}} (public key)"
     echo "  Vault:      {{op_vault}}"
-    echo "  Key type:   $(echo "$PUB_KEY" | cut -d' ' -f1 | head -c10)..."
+    echo "  Key type:   $(echo "$PUB_KEY" | cut -d' ' -f1)"
     echo "  Comment:    $(echo "$PUB_KEY" | cut -d' ' -f3-)"
     echo "  Fingerprint: $FINGERPRINT"
