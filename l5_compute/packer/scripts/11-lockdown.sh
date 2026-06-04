@@ -7,12 +7,12 @@ set -euo pipefail
 
 SSHD_CONFIG_DIR="/etc/ssh/sshd_config.d"
 
-cat > "$SSHD_CONFIG_DIR/disable-root-login.conf" <<'EOF'
+cat > "$SSHD_CONFIG_DIR/99-disable-root-login.conf" <<'EOF'
 PermitRootLogin no
 PasswordAuthentication no
 EOF
 
-chmod 644 "$SSHD_CONFIG_DIR/disable-root-login.conf"
+chmod 644 "$SSHD_CONFIG_DIR/99-disable-root-login.conf"
 
 # Do NOT restart sshd here — Packer still needs its connection.
 # The sanity check script (99-sanity-check.sh) verifies sshd is active.

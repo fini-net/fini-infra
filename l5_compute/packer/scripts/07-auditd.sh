@@ -15,6 +15,7 @@ if [[ -f /etc/default/grub ]]; then
     if ! grep -q 'audit=1' /etc/default/grub; then
         sed -i 's/GRUB_CMDLINE_LINUX="/GRUB_CMDLINE_LINUX="audit=1 /' /etc/default/grub
     fi
+    update-grub
 fi
 
 # CIS 4.1.4 - Ensure audit log storage size is configured

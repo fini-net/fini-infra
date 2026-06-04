@@ -30,7 +30,7 @@ chmod 600 /etc/ssh/ssh_host_*
 cat > "$SSHD_CONFIG_DIR/hardening.conf" <<'EOF'
 Protocol 2
 LogLevel INFO
-PermitRootLogin yes
+PermitRootLogin prohibit-password
 PermitEmptyPasswords no
 PermitUserEnvironment no
 IgnoreRhosts yes

@@ -4,7 +4,8 @@ set -euo pipefail
 # CIS 1.1 - Secure file permissions and ownership
 
 # CIS 1.1.2 - Ensure /tmp is configured (separate mount with nodev/noexec/nosuid)
-if ! mount | grep -q ' /tmp '; then
+# Check if /tmp is mounted with the required options; if not, set up a hardened mount unit
+if ! findmnt -n -o OPTIONS /tmp 2>/dev/null | grep -qE '(^|,)noexec(,|$)'; then
     if [[ -f /usr/share/systemd/tmp.mount ]]; then
         cp /usr/share/systemd/tmp.mount /etc/systemd/system/tmp.mount
         sed -i 's/Options=mode=1777,strictatime,nosuid,nodev/Options=mode=1777,strictatime,nosuid,nodev,noexec/' /etc/systemd/system/tmp.mount
@@ -15,7 +16,8 @@ if ! mount | grep -q ' /tmp '; then
 fi
 
 # CIS 1.1.4 - Ensure noexec on /dev/shm
-if ! mount | grep -q '/dev/shm'; then
+# Check if /dev/shm is mounted with the required options; if not, set up a hardened mount unit
+if ! findmnt -n -o OPTIONS /dev/shm 2>/dev/null | grep -qE '(^|,)noexec(,|$)'; then
     cat > /etc/systemd/system/dev-shm.mount <<'EOF'
 [Unit]
 Description=Memory filesystem on /dev/shm

@@ -27,6 +27,7 @@ packer-build:
     echo "{{BLUE}}Building hardened Debian 12 image...{{NORMAL}}"
     echo "  Snapshot name: ${SNAPSHOT_NAME}"
 
+    packer init {{pk_dir}}
     packer build \
         -var "deploy_public_key=${DEPLOY_PUB_KEY}" \
         -var "digitalocean_token=${DIGITALOCEAN_TOKEN}" \
