@@ -48,4 +48,4 @@ EOF
 
 chmod 644 "$SSHD_CONFIG_DIR/hardening.conf"
 
-systemctl restart sshd
+systemctl reload sshd

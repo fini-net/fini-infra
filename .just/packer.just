@@ -59,7 +59,7 @@ packer-docs:
     INSPECT_OUTPUT=$(packer inspect {{pk_dir}} 2>&1)
 
     # inject between markers
-    BEFORE=$(sed -n "1,/${START_MARKER}/p" "$README" | head -n -1)
+    BEFORE=$(sed -n "1,/${START_MARKER}/p" "$README" | sed '$d')
     AFTER=$(sed -n "/${END_MARKER}/,\$p" "$README" | tail -n +2)
 
     {

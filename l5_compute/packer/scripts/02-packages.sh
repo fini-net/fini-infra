@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+export DEBIAN_FRONTEND=noninteractive
 
 # CIS 2.2 - Remove unnecessary packages
 UNNECESSARY_PACKAGES=(
