@@ -11,4 +11,4 @@ source "${SCRIPT_DIR}/op-account.sh"
 DIGITALOCEAN_TOKEN=$(op item get digocean-fini2 --vault Private --format json | jq -r '.fields[] | select(.id=="credential") | .value')
 export DIGITALOCEAN_TOKEN
 
-echo "DIGITALOCEAN_TOKEN exported."
+echo "DIGITALOCEAN_TOKEN exported." >&2

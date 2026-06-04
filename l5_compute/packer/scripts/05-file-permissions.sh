@@ -51,7 +51,7 @@ chmod 644 /etc/issue /etc/issue.net
 # CIS 1.7.1 - Ensure message of the day is configured
 cat > /etc/motd <<'EOF'
 *******************************************************************
-*  This system is for authorized use only.                         *
+*  This system is for authorized use only.                        *
 *  All activity is monitored and recorded.                        *
 *******************************************************************
 EOF

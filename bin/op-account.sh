@@ -1,4 +1,5 @@
-#!/usr/bin/env bash
+# shellcheck shell=bash
+# This script must be sourced, not executed directly.
 set -euo pipefail
 command -v jq &>/dev/null || { echo "ERROR: jq is required but not installed." >&2; return 1; }
 

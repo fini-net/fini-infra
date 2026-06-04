@@ -29,6 +29,8 @@ chmod 644 /etc/ssh/ssh_host_*_key.pub
 cat > "$SSHD_CONFIG_DIR/hardening.conf" <<'EOF'
 Protocol 2
 LogLevel INFO
+# Intentionally prohibit-password (not "no") so Packer can SSH as root with a key
+# during the build.  11-lockdown.sh overrides this with PermitRootLogin no.
 PermitRootLogin prohibit-password
 PermitEmptyPasswords no
 PermitUserEnvironment no
@@ -48,4 +50,5 @@ EOF
 
 chmod 644 "$SSHD_CONFIG_DIR/hardening.conf"
 
+sshd -t
 systemctl reload sshd
