@@ -5,8 +5,8 @@ set -euo pipefail
 
 SSHD_CONFIG_DIR="/etc/ssh/sshd_config.d"
 
-# CIS 5.2.1 - Ensure permissions on /etc/ssh are 600/700
-chmod 700 /etc/ssh
+# CIS 5.2.1 - Ensure permissions on /etc/ssh are configured
+chmod 755 /etc/ssh
 chmod 600 /etc/ssh/ssh_host_*_key
 chmod 644 /etc/ssh/ssh_host_*_key.pub
 

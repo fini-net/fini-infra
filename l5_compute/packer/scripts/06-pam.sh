@@ -36,6 +36,9 @@ Auth:
     required      pam_faillock.so preauth audit silent deny=5 unlock_time=900
 Auth-Initial:
     required      pam_faillock.so authfail audit deny=5 unlock_time=900
+Account-Type: Primary
+Account:
+    required      pam_faillock.so
 EOF
 
 chmod 644 "$FAILLOCK_PROFILE"

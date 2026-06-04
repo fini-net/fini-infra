@@ -7,5 +7,8 @@ set -euo pipefail
 # Wait for cloud-init to complete
 cloud-init status --wait
 
+# Verify the hardening config is syntactically valid for next boot
+sshd -t
+
 # Verify sshd is running and will accept connections on next boot
 systemctl is-active sshd

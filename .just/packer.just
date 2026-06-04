@@ -51,7 +51,7 @@ packer-docs:
     fi
 
     # generate packer inspect output
-    INSPECT_OUTPUT=$(packer inspect {{pk_dir}}/fini-debian.pkr.hcl 2>&1)
+    INSPECT_OUTPUT=$(packer inspect {{pk_dir}} 2>&1)
 
     # inject between markers
     BEFORE=$(sed -n "1,/${START_MARKER}/p" "$README" | head -n -1)

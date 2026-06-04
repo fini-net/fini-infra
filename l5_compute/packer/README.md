@@ -36,7 +36,7 @@ and tagged with `fini-debian12-hardened-latest` for downstream lookup.
 | `04-sysctl.sh` | 3.1, 1.1 | Kernel params, disable unused filesystems |
 | `05-file-permissions.sh` | 1.1, 1.7, 4.1 | File perms, `/tmp` mount options, login banners |
 | `06-pam.sh` | 5.3, 5.4 | Password quality, lockout, expiration, PAM config |
-| `07-auditd.sh` | 4.1 | Audit logging rules and configuration |
+| `07-auditd.sh` | 4.1 | Audit logging rules and configuration (immutable — rule changes require reboot) |
 | `08-fail2ban.sh` | 4.2 | Intrusion detection with SSH jail |
 | `09-ufw.sh` | 3.6 | UFW default deny with SSH allow |
 | `10-unattended-upgrades.sh` | 2.1 | Automatic security patches |
