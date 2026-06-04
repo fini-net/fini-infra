@@ -14,7 +14,7 @@ source "digitalocean" "debian-hardened" {
   size             = var.size
   ssh_username     = "root"
   ssh_keypair_name = var.ssh_keypair_name
-  snapshot_name    = var.snapshot_name_prefix
+  snapshot_name    = var.snapshot_name
   snapshot_tags = [
     "fini-debian12-hardened-latest",
     "cis-level1",

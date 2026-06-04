@@ -16,7 +16,6 @@ backend = systemd
 enabled = true
 port = ssh
 filter = sshd
-logpath = /var/log/auth.log
 maxretry = 3
 bantime = 900
 EOF

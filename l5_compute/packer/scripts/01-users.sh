@@ -9,6 +9,9 @@ if ! id "$DEPLOY_USER" &>/dev/null; then
 fi
 
 # CIS 1.3 - NOPASSWD sudo for deploy user
+# NOTE: NOPASSWD: ALL is used for deployment automation convenience.
+# The deploy user is SSH key-only (no password auth), so the security
+# boundary is SSH key protection rather than sudo scoping.
 cat > /etc/sudoers.d/"$DEPLOY_USER" <<EOF
 $DEPLOY_USER ALL=(ALL) NOPASSWD: ALL
 EOF

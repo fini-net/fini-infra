@@ -31,17 +31,15 @@ jobs:
           version: ~1.11
 
       - name: Packer Init
-        run: |
-          cd l5_compute/packer
-          packer init .
+        working-directory: l5_compute/packer
+        run: packer init .
 
       - name: Packer Validate
-        run: |
-          cd l5_compute/packer
-          packer validate .
+        working-directory: l5_compute/packer
+        run: packer validate .
         env:
           PKR_VAR_deploy_public_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFakeKeyForCIValidationOnly"
-          PKR_VAR_snapshot_name_prefix: "ci-validation"
+          PKR_VAR_snapshot_name: "ci-validation"
           PKR_VAR_digitalocean_token: "fake-token-for-ci-validation"
 
       - name: Packer Format Check

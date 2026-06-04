@@ -18,7 +18,7 @@ just packer-build
 | `base_image` | DigitalOcean image slug | `debian-12-x64` | no |
 | `ssh_keypair_name` | DO-registered SSH key name | `deploy-fini` | no |
 | `deploy_public_key` | Public key for deploy user's authorized_keys | - | yes |
-| `snapshot_name_prefix` | Versioned snapshot name (git tag + timestamp) | - | yes |
+| `snapshot_name` | Versioned snapshot name (git tag + timestamp) | - | yes |
 | `digitalocean_token` | DigitalOcean API token (from 1Password) | - | yes |
 
 ## Snapshot Naming

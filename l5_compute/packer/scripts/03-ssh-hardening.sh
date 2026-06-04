@@ -3,13 +3,12 @@ set -euo pipefail
 
 # CIS 5.2 - SSH hardening (do NOT disable root login yet — that's in 11-lockdown.sh)
 
-# shellcheck disable=SC2034
-SSHD_CONFIG="/etc/ssh/sshd_config"
 SSHD_CONFIG_DIR="/etc/ssh/sshd_config.d"
 
 # CIS 5.2.1 - Ensure permissions on /etc/ssh are 600/700
 chmod 700 /etc/ssh
-chmod 600 /etc/ssh/ssh_host_*
+chmod 600 /etc/ssh/ssh_host_*_key
+chmod 644 /etc/ssh/ssh_host_*_key.pub
 
 # CIS 5.2.2 - Ensure SSH Protocol is set to 2 (default on Debian 12)
 # CIS 5.2.3 - Ensure SSH LogLevel is set to INFO

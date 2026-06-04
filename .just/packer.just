@@ -20,7 +20,7 @@ packer-build:
     fi
 
     # derive snapshot version from git tags
-    GIT_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "0.0.0")
+    GIT_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "untagged")
     TIMESTAMP=$(date +%Y-%m-%d-%H%M)
     SNAPSHOT_NAME="${GIT_TAG}-${TIMESTAMP}"
 
@@ -31,7 +31,7 @@ packer-build:
     packer build \
         -var "deploy_public_key=${DEPLOY_PUB_KEY}" \
         -var "digitalocean_token=${DIGITALOCEAN_TOKEN}" \
-        -var "snapshot_name_prefix=${SNAPSHOT_NAME}" \
+        -var "snapshot_name=${SNAPSHOT_NAME}" \
         {{pk_dir}}
 
 # regenerate Packer docs in README (injects packer inspect output)

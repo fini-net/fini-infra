@@ -28,8 +28,8 @@ variable "deploy_public_key" {
   sensitive   = true
 }
 
-variable "snapshot_name_prefix" {
-  description = "Prefix for the snapshot name (typically git tag + timestamp)"
+variable "snapshot_name" {
+  description = "Versioned snapshot name (git tag + timestamp)"
   type        = string
 }
 
