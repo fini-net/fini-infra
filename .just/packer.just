@@ -50,6 +50,11 @@ packer-docs:
         exit 1
     fi
 
+    if ! grep -q "$START_MARKER" "$README" || ! grep -q "$END_MARKER" "$README"; then
+        echo "{{RED}}ERROR: Markers not found in $README — expected $START_MARKER and $END_MARKER{{NORMAL}}"
+        exit 1
+    fi
+
     # generate packer inspect output
     INSPECT_OUTPUT=$(packer inspect {{pk_dir}} 2>&1)
 
