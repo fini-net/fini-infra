@@ -29,6 +29,7 @@ packer-build:
 
     packer build \
         -var "deploy_public_key=${DEPLOY_PUB_KEY}" \
+        -var "digitalocean_token=${DIGITALOCEAN_TOKEN}" \
         -var "snapshot_name_prefix=${SNAPSHOT_NAME}" \
         {{pk_dir}}
 
@@ -67,7 +68,11 @@ packer-docs:
         echo "$AFTER"
     } > "$README"
 
-    # clean up trailing blank lines
-    sed -i '' -e :a -e '/^\n*$/{$d;N;};/\n$/ba' "$README"
+    # clean up trailing blank lines (portable across macOS and Linux)
+    if [[ "$(uname)" = "Darwin" ]]; then
+        sed -i '' -e :a -e '/^\n*$/{$d;N;};/\n$/ba' "$README"
+    else
+        sed -i -e :a -e '/^\n*$/{$d;N;};/\n$/ba' "$README"
+    fi
 
     echo "{{GREEN}}Packer docs injected into $README{{NORMAL}}"

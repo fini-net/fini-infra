@@ -28,17 +28,7 @@ net.ipv6.conf.default.accept_source_route = 0
 # CIS 3.2.1 - Enable SYN cookies
 net.ipv4.tcp_syncookies = 1
 
-# CIS 3.2.2 - Configure ICMP redirects to not be accepted
-net.ipv4.conf.all.accept_redirects = 0
-net.ipv4.conf.default.accept_redirects = 0
-
-# CIS 3.2.3 - Do not send ICMP redirects
-net.ipv4.conf.all.send_redirects = 0
-net.ipv4.conf.default.send_redirects = 0
-
-# CIS 3.2.4 - Do not accept IP source route packets
-net.ipv4.conf.all.accept_source_route = 0
-net.ipv4.conf.default.accept_source_route = 0
+# (CIS 3.2.2–3.2.4 are covered by 3.1.2–3.1.4 above: accept_redirects, send_redirects, accept_source_route)
 
 # CIS 3.2.5 - Log martians
 net.ipv4.conf.all.log_martians = 1

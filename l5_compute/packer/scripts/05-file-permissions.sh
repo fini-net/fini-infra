@@ -5,10 +5,13 @@ set -euo pipefail
 
 # CIS 1.1.2 - Ensure /tmp is configured (separate mount with nodev/noexec/nosuid)
 if ! mount | grep -q ' /tmp '; then
-    # Remount /tmp with secure options if it exists as a mount, otherwise set up tmpfiles.d
-    cp /usr/share/systemd/tmp.mount /etc/systemd/system/tmp.mount
-    sed -i 's/Options=mode=1777,strictatime,nosuid,nodev/Options=mode=1777,strictatime,nosuid,nodev,noexec/' /etc/systemd/system/tmp.mount
-    systemctl enable tmp.mount
+    if [[ -f /usr/share/systemd/tmp.mount ]]; then
+        cp /usr/share/systemd/tmp.mount /etc/systemd/system/tmp.mount
+        sed -i 's/Options=mode=1777,strictatime,nosuid,nodev/Options=mode=1777,strictatime,nosuid,nodev,noexec/' /etc/systemd/system/tmp.mount
+        systemctl enable tmp.mount
+    else
+        echo "WARNING: /usr/share/systemd/tmp.mount not found — skipping /tmp hardening" >&2
+    fi
 fi
 
 # CIS 1.1.4 - Ensure noexec on /dev/shm

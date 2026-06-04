@@ -23,16 +23,23 @@ EOF
 chmod 644 "$PAM_PWQUALITY"
 
 # CIS 5.3.2 - Ensure lockout for failed password attempts
-cat > /etc/pam.d/common-auth <<'EOF'
-# PAM common-auth with faillock
-auth    required                        pam_faillock.so preauth audit silent deny=5 unlock_time=900
-auth    [success=1 default=ignore]      pam_unix.so nullok try_first_pass
-auth    requisite                       pam_deny.so
-auth    required                        pam_faillock.so authfail audit deny=5 unlock_time=900
-auth    required                        pam_permit.so
+# Use pam-auth-update with a custom profile instead of overwriting common-auth,
+# which preserves entries added by other Debian packages (pam_cap, pam_systemd, etc.)
+FAILLOCK_PROFILE="/usr/share/pam-configs/faillock"
+
+cat > "$FAILLOCK_PROFILE" <<'EOF'
+Name: Faillock authentication profile
+Default: yes
+Priority: 256
+Auth-Type: Primary
+Auth:
+    required      pam_faillock.so preauth audit silent deny=5 unlock_time=900
+Auth-Initial:
+    required      pam_faillock.so authfail audit deny=5 unlock_time=900
 EOF
 
-chmod 644 /etc/pam.d/common-auth
+chmod 644 "$FAILLOCK_PROFILE"
+pam-auth-update --force
 
 # CIS 5.3.3 - Ensure password reuse is limited
 # Debian uses pam_pwhistory for this

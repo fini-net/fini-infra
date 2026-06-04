@@ -34,7 +34,7 @@ space_left_action = SYSLOG
 action_mail_acct = root
 admin_space_left = 50
 admin_space_left_action = ROTATE
-disk_full_action = HALT
+disk_full_action = ROTATE
 disk_error_action = HALT
 EOF
 
@@ -90,4 +90,4 @@ cat > /etc/audit/rules.d/audit.rules <<'EOF'
 EOF
 
 chmod 600 /etc/audit/rules.d/audit.rules
-augenrule --load
+augenrules --load

@@ -20,9 +20,11 @@ DEPLOY_HOME=$(eval echo "~$DEPLOY_USER")
 mkdir -p "$DEPLOY_HOME/.ssh"
 chmod 700 "$DEPLOY_HOME/.ssh"
 
-# Inject the deploy public key from Packer variable
-if [[ -n "${DEPLOY_PUBLIC_KEY:-}" ]]; then
-    echo "$DEPLOY_PUBLIC_KEY" > "$DEPLOY_HOME/.ssh/authorized_keys"
+# Inject the deploy public key from Packer variable (required — without it the image is inaccessible)
+if [[ -z "${DEPLOY_PUBLIC_KEY:-}" ]]; then
+    echo "ERROR: DEPLOY_PUBLIC_KEY is empty — deploy user will have no SSH access" >&2
+    exit 1
 fi
+echo "$DEPLOY_PUBLIC_KEY" > "$DEPLOY_HOME/.ssh/authorized_keys"
 chmod 600 "$DEPLOY_HOME/.ssh/authorized_keys"
 chown -R "$DEPLOY_USER:$DEPLOY_USER" "$DEPLOY_HOME/.ssh"
