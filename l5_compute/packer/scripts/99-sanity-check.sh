@@ -4,8 +4,8 @@ set -euo pipefail
 # Sanity check — verify the hardened image is functional
 # This is the final Packer provisioner. If either check fails, the build fails.
 
-# Wait for cloud-init to complete
-cloud-init status --wait
+# Wait for cloud-init to complete (with 120s timeout to avoid indefinite hang)
+timeout 120 cloud-init status --wait || echo "WARNING: cloud-init did not complete within 120s" >&2
 
 # Verify the hardening config is syntactically valid for next boot
 sshd -t

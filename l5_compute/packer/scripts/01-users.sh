@@ -19,7 +19,7 @@ chmod 440 /etc/sudoers.d/"$DEPLOY_USER"
 visudo -c
 
 # CIS 1.1 - SSH key-only access for deploy user
-DEPLOY_HOME=$(eval echo "~$DEPLOY_USER")
+DEPLOY_HOME=$(getent passwd "$DEPLOY_USER" | cut -d: -f6)
 mkdir -p "$DEPLOY_HOME/.ssh"
 chmod 700 "$DEPLOY_HOME/.ssh"
 

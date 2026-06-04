@@ -73,16 +73,16 @@ chmod 644 /etc/group
 chmod 600 /etc/gshadow
 
 # CIS 4.1 - Ensure permissions on /etc/passwd- are 644
-chmod 644 /etc/passwd-
+[[ -f /etc/passwd- ]] && chmod 644 /etc/passwd-
 
 # CIS 4.1 - Ensure permissions on /etc/shadow- are 600
-chmod 600 /etc/shadow-
+[[ -f /etc/shadow- ]] && chmod 600 /etc/shadow-
 
 # CIS 4.1 - Ensure permissions on /etc/group- are 644
-chmod 644 /etc/group-
+[[ -f /etc/group- ]] && chmod 644 /etc/group-
 
 # CIS 4.1 - Ensure permissions on /etc/gshadow- are 600
-chmod 600 /etc/gshadow-
+[[ -f /etc/gshadow- ]] && chmod 600 /etc/gshadow-
 
 # CIS 4.2 - Ensure no duplicate UIDs exist
 awk -F: '++a[$3]>1{print $3}' /etc/passwd | while read -r uid; do
