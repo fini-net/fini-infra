@@ -41,6 +41,10 @@ EOF
 
 chmod 640 /etc/audit/auditd.conf
 
+# Pre-create sudo.log so auditd watch rule doesn't warn on missing file
+touch /var/log/sudo.log
+chmod 640 /var/log/sudo.log
+
 # CIS 4.1.x - Audit rules for key system events
 cat > /etc/audit/rules.d/audit.rules <<'EOF'
 # CIS 4.1.7 - Ensure login events are collected
@@ -80,9 +84,6 @@ cat > /etc/audit/rules.d/audit.rules <<'EOF'
 -w /etc/sudoers.d/ -p wa -k scope
 
 # CIS 4.1.15 - Ensure system administrator actions are collected
-# Pre-create sudo.log so auditd watch rule doesn't warn on missing file
-touch /var/log/sudo.log
-chmod 640 /var/log/sudo.log
 -w /var/log/sudo.log -p wa -k actions
 
 # CIS 4.1.16 - Ensure kernel module loading/unloading is collected

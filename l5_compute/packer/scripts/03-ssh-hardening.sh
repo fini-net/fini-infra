@@ -10,7 +10,7 @@ chmod 755 /etc/ssh
 chmod 600 /etc/ssh/ssh_host_*_key
 chmod 644 /etc/ssh/ssh_host_*_key.pub
 
-# CIS 5.2.2 - Ensure SSH Protocol is set to 2 (default on Debian 12)
+# CIS 5.2.2 - Ensure SSH Protocol is set to 2 (default on Debian 12; Protocol 1 removed in OpenSSH 7.6)
 # CIS 5.2.3 - Ensure SSH LogLevel is set to INFO
 # CIS 5.2.4 - Ensure SSH root login is disabled (done in 11-lockdown.sh)
 # CIS 5.2.5 - Ensure SSH PermitEmptyPasswords is disabled
@@ -27,7 +27,6 @@ chmod 644 /etc/ssh/ssh_host_*_key.pub
 # CIS 5.2.16 - Ensure only strong KEX algorithms are used
 
 cat > "$SSHD_CONFIG_DIR/hardening.conf" <<'EOF'
-Protocol 2
 LogLevel INFO
 # Intentionally prohibit-password (not "no") so Packer can SSH as root with a key
 # during the build.  11-lockdown.sh overrides this with PermitRootLogin no.

@@ -9,6 +9,10 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 source "${SCRIPT_DIR}/op-account.sh"
 
 DIGITALOCEAN_TOKEN=$(op item get digocean-fini2 --vault Private --format json | jq -r '.fields[] | select(.id=="credential") | .value')
+if [[ -z "$DIGITALOCEAN_TOKEN" ]]; then
+    echo "ERROR: Could not read DIGITALOCEAN_TOKEN from 1Password" >&2
+    exit 1
+fi
 export DIGITALOCEAN_TOKEN
 
 echo "DIGITALOCEAN_TOKEN exported." >&2

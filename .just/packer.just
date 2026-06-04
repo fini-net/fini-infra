@@ -56,6 +56,7 @@ packer-docs:
     fi
 
     # generate packer inspect output
+    packer init {{pk_dir}}
     INSPECT_OUTPUT=$(packer inspect {{pk_dir}} 2>&1)
 
     # inject between markers

@@ -19,7 +19,7 @@ net.ipv4.conf.default.accept_redirects = 0
 net.ipv6.conf.all.accept_redirects = 0
 net.ipv6.conf.default.accept_redirects = 0
 
-# CIS 3.1.4 - Disable.accept_source_route
+# CIS 3.1.4 - Disable accept_source_route
 net.ipv4.conf.all.accept_source_route = 0
 net.ipv4.conf.default.accept_source_route = 0
 net.ipv6.conf.all.accept_source_route = 0
