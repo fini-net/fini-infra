@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+export DEBIAN_FRONTEND=noninteractive
 
 # CIS 5.2 - SSH hardening (do NOT disable root login yet — that's in 11-lockdown.sh)
 

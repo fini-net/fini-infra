@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+export DEBIAN_FRONTEND=noninteractive
 
 # CIS 1.1 - Create deploy user with sudo access
 DEPLOY_USER="deploy"

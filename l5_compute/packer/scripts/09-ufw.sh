@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+export DEBIAN_FRONTEND=noninteractive
 
 # CIS 3.6 - Configure and enable UFW
 # WARNING: UFW is enabled at the END of this script (after all rules are in place)

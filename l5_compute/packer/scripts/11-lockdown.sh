@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+export DEBIAN_FRONTEND=noninteractive
 
 # CIS 5.2.4 - Disable root SSH login
 # THIS MUST BE THE LAST PROVISIONER before the sanity check.

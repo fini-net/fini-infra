@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+export DEBIAN_FRONTEND=noninteractive
 
 # Sanity check — verify the hardened image is functional
 # This is the final Packer provisioner. If either check fails, the build fails.
