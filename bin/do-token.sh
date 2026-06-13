@@ -4,7 +4,7 @@ set -euo pipefail
 # Exports DIGITALOCEAN_TOKEN for Packer's digitalocean builder.
 # Only sources op-account.sh (not the full Spaces/S3 creds).
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=./op-account.sh
 source "${SCRIPT_DIR}/op-account.sh"
 

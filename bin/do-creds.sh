@@ -2,7 +2,7 @@
 set -euo pipefail
 command -v jq &>/dev/null || { echo "ERROR: jq is required but not installed." >&2; exit 1; }
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=./op-account.sh
 source "${SCRIPT_DIR}/op-account.sh"
 
