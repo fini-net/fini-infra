@@ -1,7 +1,7 @@
 variable "region" {
   description = "DigitalOcean region for the build droplet"
   type        = string
-  default     = "ric1"
+  default     = "nyc3"
 }
 
 variable "size" {
