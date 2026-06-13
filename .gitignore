@@ -44,3 +44,5 @@ inc/
 .terraform.lock.hcl
 #terraform.tfvars
 *.tfplan
+
+/packer.log
