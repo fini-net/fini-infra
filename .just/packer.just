@@ -27,12 +27,13 @@ packer-build:
     echo "{{BLUE}}Building hardened Debian 12 image...{{NORMAL}}"
     echo "  Snapshot name: ${SNAPSHOT_NAME}"
 
-    packer init {{pk_dir}}
+    cd {{pk_dir}}
+    packer init .
     packer build \
         -var "deploy_public_key=${DEPLOY_PUB_KEY}" \
         -var "digitalocean_token=${DIGITALOCEAN_TOKEN}" \
         -var "snapshot_name=${SNAPSHOT_NAME}" \
-        {{pk_dir}}
+        .
 
 # regenerate Packer docs in README (injects packer inspect output)
 [group('packer')]
@@ -41,7 +42,8 @@ packer-docs:
     # shellcheck disable=SC1083
     set -euo pipefail
 
-    README="{{pk_dir}}/README.md"
+    cd {{pk_dir}}
+    README="README.md"
     START_MARKER="<!-- BEGIN_PACKER_DOCS -->"
     END_MARKER="<!-- END_PACKER_DOCS -->"
 
@@ -56,8 +58,8 @@ packer-docs:
     fi
 
     # generate packer inspect output
-    packer init {{pk_dir}}
-    INSPECT_OUTPUT=$(packer inspect {{pk_dir}} 2>&1)
+    packer init .
+    INSPECT_OUTPUT=$(packer inspect . 2>&1)
 
     # inject between markers
     BEFORE=$(sed -n "1,/${START_MARKER}/p" "$README" | sed '$d')
