@@ -56,7 +56,7 @@ packer-check:
         echo "{{GREEN}}No orphaned Packer droplets found{{NORMAL}}"
     fi
 
-    SNAPSHOTS=$(doctl compute image list-user --format "ID,Name,Type" --no-header 2>/dev/null | grep -i packer || true)
+    SNAPSHOTS=$(doctl compute image list-user --format "ID,Name,Tags" --no-header 2>/dev/null | grep -i "cis-level1\|fini-debian12" || true)
     if [[ -n "$SNAPSHOTS" ]]; then
         echo "{{RED}}Orphaned Packer snapshots found:{{NORMAL}}"
         echo "$SNAPSHOTS"

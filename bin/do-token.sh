@@ -8,7 +8,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=./op-account.sh
 source "${SCRIPT_DIR}/op-account.sh"
 
-DIGITALOCEAN_TOKEN=$(op item get digocean-fini2 --vault Private --format json | jq -r '.fields[] | select(.id=="credential") | .value')
+DIGITALOCEAN_TOKEN=$(op item get digocean-fini2 --vault Private --format json | jq -r '.fields[] | select(.label=="credential") | .value')
 if [[ -z "$DIGITALOCEAN_TOKEN" ]]; then
     echo "ERROR: Could not read DIGITALOCEAN_TOKEN from 1Password" >&2
     exit 1

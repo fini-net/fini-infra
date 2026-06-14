@@ -13,7 +13,7 @@ just packer-build
 
 | Name | Description | Default | Required |
 | ---- | ----------- | ------- | :------: |
-| `region` | DigitalOcean region for build droplet | `ric1` | no |
+| `region` | DigitalOcean region for build droplet | `nyc3` | no |
 | `size` | Droplet size for build | `s-1vcpu-1gb` | no |
 | `base_image` | DigitalOcean image slug | `debian-12-x64` | no |
 | `ssh_keypair_name` | DO-registered SSH key name | `deploy-fini` | no |

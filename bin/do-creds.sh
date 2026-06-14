@@ -9,9 +9,9 @@ source "${SCRIPT_DIR}/op-account.sh"
 echo "Reading creds from 1password...."
 
 BUCKETS_JSON=$(op item get allbuckets-fini-2025 --vault Private --format json)
-AWS_ACCESS_KEY_ID=$(echo "$BUCKETS_JSON" | jq -r '.fields[] | select(.id=="access_key") | .value')
+AWS_ACCESS_KEY_ID=$(echo "$BUCKETS_JSON" | jq -r '.fields[] | select(.label=="access_key") | .value')
 export AWS_ACCESS_KEY_ID
-AWS_SECRET_ACCESS_KEY=$(echo "$BUCKETS_JSON" | jq -r '.fields[] | select(.id=="secret_key") | .value')
+AWS_SECRET_ACCESS_KEY=$(echo "$BUCKETS_JSON" | jq -r '.fields[] | select(.label=="secret_key") | .value')
 export AWS_SECRET_ACCESS_KEY
 
 SPACES_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
