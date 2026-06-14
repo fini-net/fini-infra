@@ -2,6 +2,16 @@
 set -euo pipefail
 export DEBIAN_FRONTEND=noninteractive
 
+# Wait for cloud-init to finish (it runs apt-get concurrently on fresh DO images)
+timeout 120 cloud-init status --wait 2>/dev/null || true
+
+# Wait for any other apt processes to release the lock
+while fuser /var/lib/apt/lists/lock >/dev/null 2>&1 || \
+      fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do
+    echo "Waiting for apt lock to be released..."
+    sleep 5
+done
+
 # CIS 2.2 - Remove unnecessary packages
 UNNECESSARY_PACKAGES=(
     avahi-daemon
