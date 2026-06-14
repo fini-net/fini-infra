@@ -30,10 +30,48 @@ packer-build:
     cd {{pk_dir}}
     packer init .
     packer build \
+        -on-error=abort \
+        -color=false \
         -var "deploy_public_key=${DEPLOY_PUB_KEY}" \
         -var "digitalocean_token=${DIGITALOCEAN_TOKEN}" \
         -var "snapshot_name=${SNAPSHOT_NAME}" \
-        .
+        . 2>&1 | tee /tmp/packer-build.log
+
+# check for orphaned packer droplets or snapshots left behind by failed builds
+[group('packer')]
+packer-check:
+    #!/usr/bin/env bash
+    # shellcheck disable=SC1083
+    set -euo pipefail
+    source bin/do-token.sh
+
+    FOUND=0
+
+    DROPLETS=$(doctl compute droplet list --format "ID,Name,Status,Tags" --no-header 2>/dev/null | grep -i packer || true)
+    if [[ -n "$DROPLETS" ]]; then
+        echo "{{RED}}Orphaned Packer droplets found:{{NORMAL}}"
+        echo "$DROPLETS"
+        FOUND=1
+    else
+        echo "{{GREEN}}No orphaned Packer droplets found{{NORMAL}}"
+    fi
+
+    SNAPSHOTS=$(doctl compute image list-user --format "ID,Name,Type" --no-header 2>/dev/null | grep -i packer || true)
+    if [[ -n "$SNAPSHOTS" ]]; then
+        echo "{{RED}}Orphaned Packer snapshots found:{{NORMAL}}"
+        echo "$SNAPSHOTS"
+        FOUND=1
+    else
+        echo "{{GREEN}}No orphaned Packer snapshots found{{NORMAL}}"
+    fi
+
+    if [[ "$FOUND" -eq 1 ]]; then
+        echo ""
+        echo "{{YELLOW}}Hint: delete droplets with 'doctl compute droplet delete <ID> --force'{{NORMAL}}"
+        echo "{{YELLOW}}Hint: delete snapshots with 'doctl compute image delete <ID> --force'{{NORMAL}}"
+    fi
+
+    exit "$FOUND"
 
 # regenerate Packer docs in README (injects packer inspect output)
 [group('packer')]
