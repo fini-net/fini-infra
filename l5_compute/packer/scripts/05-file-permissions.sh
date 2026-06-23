@@ -14,7 +14,7 @@ if ! findmnt -n -o OPTIONS /tmp 2>/dev/null | grep -qE '(^|,)noexec(,|$)'; then
         mkdir -p /etc/systemd/system/tmp.mount.d
         cat > /etc/systemd/system/tmp.mount.d/hardening.conf <<'EOF'
 [Mount]
-        Options=mode=1777,strictatime,nosuid,nodev,noexec
+Options=mode=1777,strictatime,nosuid,nodev,noexec
 EOF
         systemctl daemon-reload
         systemctl enable tmp.mount
@@ -34,7 +34,7 @@ Description=Memory filesystem on /dev/shm
 What=tmpfs
 Where=/dev/shm
 Type=tmpfs
-    Options=defaults,noexec,nosuid,nodev
+Options=defaults,noexec,nosuid,nodev
 EOF
     systemctl daemon-reload
     systemctl enable dev-shm.mount

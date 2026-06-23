@@ -13,7 +13,7 @@ variable "size" {
   type        = string
   default     = "s-1vcpu-1gb"
   validation {
-    condition     = can(regex("^s-[0-9]+vcpu-[0-9]+gb$|^c-[0-9]+vcpu-[0-9]+gb$|^g-[0-9]+vcpu-[0-9]+gb$|^so[0-9]+_.*$", var.size))
+    condition     = can(regex("^(s|c|c2|m|m3|g)-[0-9]+vcpu-[0-9]+gb$|^so[0-9]+_.*$", var.size))
     error_message = "Must be a valid DigitalOcean droplet size slug (e.g., s-1vcpu-1gb)."
   }
 }

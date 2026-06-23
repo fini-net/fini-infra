@@ -104,4 +104,8 @@ cat > /etc/audit/rules.d/audit.rules <<'EOF'
 EOF
 
 chmod 600 /etc/audit/rules.d/audit.rules
+
+# augenrules --load exercises the rules against this build droplet's kernel
+# as a parse/validity check only — the droplet is discarded after the build.
+# The rules on disk (/etc/audit/rules.d/audit.rules) take effect on first boot.
 augenrules --load

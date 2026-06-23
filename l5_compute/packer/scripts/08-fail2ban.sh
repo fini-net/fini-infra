@@ -8,7 +8,7 @@ JAIL_LOCAL="/etc/fail2ban/jail.local"
 
 cat > "$JAIL_LOCAL" <<'EOF'
 [DEFAULT]
-bantime = 600
+bantime = 900
 findtime = 600
 maxretry = 5
 backend = systemd

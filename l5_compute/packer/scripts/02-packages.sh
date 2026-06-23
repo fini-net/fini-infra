@@ -44,7 +44,9 @@ UNNECESSARY_PACKAGES=(
 
 # apt-get silently skips packages that aren't installed, so a single batched
 # call replaces the per-package loop (avoids 19 dpkg-lock acquisitions).
-# --ignore-missing suppresses "not installed" noise without hiding real errors.
+# --ignore-missing is a no-op on remove (apt-get remove already skips absent
+# packages), but kept for forward-compat in case the call is ever repurposed.
+# The 2>/dev/null redirection is what actually suppresses "not installed" noise.
 apt-get -y remove --ignore-missing "${UNNECESSARY_PACKAGES[@]}" 2>/dev/null || true
 
 # CIS 2.3 - Install required hardening packages

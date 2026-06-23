@@ -74,4 +74,49 @@ and tagged with `fini-debian12-hardened-latest` for downstream lookup.
 
 <!-- BEGIN_PACKER_DOCS -->
 
+```console
+Packer Inspect: HCL2 mode
+
+> input-variables:
+
+var.base_image: "debian-12-x64"
+var.deploy_public_key: "<unknown>"
+var.digitalocean_token: "<unknown>"
+var.region: "nyc3"
+var.size: "s-1vcpu-1gb"
+var.snapshot_name: "<unknown>"
+var.ssh_keypair_name: "deploy-fini"
+var.ssh_private_key_file: "~/.ssh/deploy_fini"
+
+> local-variables:
+
+
+> builds:
+
+  > <unnamed build 0>:
+
+    sources:
+
+      digitalocean.debian-hardened
+
+    provisioners:
+
+      shell
+      shell
+      shell
+      shell
+      shell
+      shell
+      shell
+      shell
+      shell
+      shell
+      shell
+      shell
+
+    post-processors:
+
+      <no post-processor>
+```
+
 <!-- END_PACKER_DOCS -->
