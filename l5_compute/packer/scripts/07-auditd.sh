@@ -8,7 +8,7 @@ export DEBIAN_FRONTEND=noninteractive
 # auditd is installed via 02-packages.sh
 
 # CIS 4.1.2 - Ensure auditd service is enabled
-systemctl enable auditd
+systemctl enable --now auditd
 
 # CIS 4.1.3 - Ensure auditing for processes that start prior to auditd is enabled
 # (GRUB_CMDLINE_LINUX — Debian 12 uses systemd so we configure the kernel param)

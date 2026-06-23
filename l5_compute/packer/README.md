@@ -44,6 +44,15 @@ and tagged with `fini-debian12-hardened-latest` for downstream lookup.
 | `11-lockdown.sh` | 5.2.4 | Disable root SSH login (last step) |
 | `99-sanity-check.sh` | - | Verify `cloud-init` and `sshd` are functional |
 
+## Limitations
+
+- **Snap is unsupported.** CIS 1.1.1 disables the `squashfs` kernel module
+  (`install squashfs /bin/true` in `04-sysctl.sh`). Snap packages mount squashfs
+  images, so any `snap install` on a provisioned host will silently fail at
+  kernel-module load. If snap-based tooling is required, use a different image
+  or override `04-sysctl.sh` to keep squashfs enabled (and accept the
+  associated CIS deviation).
+
 ## Prerequisites
 
 - 1Password CLI authenticated (`op signin`)

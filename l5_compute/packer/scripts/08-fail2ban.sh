@@ -23,4 +23,4 @@ EOF
 
 chmod 644 "$JAIL_LOCAL"
 
-systemctl enable fail2ban
+systemctl enable --now fail2ban

@@ -94,4 +94,9 @@ done
 sed -i 's/^UMASK\s\+.*/UMASK 027/' /etc/login.defs
 sed -i 's/^USERGROUPS_ENAB\s\+.*/USERGROUPS_ENAB yes/' /etc/login.defs
 
-# CIS 5.4.4 - Ensure default shell for new users is not bash (not needed, keep bash)
+# CIS 5.4.4 - Ensure default shell for new users is not bash
+# Skipped: deploy automation assumes bash as the default interactive shell for new
+# users. Switching to a more restrictive default (e.g. /bin/sh) would break
+# provisioning scripts and operator expectations. Accept this residual risk per
+# project decision; mitigate via the locked-down sudoers entry for the deploy
+# user (see 01-users.sh) and the absence of general interactive logins.

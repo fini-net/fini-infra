@@ -10,8 +10,10 @@ echo "Reading creds from 1password...."
 
 BUCKETS_JSON=$(op item get allbuckets-fini-2025 --vault Private --format json)
 AWS_ACCESS_KEY_ID=$(echo "$BUCKETS_JSON" | jq -r '.fields[] | select(.label=="access_key") | .value')
+[[ -n "$AWS_ACCESS_KEY_ID" ]] || { echo "ERROR: access_key not found in 1Password item 'allbuckets-fini-2025'" >&2; exit 1; }
 export AWS_ACCESS_KEY_ID
 AWS_SECRET_ACCESS_KEY=$(echo "$BUCKETS_JSON" | jq -r '.fields[] | select(.label=="secret_key") | .value')
+[[ -n "$AWS_SECRET_ACCESS_KEY" ]] || { echo "ERROR: secret_key not found in 1Password item 'allbuckets-fini-2025'" >&2; exit 1; }
 export AWS_SECRET_ACCESS_KEY
 
 SPACES_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
