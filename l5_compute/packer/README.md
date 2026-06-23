@@ -17,6 +17,7 @@ just packer-build
 | `size` | Droplet size for build | `s-1vcpu-1gb` | no |
 | `base_image` | DigitalOcean image slug | `debian-12-x64` | no |
 | `ssh_keypair_name` | DO-registered SSH key name | `deploy-fini` | no |
+| `ssh_private_key_file` | Local path to the private key matching ssh_keypair_name | `~/.ssh/deploy_fini` | no |
 | `deploy_public_key` | Public key for deploy user's authorized_keys | - | yes |
 | `snapshot_name` | Versioned snapshot name (git tag + timestamp) | - | yes |
 | `digitalocean_token` | DigitalOcean API token (from 1Password) | - | yes |

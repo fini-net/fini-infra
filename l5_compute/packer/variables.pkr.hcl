@@ -2,12 +2,20 @@ variable "region" {
   description = "DigitalOcean region for the build droplet"
   type        = string
   default     = "nyc3"
+  validation {
+    condition     = contains(["nyc1", "nyc3", "ams3", "sfo3", "sgp1", "lon1", "fra1", "tor1", "blr1", "syd1"], var.region)
+    error_message = "Must be a valid DigitalOcean region slug."
+  }
 }
 
 variable "size" {
   description = "DigitalOcean droplet size for the build"
   type        = string
   default     = "s-1vcpu-1gb"
+  validation {
+    condition     = can(regex("^s-[0-9]+vcpu-[0-9]+gb$|^c-[0-9]+vcpu-[0-9]+gb$|^g-[0-9]+vcpu-[0-9]+gb$|^so[0-9]+_.*$", var.size))
+    error_message = "Must be a valid DigitalOcean droplet size slug (e.g., s-1vcpu-1gb)."
+  }
 }
 
 variable "base_image" {
@@ -20,6 +28,12 @@ variable "ssh_keypair_name" {
   description = "Name of the DO-registered SSH key for Packer build access"
   type        = string
   default     = "deploy-fini"
+}
+
+variable "ssh_private_key_file" {
+  description = "Local path to the private key matching ssh_keypair_name"
+  type        = string
+  default     = "~/.ssh/deploy_fini"
 }
 
 variable "deploy_public_key" {

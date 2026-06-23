@@ -24,7 +24,7 @@ packer-build:
     TIMESTAMP=$(date +%Y-%m-%d-%H%M)
     SNAPSHOT_NAME="${GIT_TAG}-${TIMESTAMP}"
 
-    # log to repo-root .cache (gitignored via *.log)
+    # log to repo-root .cache (gitignored via /.cache)
     LOG_DIR="{{justfile_directory()}}/.cache"
     mkdir -p "$LOG_DIR"
     LOG_FILE="${LOG_DIR}/packer.log"
@@ -43,7 +43,9 @@ packer-build:
         -var "snapshot_name=${SNAPSHOT_NAME}" \
         . 2>&1 | tee "$LOG_FILE"
 
-# check for orphaned packer droplets or snapshots left behind by failed builds
+# check for orphaned packer droplets left behind by failed builds
+# (snapshots are intentional build products, not orphans — they're listed
+# for visibility but never cause a non-zero exit)
 [group('packer')]
 packer-check:
     #!/usr/bin/env bash
@@ -64,17 +66,16 @@ packer-check:
 
     SNAPSHOTS=$(doctl compute image list-user --format "ID,Name,Tags" --no-header 2>/dev/null | grep -i "cis-level1\|fini-debian12" || true)
     if [[ -n "$SNAPSHOTS" ]]; then
-        echo "{{RED}}Orphaned Packer snapshots found:{{NORMAL}}"
+        echo ""
+        echo "{{BLUE}}Existing hardened snapshots (build products, not orphans):{{NORMAL}}"
         echo "$SNAPSHOTS"
-        FOUND=1
     else
-        echo "{{GREEN}}No orphaned Packer snapshots found{{NORMAL}}"
+        echo "{{GREEN}}No hardened snapshots found{{NORMAL}}"
     fi
 
     if [[ "$FOUND" -eq 1 ]]; then
         echo ""
         echo "{{YELLOW}}Hint: delete droplets with 'doctl compute droplet delete <ID> --force'{{NORMAL}}"
-        echo "{{YELLOW}}Hint: delete snapshots with 'doctl compute image delete <ID> --force'{{NORMAL}}"
     fi
 
     exit "$FOUND"
@@ -105,9 +106,10 @@ packer-docs:
     packer init .
     INSPECT_OUTPUT=$(packer inspect . 2>&1)
 
-    # inject between markers
-    BEFORE=$(sed -n "1,/${START_MARKER}/p" "$README" | sed '$d')
-    AFTER=$(sed -n "/${END_MARKER}/,\$p" "$README" | tail -n +2)
+    # inject between markers (use | delimiter so future marker changes
+    # containing / don't silently break the sed pattern)
+    BEFORE=$(sed -n "1,\|${START_MARKER}|p" "$README" | sed '$d')
+    AFTER=$(sed -n "\|${END_MARKER}|,\$p" "$README" | tail -n +2)
 
     {
         echo "$BEFORE"

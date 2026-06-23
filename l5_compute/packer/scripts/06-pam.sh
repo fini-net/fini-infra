@@ -45,6 +45,11 @@ EOF
 chmod 644 "$FAILLOCK_PROFILE"
 pam-auth-update --force
 
+# pam-auth-update can silently produce a broken PAM stack (exit 0 on
+# some failure modes) that would lock out sshd on the next build provisioner.
+# Verify sshd config still parses before continuing.
+sshd -t
+
 # CIS 5.3.3 - Ensure password reuse is limited
 # Debian uses pam_pwhistory for this
 if ! grep -q 'pam_pwhistory' /etc/pam.d/common-password; then
