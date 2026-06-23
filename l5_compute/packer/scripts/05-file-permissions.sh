@@ -8,8 +8,14 @@ export DEBIAN_FRONTEND=noninteractive
 # Check if /tmp is mounted with the required options; if not, set up a hardened mount unit
 if ! findmnt -n -o OPTIONS /tmp 2>/dev/null | grep -qE '(^|,)noexec(,|$)'; then
     if [[ -f /usr/share/systemd/tmp.mount ]]; then
-        cp /usr/share/systemd/tmp.mount /etc/systemd/system/tmp.mount
-        sed -i 's/Options=mode=1777,strictatime,nosuid,nodev/Options=mode=1777,strictatime,nosuid,nodev,noexec/' /etc/systemd/system/tmp.mount
+        # Use a drop-in rather than copying and sed-patching the vendor unit,
+        # so the override survives future Debian/systemd updates that may
+        # reorder or change the vendor Options line.
+        mkdir -p /etc/systemd/system/tmp.mount.d
+        cat > /etc/systemd/system/tmp.mount.d/hardening.conf <<'EOF'
+[Mount]
+Options=mode=1777,strictatime,nosuid,nodev,noexec
+EOF
         systemctl enable tmp.mount
     else
         echo "WARNING: /usr/share/systemd/tmp.mount not found — skipping /tmp hardening" >&2

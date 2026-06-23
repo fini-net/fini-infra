@@ -13,7 +13,9 @@ systemctl enable --now auditd
 # CIS 4.1.3 - Ensure auditing for processes that start prior to auditd is enabled
 # (GRUB_CMDLINE_LINUX — Debian 12 uses systemd so we configure the kernel param)
 if [[ -f /etc/default/grub ]]; then
-    if ! grep -q 'audit=1' /etc/default/grub; then
+    # Anchor to the GRUB_CMDLINE_LINUX line — a bare 'audit=1' match elsewhere
+    # (e.g. comments) would falsely skip the injection.
+    if ! grep -qE '^GRUB_CMDLINE_LINUX=.*audit=1' /etc/default/grub; then
         sed -i 's/GRUB_CMDLINE_LINUX="/GRUB_CMDLINE_LINUX="audit=1 /' /etc/default/grub
     fi
     update-grub

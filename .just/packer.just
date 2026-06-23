@@ -33,14 +33,17 @@ packer-build:
     echo "  Snapshot name: ${SNAPSHOT_NAME}"
     echo "  Log file:      ${LOG_FILE}"
 
+    # Pass sensitive vars via PKR_VAR_* environment variables rather than
+    # -var flags so they don't appear in the process argument list (ps, cmdline).
+    export PKR_VAR_deploy_public_key="$DEPLOY_PUB_KEY"
+    export PKR_VAR_digitalocean_token="$DIGITALOCEAN_TOKEN"
+    export PKR_VAR_snapshot_name="$SNAPSHOT_NAME"
+
     cd {{pk_dir}}
     packer init .
     packer build \
         -on-error=abort \
         -color=false \
-        -var "deploy_public_key=${DEPLOY_PUB_KEY}" \
-        -var "digitalocean_token=${DIGITALOCEAN_TOKEN}" \
-        -var "snapshot_name=${SNAPSHOT_NAME}" \
         . 2>&1 | tee "$LOG_FILE"
 
 # check for orphaned packer droplets left behind by failed builds
@@ -52,6 +55,8 @@ packer-check:
     # shellcheck disable=SC1083
     set -euo pipefail
     source bin/do-token.sh
+    # doctl authenticates from DIGITALOCEAN_ACCESS_TOKEN, not DIGITALOCEAN_TOKEN
+    export DIGITALOCEAN_ACCESS_TOKEN="$DIGITALOCEAN_TOKEN"
 
     FOUND=0
 

@@ -1,6 +1,8 @@
 # shellcheck shell=bash
 # This script must be sourced, not executed directly.
-set -euo pipefail
+# Deliberately does NOT set -euo pipefail: those flags would leak into the
+# calling shell's context and persist for the rest of the caller's execution.
+# Callers are expected to set their own shell options as appropriate.
 command -v jq &>/dev/null || { echo "ERROR: jq is required but not installed." >&2; return 1; }
 
 # Picks account whose user_uuid starts with "GBQ"; set OP_ACCOUNT in environment to override

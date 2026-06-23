@@ -43,18 +43,32 @@ Account:
 EOF
 
 chmod 644 "$FAILLOCK_PROFILE"
+
+# CIS 5.3.3 - Ensure password reuse is limited
+# Inject pam_pwhistory via a Debian pam-configs profile so pam-auth-update
+# manages it persistently. A raw sed into common-password would be silently
+# dropped by any subsequent pam-auth-update (e.g. an apt install of a PAM-aware
+# package) because there's no matching profile in /usr/share/pam-configs/.
+PWHISTORY_PROFILE="/usr/share/pam-configs/pwhistory"
+
+cat > "$PWHISTORY_PROFILE" <<'EOF'
+Name: pwhistory password profile
+Default: yes
+Priority: 192
+Password-Type: Primary
+Password:
+    required        pam_pwhistory.so remember=5 use_authtok
+EOF
+
+chmod 644 "$PWHISTORY_PROFILE"
+
+# Apply both profiles (faillock + pwhistory) in a single pam-auth-update run.
 pam-auth-update --force
 
 # pam-auth-update can silently produce a broken PAM stack (exit 0 on
 # some failure modes) that would lock out sshd on the next build provisioner.
 # Verify sshd config still parses before continuing.
 sshd -t
-
-# CIS 5.3.3 - Ensure password reuse is limited
-# Debian uses pam_pwhistory for this
-if ! grep -q 'pam_pwhistory' /etc/pam.d/common-password; then
-    sed -i '/pam_unix.so/i password\trequired\t\t\tpam_pwhistory.so remember=5 use_authtok' /etc/pam.d/common-password
-fi
 
 # CIS 5.4.1 - Ensure password expiration for accounts is 365 days or less
 sed -i 's/^PASS_MAX_DAYS\s.*/PASS_MAX_DAYS   365/' /etc/login.defs
