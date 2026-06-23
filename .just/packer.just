@@ -64,7 +64,7 @@ packer-check:
 
     FOUND=0
 
-    DROPLETS=$(doctl compute droplet list --format "ID,Name,Status,Tags" --no-header 2>/dev/null | grep -i packer || true)
+    DROPLETS=$(doctl compute droplet list --format "ID,Name,Status,Tags" --no-header 2>/dev/null | grep -iE 'packer-[0-9a-f]{8}-[0-9a-f]{4}' || true)
     if [[ -n "$DROPLETS" ]]; then
         echo "{{RED}}Orphaned Packer droplets found:{{NORMAL}}"
         echo "$DROPLETS"
