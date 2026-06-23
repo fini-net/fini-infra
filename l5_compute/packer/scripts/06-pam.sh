@@ -80,8 +80,8 @@ else
     # Fall back to checking every pam_*.so referenced in common-auth exists.
     missing=0
     while IFS= read -r mod; do
-        # Skip blank/comment lines and non-.so entries (e.g. pam_localuser).
-        [[ -z "$mod" || "$mod" == \#* ]] && continue
+        # Skip blank lines and non-.so entries (e.g. pam_localuser).
+        [[ -z "$mod" ]] && continue
         case "$mod" in
             pam_*.so|libpam*.so)
                 # Search standard lib paths for the module.
@@ -91,7 +91,7 @@ else
                 }
                 ;;
         esac
-    done < <(awk '{print $3}' /etc/pam.d/common-auth | sort -u)
+    done < <(grep -v '^[[:space:]]*#' /etc/pam.d/common-auth | awk 'NF>=3 {print $3}' | sort -u)
     [[ "$missing" -eq 0 ]] || { echo "ERROR: PAM stack validation failed" >&2; exit 1; }
 fi
 

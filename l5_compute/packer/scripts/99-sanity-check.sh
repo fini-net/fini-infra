@@ -8,10 +8,10 @@ export DEBIAN_FRONTEND=noninteractive
 # Verify the hardening config is syntactically valid for next boot
 sshd -t
 
-# Verify core services will be active on next boot
-systemctl is-active sshd
-systemctl is-active auditd
-systemctl is-active fail2ban
+# Verify core services are enabled to start on next boot
+systemctl is-enabled sshd
+systemctl is-enabled auditd
+systemctl is-enabled fail2ban
 
 # UFW must be enabled
 ufw status | grep -q "Status: active"

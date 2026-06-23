@@ -19,8 +19,12 @@ packer-build:
         exit 1
     fi
 
-    # derive snapshot version from git tags
-    GIT_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "untagged")
+    # derive snapshot version from git tags (required — untagged builds
+    # would be invisible to `packer-check`, which matches cis-level1|fini-debian12)
+    GIT_TAG=$(git describe --tags --abbrev=0 2>/dev/null) || {
+        echo "{{RED}}ERROR: no git tag found. Tag the repo before building.{{NORMAL}}"
+        exit 1
+    }
     TIMESTAMP=$(date +%Y-%m-%d-%H%M)
     SNAPSHOT_NAME="${GIT_TAG}-${TIMESTAMP}"
 

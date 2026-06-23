@@ -16,7 +16,7 @@ if [[ -f /etc/default/grub ]]; then
     # Anchor to the GRUB_CMDLINE_LINUX line — a bare 'audit=1' match elsewhere
     # (e.g. comments) would falsely skip the injection.
     if ! grep -qE '^GRUB_CMDLINE_LINUX=.*audit=1' /etc/default/grub; then
-        sed -i 's/GRUB_CMDLINE_LINUX="/GRUB_CMDLINE_LINUX="audit=1 /' /etc/default/grub
+        sed -i 's/^GRUB_CMDLINE_LINUX="/GRUB_CMDLINE_LINUX="audit=1 /' /etc/default/grub
     fi
     update-grub
     # Verify the injection actually landed — sed exits 0 on no-match, so a
@@ -57,9 +57,11 @@ chmod 640 /var/log/sudo.log
 # CIS 4.1.x - Audit rules for key system events
 cat > /etc/audit/rules.d/audit.rules <<'EOF'
 # CIS 4.1.7 - Ensure login events are collected
--w /var/log/faillog -p wa -k logins
+# Debian 12 uses pam_faillock (replaces pam_tally2 from Debian 11+);
+# /var/log/tallylog and /var/log/faillog no longer exist. Watch the
+# pam_faillock runtime directory to capture authentication failures.
+-w /var/run/faillock -p wa -k logins
 -w /var/log/lastlog -p wa -k logins
--w /var/log/tallylog -p wa -k logins
 
 # CIS 4.1.8 - Ensure session initiation events are collected
 -w /var/run/utmp -p wa -k session
