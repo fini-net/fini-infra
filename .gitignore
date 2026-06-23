@@ -45,4 +45,6 @@ inc/
 #terraform.tfvars
 *.tfplan
 
+# Packer
+*.log
 
