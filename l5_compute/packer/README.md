@@ -53,6 +53,14 @@ and tagged with `fini-debian12-hardened-latest` for downstream lookup.
   or override `04-sysctl.sh` to keep squashfs enabled (and accept the
   associated CIS deviation).
 
+- **Audit rules are immutable on a running instance.** `07-auditd.sh` loads
+  rules terminating in `-e 2`, which locks the audit subsystem at the kernel
+  level. Any operator attempting to add, remove, or modify audit rules on a
+  booted host will get a silent no-op from `augenrules`/`auditctl`. Tuning
+  audit rules requires editing `/etc/audit/rules.d/audit.rules` and rebooting
+  the instance — there is no live-reload path. Build-time rule changes are the
+  intended workflow.
+
 ## Prerequisites
 
 - 1Password CLI authenticated (`op signin`)

@@ -109,7 +109,7 @@ packer-docs:
 
     # generate packer inspect output
     packer init .
-    INSPECT_OUTPUT=$(packer inspect . 2>&1)
+    INSPECT_OUTPUT=$(packer inspect . 2>/dev/null)
 
     # inject between markers (use | delimiter so future marker changes
     # containing / don't silently break the sed pattern)
