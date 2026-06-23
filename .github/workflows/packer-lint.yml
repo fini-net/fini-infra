@@ -34,6 +34,13 @@ jobs:
         working-directory: l5_compute/packer
         run: packer init .
 
+      - name: Create placeholder SSH key
+        # Packer validate stat()s ssh_private_key_file even without building;
+        # supply a throwaway key so the default-var path resolves.
+        run: |
+          mkdir -p "$HOME/.ssh"
+          ssh-keygen -t ed25519 -N "" -f "$HOME/.ssh/deploy_fini"
+
       - name: Packer Validate
         working-directory: l5_compute/packer
         run: packer validate .
