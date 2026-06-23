@@ -50,11 +50,14 @@ UNNECESSARY_PACKAGES=(
 apt-get -y remove --ignore-missing "${UNNECESSARY_PACKAGES[@]}" 2>/dev/null || true
 
 # CIS 2.3 - Install required hardening packages
+# pamtester is included so the PAM stack can be exercised at build time
+# (see 06-pam.sh) — a syntax-only check would miss a broken /etc/pam.d chain.
 apt-get update
 apt-get -y install \
     auditd \
     fail2ban \
     libpam-pwquality \
+    pamtester \
     ufw \
     unattended-upgrades \
     apt-listchanges

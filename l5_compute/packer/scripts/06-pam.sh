@@ -72,28 +72,34 @@ sshd -t
 
 # sshd -t only validates sshd_config syntax — it does NOT exercise the PAM
 # stack. A broken /etc/pam.d/common-auth (e.g. missing module .so) would pass
-# sshd -t but fail every real authentication attempt. Verify the modules
-# referenced in the generated common-auth are actually loadable.
-if command -v pamtester >/dev/null 2>&1; then
-    pamtester sshd root authenticate >/dev/null 2>&1 || true
-else
-    # Fall back to checking every pam_*.so referenced in common-auth exists.
-    missing=0
-    while IFS= read -r mod; do
-        # Skip blank lines and non-.so entries (e.g. pam_localuser).
-        [[ -z "$mod" ]] && continue
-        case "$mod" in
-            pam_*.so|libpam*.so)
-                # Search standard lib paths for the module.
-                find /lib /usr/lib -name "$mod" -print 2>/dev/null | grep -q . || {
-                    echo "ERROR: PAM module $mod referenced but not found" >&2
-                    missing=1
-                }
-                ;;
-        esac
-    done < <(grep -v '^[[:space:]]*#' /etc/pam.d/common-auth | awk 'NF>=3 {print $3}' | sort -u)
-    [[ "$missing" -eq 0 ]] || { echo "ERROR: PAM stack validation failed" >&2; exit 1; }
+# sshd -t but fail every real authentication attempt. Exercise the account-
+# management stack via pamtester (installed in 02-packages.sh), using the
+# acct_mgmt action which loads pam_faillock.so / pam_unix.so without prompting
+# for credentials — an authenticate call would hang the non-interactive build.
+if ! pamtester sshd root acct_mgmt >/dev/null 2>&1; then
+    echo "ERROR: pamtester failed to validate the sshd account-management stack" >&2
+    exit 1
 fi
+
+# Backstop: verify every pam_*.so referenced in common-auth is actually
+# loadable on disk. pamtester covers the account stack; this catches a missing
+# module in the auth or password stacks that pamtester wouldn't reach via
+# acct_mgmt alone.
+missing=0
+while IFS= read -r mod; do
+    # Skip blank lines and non-.so entries (e.g. pam_localuser).
+    [[ -z "$mod" ]] && continue
+    case "$mod" in
+        pam_*.so|libpam*.so)
+            # Search standard lib paths for the module.
+            find /lib /usr/lib -name "$mod" -print 2>/dev/null | grep -q . || {
+                echo "ERROR: PAM module $mod referenced but not found" >&2
+                missing=1
+            }
+            ;;
+    esac
+done < <(grep -v '^[[:space:]]*#' /etc/pam.d/common-auth | awk 'NF>=3 {print $3}' | sort -u)
+[[ "$missing" -eq 0 ]] || { echo "ERROR: PAM stack validation failed" >&2; exit 1; }
 
 # CIS 5.4.1 - Ensure password expiration for accounts is 365 days or less
 sed -i 's/^PASS_MAX_DAYS\s.*/PASS_MAX_DAYS   365/' /etc/login.defs
