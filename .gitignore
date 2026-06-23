@@ -45,6 +45,5 @@ inc/
 #terraform.tfvars
 *.tfplan
 
-# Packer
-*.log
-
+# Project tmp files
+/.cache

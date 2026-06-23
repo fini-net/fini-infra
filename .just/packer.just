@@ -24,8 +24,14 @@ packer-build:
     TIMESTAMP=$(date +%Y-%m-%d-%H%M)
     SNAPSHOT_NAME="${GIT_TAG}-${TIMESTAMP}"
 
+    # log to repo-root .cache (gitignored via *.log)
+    LOG_DIR="{{justfile_directory()}}/.cache"
+    mkdir -p "$LOG_DIR"
+    LOG_FILE="${LOG_DIR}/packer.log"
+
     echo "{{BLUE}}Building hardened Debian 12 image...{{NORMAL}}"
     echo "  Snapshot name: ${SNAPSHOT_NAME}"
+    echo "  Log file:      ${LOG_FILE}"
 
     cd {{pk_dir}}
     packer init .
@@ -35,7 +41,7 @@ packer-build:
         -var "deploy_public_key=${DEPLOY_PUB_KEY}" \
         -var "digitalocean_token=${DIGITALOCEAN_TOKEN}" \
         -var "snapshot_name=${SNAPSHOT_NAME}" \
-        . 2>&1 | tee /tmp/packer-build.log
+        . 2>&1 | tee "$LOG_FILE"
 
 # check for orphaned packer droplets or snapshots left behind by failed builds
 [group('packer')]
