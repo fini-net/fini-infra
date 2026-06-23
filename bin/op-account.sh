@@ -12,6 +12,7 @@ if [[ -z "${OP_ACCOUNT:-}" ]]; then
 	OP_ACCOUNT=$(op account ls --format=json | jq -r '[.[] | select(.user_uuid | startswith("GBQ")).account_uuid][0] // empty')
 	if [[ -z "$OP_ACCOUNT" ]]; then
 		echo "ERROR: No 1Password account detected. Run 'op signin' first." >&2
+		# return 1 only aborts callers running under `set -e`; see header note above.
 		return 1
 	fi
 	export OP_ACCOUNT

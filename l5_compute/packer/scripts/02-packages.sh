@@ -42,9 +42,10 @@ UNNECESSARY_PACKAGES=(
     whois
 )
 
-for pkg in "${UNNECESSARY_PACKAGES[@]}"; do
-    apt-get -y remove "$pkg" 2>/dev/null || true
-done
+# apt-get silently skips packages that aren't installed, so a single batched
+# call replaces the per-package loop (avoids 19 dpkg-lock acquisitions).
+# --ignore-missing suppresses "not installed" noise without hiding real errors.
+apt-get -y remove --ignore-missing "${UNNECESSARY_PACKAGES[@]}" 2>/dev/null || true
 
 # CIS 2.3 - Install required hardening packages
 apt-get update

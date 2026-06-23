@@ -19,6 +19,12 @@ if [[ -f /etc/default/grub ]]; then
         sed -i 's/GRUB_CMDLINE_LINUX="/GRUB_CMDLINE_LINUX="audit=1 /' /etc/default/grub
     fi
     update-grub
+    # Verify the injection actually landed — sed exits 0 on no-match, so a
+    # single-quoted or unquoted GRUB_CMDLINE_LINUX would silently bypass CIS 4.1.3.
+    grep -q '^GRUB_CMDLINE_LINUX=.*audit=1' /etc/default/grub || {
+        echo "ERROR: audit=1 injection into GRUB_CMDLINE_LINUX failed" >&2
+        exit 1
+    }
 fi
 
 # CIS 4.1.4 - Ensure audit log storage size is configured

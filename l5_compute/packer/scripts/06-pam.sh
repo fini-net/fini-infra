@@ -70,6 +70,31 @@ pam-auth-update --force
 # Verify sshd config still parses before continuing.
 sshd -t
 
+# sshd -t only validates sshd_config syntax — it does NOT exercise the PAM
+# stack. A broken /etc/pam.d/common-auth (e.g. missing module .so) would pass
+# sshd -t but fail every real authentication attempt. Verify the modules
+# referenced in the generated common-auth are actually loadable.
+if command -v pamtester >/dev/null 2>&1; then
+    pamtester sshd root authenticate >/dev/null 2>&1 || true
+else
+    # Fall back to checking every pam_*.so referenced in common-auth exists.
+    missing=0
+    while IFS= read -r mod; do
+        # Skip blank/comment lines and non-.so entries (e.g. pam_localuser).
+        [[ -z "$mod" || "$mod" == \#* ]] && continue
+        case "$mod" in
+            pam_*.so|libpam*.so)
+                # Search standard lib paths for the module.
+                find /lib /usr/lib -name "$mod" -print 2>/dev/null | grep -q . || {
+                    echo "ERROR: PAM module $mod referenced but not found" >&2
+                    missing=1
+                }
+                ;;
+        esac
+    done < <(awk '{print $3}' /etc/pam.d/common-auth | sort -u)
+    [[ "$missing" -eq 0 ]] || { echo "ERROR: PAM stack validation failed" >&2; exit 1; }
+fi
+
 # CIS 5.4.1 - Ensure password expiration for accounts is 365 days or less
 sed -i 's/^PASS_MAX_DAYS\s.*/PASS_MAX_DAYS   365/' /etc/login.defs
 sed -i 's/^PASS_MIN_DAYS\s.*/PASS_MIN_DAYS   1/' /etc/login.defs
