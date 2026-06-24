@@ -9,6 +9,8 @@ SYSCTL_CONF="/etc/sysctl.d/99-hardening.conf"
 cat > "$SYSCTL_CONF" <<'EOF'
 # CIS 3.1.1 - Disable IP forwarding
 net.ipv4.ip_forward = 0
+net.ipv6.conf.all.forwarding = 0
+net.ipv6.conf.default.forwarding = 0
 
 # CIS 3.1.2 - Disable sending of redirects
 net.ipv4.conf.all.send_redirects = 0

@@ -12,6 +12,7 @@ bantime = 900
 findtime = 600
 maxretry = 5
 backend = systemd
+banaction = ufw
 
 [sshd]
 enabled = true

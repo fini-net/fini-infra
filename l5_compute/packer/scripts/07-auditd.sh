@@ -44,7 +44,7 @@ space_left_action = SYSLOG
 action_mail_acct = root
 admin_space_left = 50
 admin_space_left_action = ROTATE
-disk_full_action = ROTATE
+disk_full_action = SUSPEND
 disk_error_action = SYSLOG
 EOF
 
