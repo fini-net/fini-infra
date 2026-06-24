@@ -27,6 +27,9 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: ShellCheck provisioner scripts
+        run: shellcheck l5_compute/packer/scripts/*.sh
+
       - name: Setup Packer
         uses: hashicorp/setup-packer@1aa358be5cf73883762b302a3a03abd66e75b232 # v3.1.0
         with:

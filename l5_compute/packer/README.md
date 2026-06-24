@@ -111,6 +111,23 @@ recency, grep for `cis-level1|fini-debian12` instead (see
   the instance — there is no live-reload path. Build-time rule changes are the
   intended workflow.
 
+- **No build timeout.** `packer-build` passes `-on-error=abort` so a failed
+  provisioner exits cleanly, but a hung script (e.g. a network partition
+  mid-`apt-get`) will block indefinitely — Packer has no native build-timeout
+  for the DigitalOcean source. If a build hangs, abort it and remove the
+  orphaned build droplet by hand:
+
+  ```shell
+  source bin/do-token.sh
+  export DIGITALOCEAN_ACCESS_TOKEN="$DIGITALOCEAN_TOKEN"
+  doctl compute droplet list --format "ID,Name,Status" --no-header \
+    | grep -iE 'packer-[0-9a-f]{8}-[0-9a-f]{4}'
+  doctl compute droplet delete <id> --force
+  ```
+
+  `just packer-check` will also surface any orphaned Packer droplets left
+  behind by a failed or aborted build.
+
 ## Prerequisites
 
 - 1Password CLI authenticated (`op signin`)
