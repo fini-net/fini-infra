@@ -186,8 +186,10 @@ packer-docs:
         exit 1
     fi
 
-    if ! grep -q "$START_MARKER" "$README" || ! grep -q "$END_MARKER" "$README"; then
-        echo "{{RED}}ERROR: Markers not found in $README — expected $START_MARKER and $END_MARKER{{NORMAL}}"
+    START_COUNT=$(grep -c "$START_MARKER" "$README")
+    END_COUNT=$(grep -c "$END_MARKER" "$README")
+    if [[ "$START_COUNT" -ne 1 || "$END_COUNT" -ne 1 ]]; then
+        echo "{{RED}}ERROR: Markers in $README must appear exactly once each — found START=${START_COUNT}, END=${END_COUNT}{{NORMAL}}"
         exit 1
     fi
 
