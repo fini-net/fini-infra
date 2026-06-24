@@ -81,10 +81,11 @@ if ! pamtester sshd root acct_mgmt >/dev/null 2>&1; then
     exit 1
 fi
 
-# Backstop: verify every pam_*.so referenced in common-auth is actually
-# loadable on disk. pamtester covers the account stack; this catches a missing
-# module in the auth or password stacks that pamtester wouldn't reach via
-# acct_mgmt alone.
+# Backstop: verify every pam_*.so referenced across the PAM common-* stacks
+# is actually loadable on disk. pamtester (above) exercises the account stack
+# via acct_mgmt; this loop covers the auth, password, account, and session
+# stacks so a missing .so in any of them fails the build rather than silently
+# breaking authentication or password changes on a deployed droplet.
 missing=0
 while IFS= read -r mod; do
     # Skip blank lines and non-.so entries (e.g. pam_localuser).
@@ -98,7 +99,12 @@ while IFS= read -r mod; do
             }
             ;;
     esac
-done < <(grep -v '^[[:space:]]*#' /etc/pam.d/common-auth | awk 'NF>=3 {print $3}' | sort -u)
+done < <(grep -h -v '^[[:space:]]*#' \
+           /etc/pam.d/common-auth \
+           /etc/pam.d/common-account \
+           /etc/pam.d/common-password \
+           /etc/pam.d/common-session \
+         | awk 'NF>=3 {print $3}' | sort -u)
 [[ "$missing" -eq 0 ]] || { echo "ERROR: PAM stack validation failed" >&2; exit 1; }
 
 # CIS 5.4.1 - Ensure password expiration for accounts is 365 days or less
