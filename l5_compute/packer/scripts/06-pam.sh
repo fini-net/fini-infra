@@ -17,7 +17,7 @@ lcredit = -1
 ocredit = -1
 maxrepeat = 3
 maxsequence = 3
-dictcheck = 2
+dictcheck = 1
 enforce_for_root
 EOF
 

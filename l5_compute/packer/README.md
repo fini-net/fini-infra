@@ -92,7 +92,7 @@ recency, grep for `cis-level1|fini-debian12` instead (see
 | `09-ufw.sh` | 3.6 | UFW default deny with SSH allow |
 | `10-unattended-upgrades.sh` | 2.1 | Automatic security patches |
 | `11-lockdown.sh` | 5.2.4 | Disable root SSH login (last step) |
-| `99-sanity-check.sh` | - | Verify `cloud-init` and `sshd` are functional |
+| `99-sanity-check.sh` | - | Verify `sshd` is functional |
 
 ## Limitations
 
