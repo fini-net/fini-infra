@@ -25,7 +25,57 @@ just packer-build
 ## Snapshot Naming
 
 Snapshots are named `{git-tag}-YYYY-MM-DD-HHMM` (e.g., `v1.2.3-2026-06-03-1430`)
-and tagged with `fini-debian12-hardened-latest` for downstream lookup.
+and tagged with `fini-debian12-hardened-latest`, `cis-level1`, and `debian12`
+at build time.
+
+> **Note:** Packer-built droplet snapshots are exposed by the DigitalOcean API
+> under `/v2/snapshots`, not `/v2/images`. `doctl compute image list-user`
+> (which hits `/v2/images`) will not find them — use `doctl compute snapshot
+> list` instead.
+
+## Promotion
+
+`just packer-build` invokes `just packer-promote <snapshot-name>` after every
+successful build. The promote step ensures **exactly one** snapshot — the
+most recent successful build — carries the `fini-debian12-hardened-latest`
+tag:
+
+- applies `fini-debian12-hardened-latest` to the just-built snapshot
+  (defensively, in case it was stripped manually), and
+- removes that tag from every prior snapshot that still has it.
+
+Prior snapshots retain `cis-level1` and `debian12`; only the `latest` tag
+moves forward. If the promote step fails, `packer-build` exits non-zero —
+rerun `just packer-promote <snapshot-name>` by hand to recover (the recipe
+is idempotent).
+
+## Spinning Up a Droplet from a Snapshot
+
+```shell
+# source the DigitalOcean API token from 1Password
+source bin/do-token.sh
+export DIGITALOCEAN_ACCESS_TOKEN="$DIGITALOCEAN_TOKEN"
+
+# list snapshots tagged fini-debian12-hardened-latest (returns exactly one row)
+doctl compute snapshot list --format "ID,Name,Regions,Tags" --no-header \
+  | grep fini-debian12-hardened-latest
+
+# create a droplet from a snapshot (use the ID from the command above)
+doctl compute droplet create <name> \
+  --image <snapshot-id> \
+  --region nyc3 \
+  --size s-1vcpu-1gb \
+  --ssh-keys deploy-fini \
+  --wait
+```
+
+The `--image` flag accepts snapshot IDs as well as public image slugs. For
+production deployments, pin to a specific timestamped name (e.g.,
+`v4.2-2026-06-23-1242`) rather than floating to whatever currently carries
+`fini-debian12-hardened-latest` — the latest tag is a human-discovery aid,
+not a deployment pin. To enumerate every hardened snapshot regardless of
+recency, grep for `cis-level1|fini-debian12` instead (see
+`just packer-check`).
 
 ## CIS Level 1 Hardening
 
