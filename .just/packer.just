@@ -56,14 +56,14 @@ packer-build:
     # operator notices and re-runs `just packer-promote "$SNAPSHOT_NAME"`.
     just packer-promote "$SNAPSHOT_NAME"
 
-# promote a freshly built snapshot to "latest": apply the
-# fini-debian12-hardened-latest tag to it and strip that tag from every
-# other snapshot. Idempotent; safe to re-run. Invoked automatically by
-# packer-build; can also be called directly to recover from a failed
-# promote — `just packer-promote <snapshot-name>`.
+# promote a snapshot to "latest" (tag it, strip tag from all others)
 [group('packer')]
 packer-promote snapshot_name:
     #!/usr/bin/env bash
+    # Apply the fini-debian12-hardened-latest tag to the named snapshot and
+    # strip that tag from every other snapshot. Idempotent; safe to re-run.
+    # Invoked automatically by packer-build; can also be called directly to
+    # recover from a failed promote — `just packer-promote <snapshot-name>`.
     # shellcheck disable=SC1083
     set -euo pipefail
     source bin/do-token.sh
@@ -121,12 +121,12 @@ packer-promote snapshot_name:
 
     echo "{{GREEN}}promoted{{NORMAL}} ${NEW_NAME} (${NEW_ID}); untagged ${REMOVED} prior snapshot(s)"
 
-# check for orphaned packer droplets left behind by failed builds.
-# Snapshots are intentional build products, not orphans — they're listed
-# for visibility but never cause a non-zero exit.
+# check for orphaned packer droplets left by failed builds
 [group('packer')]
 packer-check:
     #!/usr/bin/env bash
+    # Snapshots are intentional build products, not orphans — they're listed
+    # for visibility but never cause a non-zero exit.
     # shellcheck disable=SC1083
     set -euo pipefail
     source bin/do-token.sh
