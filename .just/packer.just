@@ -186,7 +186,10 @@ packer-docs:
 
     # generate packer inspect output
     packer init .
-    INSPECT_OUTPUT=$(packer inspect . 2>/dev/null)
+    INSPECT_OUTPUT=$(packer inspect . 2>&1) || {
+        echo "{{RED}}ERROR: packer inspect failed{{NORMAL}}"
+        exit 1
+    }
 
     # inject between markers (use | delimiter so future marker changes
     # containing / don't silently break the sed pattern)
