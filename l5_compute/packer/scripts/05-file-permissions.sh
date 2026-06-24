@@ -7,7 +7,7 @@ export DEBIAN_FRONTEND=noninteractive
 # CIS 1.1.2 - Ensure /tmp is configured (separate mount with nodev/noexec/nosuid)
 # Check if /tmp is mounted with the required options; if not, set up a hardened mount unit
 if ! findmnt -n -o OPTIONS /tmp 2>/dev/null | grep -qE '(^|,)noexec(,|$)'; then
-    if [[ -f /usr/share/systemd/tmp.mount ]]; then
+    if [[ -f /usr/lib/systemd/system/tmp.mount ]]; then
         # Use a drop-in rather than copying and sed-patching the vendor unit,
         # so the override survives future Debian/systemd updates that may
         # reorder or change the vendor Options line.
@@ -19,7 +19,7 @@ EOF
         systemctl daemon-reload
         systemctl enable tmp.mount
     else
-        echo "WARNING: /usr/share/systemd/tmp.mount not found — skipping /tmp hardening" >&2
+        echo "WARNING: /usr/lib/systemd/system/tmp.mount not found — skipping /tmp hardening" >&2
     fi
 fi
 
@@ -35,6 +35,9 @@ What=tmpfs
 Where=/dev/shm
 Type=tmpfs
 Options=defaults,noexec,nosuid,nodev
+
+[Install]
+WantedBy=local-fs.target
 EOF
     systemctl daemon-reload
     systemctl enable dev-shm.mount

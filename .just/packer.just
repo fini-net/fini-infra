@@ -105,6 +105,7 @@ packer-promote snapshot_name:
 
     # Strip the tag from every other snapshot that currently has it.
     REMOVED=0
+    FAIL=0
     while IFS=$'\t' read -r OLD_ID OLD_NAME; do
         [[ -z "$OLD_ID" ]] && continue
         [[ "$OLD_ID" == "$NEW_ID" ]] && continue
@@ -114,10 +115,16 @@ packer-promote snapshot_name:
             REMOVED=$((REMOVED + 1))
         else
             echo "{{YELLOW}}warn: failed to untag ${OLD_NAME} (${OLD_ID}) — leaving in place{{NORMAL}}"
+            FAIL=$((FAIL + 1))
         fi
     done < <(printf '%s' "$SNAPSHOTS_JSON" \
         | jq -r --arg tag "$LATEST_TAG" \
                '.[] | select(.tags // [] | index($tag)) | [.id, .name] | @tsv')
+
+    if [[ "$FAIL" -gt 0 ]]; then
+        echo "{{RED}}ERROR: ${FAIL} snapshot(s) could not be untagged — '${LATEST_TAG}' invariant broken; re-run 'just packer-promote {{snapshot_name}}'{{NORMAL}}"
+        exit 1
+    fi
 
     echo "{{GREEN}}promoted{{NORMAL}} ${NEW_NAME} (${NEW_ID}); untagged ${REMOVED} prior snapshot(s)"
 
@@ -186,10 +193,14 @@ packer-docs:
 
     # generate packer inspect output
     packer init .
-    INSPECT_OUTPUT=$(packer inspect . 2>&1) || {
+    INSPECT_ERR="$(mktemp)"
+    INSPECT_OUTPUT=$(packer inspect . 2>"$INSPECT_ERR") || {
         echo "{{RED}}ERROR: packer inspect failed{{NORMAL}}"
+        cat "$INSPECT_ERR" >&2
+        rm -f "$INSPECT_ERR"
         exit 1
     }
+    rm -f "$INSPECT_ERR"
 
     # inject between markers (use | delimiter so future marker changes
     # containing / don't silently break the sed pattern)
