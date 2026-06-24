@@ -16,7 +16,6 @@ source "digitalocean" "debian-hardened" {
   ssh_keypair_name     = var.ssh_keypair_name
   ssh_private_key_file = var.ssh_private_key_file
   snapshot_name        = var.snapshot_name
-  build_timeout        = "30m"
   snapshot_tags = [
     "fini-debian12-hardened-latest",
     "cis-level1",
