@@ -7,11 +7,13 @@ on:
     branches: [main]
     paths:
       - '**/*.pkr.hcl'
+      - 'l5_compute/packer/scripts/**'
       - '.github/workflows/packer-lint.yml'
   pull_request:
     branches: [main]
     paths:
       - '**/*.pkr.hcl'
+      - 'l5_compute/packer/scripts/**'
       - '.github/workflows/packer-lint.yml'
 
 jobs:
