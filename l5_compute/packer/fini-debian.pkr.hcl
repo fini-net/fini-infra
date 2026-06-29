@@ -8,10 +8,10 @@ packer {
 }
 
 source "digitalocean" "debian-hardened" {
-  api_token            = var.digitalocean_token
-  image                = var.base_image
-  region               = var.region
-  size                 = var.size
+  api_token        = var.digitalocean_token
+  image            = var.base_image
+  region           = var.region
+  size             = var.size
   ssh_username     = "root"
   ssh_keypair_name = var.ssh_keypair_name
   snapshot_name    = var.snapshot_name
