@@ -66,12 +66,14 @@ packer-promote snapshot_name:
     # recover from a failed promote — `just packer-promote <snapshot-name>`.
     # shellcheck disable=SC1083
     set -euo pipefail
+    NEW_NAME="{{snapshot_name}}"
+    LATEST_TAG="fini-debian12-hardened-latest"
+    echo "{{GREEN}}Promoting snapshot '${NEW_NAME}' to '${LATEST_TAG}'{{NORMAL}}"
+    echo "  - Tagging '${NEW_NAME}' with '${LATEST_TAG}'"
+    echo "  - Stripping '${LATEST_TAG}' from all other snapshots"
     source bin/do-token.sh
     # doctl authenticates from DIGITALOCEAN_ACCESS_TOKEN, not DIGITALOCEAN_TOKEN
     export DIGITALOCEAN_ACCESS_TOKEN="$DIGITALOCEAN_TOKEN"
-
-    NEW_NAME="{{snapshot_name}}"
-    LATEST_TAG="fini-debian12-hardened-latest"
 
     # Resolve the new snapshot's ID by exact name match.
     # `doctl compute image list-user` does not expose Packer-built droplet
