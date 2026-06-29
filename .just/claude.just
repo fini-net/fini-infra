@@ -2,6 +2,11 @@
 
 claude_settings_file := ".claude/settings.local.json"
 
+# Launch Claude Code in the repo root (with arguments optionally)
+[group('Claude Code')]
+claude *args:
+    claude {{ args }}
+
 # Sort Claude Code permissions in canonical order
 [group('Claude Code')]
 claude_permissions_sort:
@@ -34,19 +39,19 @@ claude_permissions_sort:
     # Group 3: WebSearch (standalone)
     # Group 4: Other (future-proof)
     if jq '
-      .permissions.allow |= (
-        map(
-          if startswith("Bash(") then {type: "1-Bash", perm: .}
-          elif startswith("WebFetch(") then {type: "2-WebFetch", perm: .}
-          elif startswith("WebSearch") then {type: "3-WebSearch", perm: .}
-          else {type: "9-Other", perm: .}
-          end
+        .permissions.allow |= (
+            map(
+                if startswith("Bash(") then {type: "1-Bash", perm: .}
+                elif startswith("WebFetch(") then {type: "2-WebFetch", perm: .}
+                elif startswith("WebSearch") then {type: "3-WebSearch", perm: .}
+                else {type: "9-Other", perm: .}
+                end
+            ) |
+            sort_by([.type, .perm]) |
+            map(.perm)
         ) |
-        sort_by([.type, .perm]) |
-        map(.perm)
-      ) |
-      .permissions.deny |= sort |
-      .permissions.ask |= sort
+        .permissions.deny |= sort |
+        .permissions.ask |= sort
     ' "$BACKUP_FILE" > "{{ claude_settings_file }}"; then
 
         # Validate output JSON

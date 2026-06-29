@@ -13,7 +13,7 @@ sync:
     git pull
     git status --porcelain # stp
 
-# PR create v5.8
+# PR create v8.2
 [group('Process')]
 pr: _has_commits && pr_checks
     #!/usr/bin/env bash
@@ -54,11 +54,6 @@ pr: _has_commits && pr_checks
 
     gh pr create --title "$FIRST_COMMIT_MESSAGE" --body-file "$bodyfile"
     rm "$bodyfile"
-
-    if [[ ! -e ".github/workflows" ]]; then
-        echo "{{BLUE}}there are no workflows in this repo so there are no PR checks to watch{{NORMAL}}"
-        exit 0
-    fi
 
 # merge PR and return to starting point
 [group('Process')]
@@ -216,18 +211,23 @@ release rel_version:
 
 # watch GHAs then check for Copilot suggestions
 [group('Process')]
-pr_checks: && claude_review
+pr_checks: _on_a_pull_request && claude_review
     #!/usr/bin/env bash
 
-    # Use gh observer if installed, otherwise fall back to gh pr checks --watch
-    if gh observer --help >/dev/null 2>&1; then
-        echo ""
-        gh observer
+    # Skip workflow watcher when repo has no GitHub Actions workflows
+    if [[ -d ".github/workflows" ]]; then
+        # Use gh observer if installed, otherwise fall back to gh pr checks --watch
+        if gh observer --help >/dev/null 2>&1; then
+            echo ""
+            gh observer
+        else
+            just _wait_for_checks
+            gh pr checks --watch -i 5
+        fi
+        echo "" # blank line for visual space
     else
-        just _wait_for_checks
-        gh pr checks --watch -i 5
+        echo "{{BLUE}}no workflows in this repo - skipping workflow watcher{{NORMAL}}"
     fi
-    echo "" # blank line for visual space
 
     # Load repo metadata for conditional display
     if [[ -e ".just/repo-toml.sh" ]]; then
@@ -251,22 +251,23 @@ pr_checks: && claude_review
         COPILOT_COUNT_FILE="/tmp/copilot_count_${PR_REPO_OWNER}_${PR_REPO_NAME}_${PR_NUMBER}"
 
         # Capture GraphQL output
+        # Note: reviewThreads(first: 100) limits to 100 threads; see copilot_pick for comment.
         # shellcheck disable=SC2016
         COPILOT_JSON=$(gh api graphql \
             -F owner="$PR_REPO_OWNER" -F name="$PR_REPO_NAME" -F pr="$PR_NUMBER" \
-            --jq '[ .data.repository.pullRequest.reviews.nodes.[] | select(.author.login=="copilot-pull-request-reviewer") | .comments.nodes.[] ]' \
+            --jq '[ .data.repository.pullRequest.reviewThreads.nodes[] | select(.isResolved == false) | .comments.nodes[] | select(.author.login=="copilot-pull-request-reviewer") ]' \
             -f query='
             query($name: String!, $owner: String!, $pr: Int!) {
                 repository(owner: $owner, name: $name) {
                     pullRequest(number: $pr) {
-                        reviews(last: 20) {
+                        reviewThreads(first: 100) {
                             nodes {
-                                author {
-                                    resourcePath
-                                    login
-                                }
+                                isResolved
                                 comments(first: 100) {
                                     nodes {
+                                        author {
+                                            login
+                                        }
                                         body
                                         path
                                         originalLine
@@ -285,9 +286,9 @@ pr_checks: && claude_review
 
         # Display output to maintain current behavior
         if [[ "$COPILOT_COUNT" -eq 0 ]]; then
-            echo "🐈‍⬛ No Copilot suggestions - looks good!"
+            echo "🐈‍⬛ No unresolved Copilot suggestions - looks good!"
         else
-            echo "🐈‍⬛ Total Copilot suggestions: $COPILOT_COUNT"
+            echo "🐈‍⬛ Unresolved Copilot suggestions: $COPILOT_COUNT"
             echo "$COPILOT_JSON" | jq '.'
         fi
     else
@@ -382,9 +383,9 @@ claude_review: _on_a_pull_request
         COPILOT_COUNT=$(cat "$COPILOT_COUNT_FILE")
         echo ""
         if [[ "$COPILOT_COUNT" -eq 0 ]]; then
-            echo "🐈‍⬛ No Copilot suggestions - looks good!"
+            echo "🐈‍⬛ No unresolved Copilot suggestions - looks good!"
         else
-            echo "🐈‍⬛ Total Copilot suggestions: $COPILOT_COUNT"
+            echo "🐈‍⬛ Unresolved Copilot suggestions: $COPILOT_COUNT"
         fi
         rm -f "$COPILOT_COUNT_FILE"
     fi

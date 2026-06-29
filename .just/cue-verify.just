@@ -188,41 +188,71 @@ cue-sync-from-github:
         cp .repo.toml .repo.toml.backup
         echo "{{YELLOW}}Created backup: .repo.toml.backup{{NORMAL}}"
 
-        # Update .repo.toml using awk (portable across macOS and Linux)
-        GH_DESC_ESCAPED="${GH_DESC//\"/\\\"}"
+        # The state-aware awk program lives in .just/lib/cue_sync.awk so the
+        # test runner (.just/lib/cue_sync_test.sh) invokes the exact same
+        # logic. See issue #196 for why the program is no longer inlined.
+        # Behavior: handles three cases for each key (description, topics):
+        #   1. Active line (e.g. `topics = [...]`)        -> replace in place
+        #   2. Commented line (e.g. `# topics = [...]`)   -> replace in place
+        #   3. Missing line                               -> insert inside [about] block
+        # Missing keys are inserted at the end of the `[about]` block, *before*
+        # any trailing blank line that separates it from the next section,
+        # landing adjacent to the preceding key (e.g. `license`) rather than
+        # visually attaching to the next `[section]`. See issue #165 for the
+        # failure modes this addresses.
+        #
+        # Description is passed via the environment (desc=...), not awk's -v,
+        # because -v processes backslash escape sequences before the program
+        # runs, which would mangle backslashes in the GitHub description. The
+        # awk program applies TOML-escaping (backslash and double-quote) on
+        # emit, so the output is valid TOML regardless of the description's
+        # contents. See issue #198.
+        desc="$GH_DESC" awk -v topics="[$TOPICS_TOML]" \
+            -f .just/lib/cue_sync.awk .repo.toml > .repo.toml.tmp
+        mv .repo.toml.tmp .repo.toml
 
-        # Use state-aware awk that only matches within [about] section
-        awk -v desc="$GH_DESC_ESCAPED" -v topics="[$TOPICS_TOML]" '
-            /^\[about\]/ { in_about=1 }
-            /^\[/ && !/^\[about\]/ { in_about=0 }
-            in_about && /^description = / { print "description = \"" desc "\""; next }
-            in_about && /^topics = / { print "topics = " topics; next }
-            { print }
-        ' .repo.toml > .repo.toml.tmp && mv .repo.toml.tmp .repo.toml
-
-        # Validate the TOML is still valid after modification
+        # Validate the TOML is still valid after modification.
+        # NOTE: cue vet passing does NOT prove the sync wrote the right values
+        # (topics is optional in the CUE schema), so the backup is preserved
+        # until the trailing `just cue-verify` also passes. See issue #165.
         echo "{{BLUE}}Validating modified TOML...{{NORMAL}}"
-        if cue vet .repo.toml docs/repo-toml.cue; then
-            # Validation passed - safe to remove backup
-            rm .repo.toml.backup
-            echo "{{GREEN}}Successfully synced from GitHub to .repo.toml{{NORMAL}}"
-        else
-            # Validation failed - restore from backup
+        if ! cue vet .repo.toml docs/repo-toml.cue; then
             mv .repo.toml.backup .repo.toml
             echo "{{RED}}Sync failed - TOML validation error. Restored from backup.{{NORMAL}}"
             exit 1
         fi
+
+        # Run full verification (this catches silent topics/description write
+        # failures that cue vet cannot, by comparing against the GitHub API).
+        echo ""
+        echo "{{BLUE}}Running full verification...{{NORMAL}}"
+        if ! just cue-verify; then
+            mv .repo.toml.backup .repo.toml
+            echo "{{RED}}Sync failed - verification mismatch. Restored from backup.{{NORMAL}}"
+            exit 1
+        fi
+
+        rm .repo.toml.backup
+        echo "{{GREEN}}Successfully synced from GitHub to .repo.toml{{NORMAL}}"
     else
         echo "{{YELLOW}}.repo.toml not found - creating from GitHub metadata{{NORMAL}}"
 
         GIT_SSH="git@github.com:$ORG_NAME/$REPO_NAME.git"
         WEB_URL="https://github.com/$ORG_NAME/$REPO_NAME"
 
+        # TOML-escape the description for the new file: backslash -> \\ and
+        # double-quote -> \". Without this, a description containing a
+        # backslash (e.g. `C:\path`) produces invalid TOML and cue vet fails,
+        # leaving the repo unable to bootstrap .repo.toml on first sync.
+        # See issue #198.
+        GH_DESC_TOML="${GH_DESC//\\/\\\\}"
+        GH_DESC_TOML="${GH_DESC_TOML//\"/\\\"}"
+
         printf '%s\n' \
             "# .repo.toml" \
             "" \
             "[about]" \
-            "description = \"$GH_DESC\"" \
+            "description = \"$GH_DESC_TOML\"" \
             "topics = [$TOPICS_TOML]" \
             "" \
             "[urls]" \
@@ -238,16 +268,20 @@ cue-sync-from-github:
 
         # Validate the new TOML
         echo "{{BLUE}}Validating new TOML...{{NORMAL}}"
-        if cue vet .repo.toml docs/repo-toml.cue; then
-            echo "{{GREEN}}Created .repo.toml from GitHub metadata{{NORMAL}}"
-        else
+        if ! cue vet .repo.toml docs/repo-toml.cue; then
             rm .repo.toml
             echo "{{RED}}Failed to create valid .repo.toml{{NORMAL}}"
             exit 1
         fi
-    fi
 
-    # Run full verification to confirm sync worked
-    echo ""
-    echo "{{BLUE}}Running full verification...{{NORMAL}}"
-    just cue-verify
+        # Mirror existing-file branch: clean up on failure (no backup to restore).
+        echo ""
+        echo "{{BLUE}}Running full verification...{{NORMAL}}"
+        if ! just cue-verify; then
+            rm .repo.toml
+            echo "{{RED}}Newly created .repo.toml failed verification - file removed.{{NORMAL}}"
+            exit 1
+        fi
+
+        echo "{{GREEN}}Successfully synced from GitHub to .repo.toml{{NORMAL}}"
+    fi
