@@ -42,13 +42,27 @@ UNNECESSARY_PACKAGES=(
     whois
 )
 
-# apt-get remove exits 0 for packages that aren't installed, so a single
-# batched call replaces the per-package loop (avoids 19 dpkg-lock
-# acquisitions). --ignore-missing is a no-op on remove but kept for
-# forward-compat in case the call is ever repurposed. No stderr redirect:
-# genuine dpkg failures (broken state, dependency conflict, disk exhaustion)
-# must surface and abort the build rather than ship a half-hardened image.
-apt-get -y remove --ignore-missing "${UNNECESSARY_PACKAGES[@]}"
+# apt-get remove exits 0 for packages that aren't installed, but it
+# aborts (exit 100) if a named package isn't resolvable from any apt
+# source — e.g. ypbind/ypserv/nis on Debian 12, where NIS has been
+# dropped. --ignore-missing is accepted by remove but does NOT suppress
+# the "Unable to locate package" error for cache-absent names, so we
+# pre-filter against apt-cache and keep a single batched call (one
+# dpkg-lock acquisition) for everything apt actually knows about. The
+# full CIS list is retained intentionally even though some names are
+# dead on current Debian — defense-in-depth if the image or sources
+# change, and cheap to filter. No stderr redirect: genuine dpkg failures
+# (broken state, dependency conflict, disk exhaustion) must surface and
+# abort the build rather than ship a half-hardened image.
+REMOVABLE=()
+for pkg in "${UNNECESSARY_PACKAGES[@]}"; do
+    if apt-cache show "$pkg" >/dev/null 2>&1; then
+        REMOVABLE+=("$pkg")
+    fi
+done
+if [[ ${#REMOVABLE[@]} -gt 0 ]]; then
+    apt-get -y remove "${REMOVABLE[@]}"
+fi
 
 # CIS 2.3 - Install required hardening packages
 # pamtester is included so the PAM stack can be exercised at build time
