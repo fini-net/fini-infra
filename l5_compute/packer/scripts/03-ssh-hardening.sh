@@ -31,7 +31,8 @@ cat > "$SSHD_CONFIG_DIR/hardening.conf" <<'EOF'
 LogLevel INFO
 # Intentionally prohibit-password (not "no") so Packer can SSH as root with a key
 # during the build.  11-lockdown.sh writes 99-disable-root-login.conf, which sorts
-# before this file alphabetically and wins via sshd's first-match semantics.
+# lexicographically before 'hardening.conf' (digits precede letters in ASCII)
+# and wins via sshd's first-match semantics.
 PermitRootLogin prohibit-password
 PermitEmptyPasswords no
 PermitUserEnvironment no

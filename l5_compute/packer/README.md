@@ -80,7 +80,7 @@ recency, grep for `cis-level1|fini-debian12` instead (see
 
 | Script | CIS Section | Description |
 | ------ | ----------- | ----------- |
-| `01-users.sh` | 1.1, 1.3 | Create `deploy` user with `NOPASSWD: ALL` sudo, SSH key-only access |
+| `01-users.sh` | 5.4, 5.5 | Create `deploy` user with `NOPASSWD: ALL` sudo, SSH key-only access |
 | `02-packages.sh` | 2.2, 2.3 | Remove unnecessary packages/services, install hardening tools |
 | `03-ssh-hardening.sh` | 5.2 | SSH key-only auth, ciphers/MACs/KEX, timeouts |
 | `04-sysctl.sh` | 3.1, 1.1 | Kernel params, disable unused filesystems |
