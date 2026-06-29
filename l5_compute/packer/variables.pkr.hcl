@@ -30,12 +30,6 @@ variable "ssh_keypair_name" {
   default     = "deploy-fini"
 }
 
-variable "ssh_private_key_file" {
-  description = "Local path to the private key matching ssh_keypair_name"
-  type        = string
-  default     = "~/.ssh/deploy_fini"
-}
-
 variable "deploy_public_key" {
   description = "Public key to inject into the deploy user's authorized_keys"
   type        = string

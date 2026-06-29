@@ -12,10 +12,9 @@ source "digitalocean" "debian-hardened" {
   image                = var.base_image
   region               = var.region
   size                 = var.size
-  ssh_username         = "root"
-  ssh_keypair_name     = var.ssh_keypair_name
-  ssh_private_key_file = var.ssh_private_key_file
-  snapshot_name        = var.snapshot_name
+  ssh_username     = "root"
+  ssh_keypair_name = var.ssh_keypair_name
+  snapshot_name    = var.snapshot_name
   snapshot_tags = [
     "fini-debian12-hardened-latest",
     "cis-level1",
