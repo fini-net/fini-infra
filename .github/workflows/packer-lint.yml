@@ -1,0 +1,58 @@
+name: Packer Lint
+
+permissions: {}
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**/*.pkr.hcl'
+      - 'l5_compute/packer/scripts/**'
+      - '.github/workflows/packer-lint.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - '**/*.pkr.hcl'
+      - 'l5_compute/packer/scripts/**'
+      - '.github/workflows/packer-lint.yml'
+
+jobs:
+  packer-lint:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: ShellCheck provisioner scripts
+        run: shellcheck l5_compute/packer/scripts/*.sh
+
+      - name: Setup Packer
+        uses: hashicorp/setup-packer@ce93c3c08a6c2ff2275bf4b54ff0d9a75f6c9789 # v3.4.0
+        with:
+          version: ~1.11
+
+      - name: Packer Init
+        working-directory: l5_compute/packer
+        run: packer init .
+
+      - name: Create placeholder SSH key
+        # Packer validate stat()s ssh_private_key_file even without building;
+        # supply a throwaway key so the default-var path resolves.
+        run: |
+          mkdir -p "$HOME/.ssh"
+          ssh-keygen -t ed25519 -N "" -f "$HOME/.ssh/deploy_fini"
+
+      - name: Packer Validate
+        working-directory: l5_compute/packer
+        run: packer validate .
+        env:
+          PKR_VAR_deploy_public_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFakeKeyForCIValidationOnly"
+          PKR_VAR_snapshot_name: "ci-validation"
+          PKR_VAR_digitalocean_token: "fake-token-for-ci-validation"
+
+      - name: Packer Format Check
+        run: packer fmt -check -recursive l5_compute/packer/

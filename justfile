@@ -10,6 +10,7 @@ import? '.just/shellcheck.just'
 import? '.just/compliance.just'
 import? '.just/deploy-ssh.just'
 import? '.just/gh-process.just'
+import? '.just/packer.just'
 
 # list recipes (default works without naming it)
 [group('example')]
@@ -21,6 +22,7 @@ list:
 [group('terraform')]
 tf-plan dir comment="": (check-tf-init dir)
 	#!/usr/bin/env bash
+	# shellcheck disable=SC2157
 	set -euo pipefail # strict
 	source bin/do-creds.sh "{{dir}}" # also chdir's
 
@@ -30,13 +32,15 @@ tf-plan dir comment="": (check-tf-init dir)
 		tofu plan -out="$plan_file"
 
 		comment_file=$(mktemp /tmp/gh_pr_comment.XXXXXX)
-		echo "## tofu plan {{dir}}" > $comment_file
-		echo "" >> $comment_file
-		echo "{{comment}}" >> $comment_file
-		echo "" >> $comment_file
-		echo "\`\`\`terraform" >> $comment_file
-		tofu show -no-color "$plan_file" >> $comment_file
-		echo "\`\`\`" >> $comment_file
+		{
+			echo "## tofu plan {{dir}}"
+			echo ""
+			echo "{{comment}}"
+			echo ""
+			echo "\`\`\`terraform"
+			tofu show -no-color "$plan_file"
+			echo "\`\`\`"
+		} > "$comment_file"
 
 		pr_number=$(gh pr view --json number | jq '.number')
 		gh pr comment "$pr_number" --body-file "$comment_file"
@@ -49,6 +53,7 @@ tf-plan dir comment="": (check-tf-init dir)
 [group('terraform')]
 tf-apply dir approve="": (check-tf-init dir)
 	#!/usr/bin/env bash
+	# shellcheck disable=SC2157
 	set -euo pipefail # strict
 	source bin/do-creds.sh "{{dir}}" # also chdir's
 	just tf-docs "{{dir}}"
@@ -69,6 +74,7 @@ tf-apply dir approve="": (check-tf-init dir)
 [group('terraform')]
 tf-init dir options="":
 	#!/usr/bin/env bash
+	# shellcheck disable=SC1083
 	set -euo pipefail
 	source bin/do-creds.sh "{{dir}}" # also chdir's
 	tofu init {{options}}
@@ -103,6 +109,7 @@ check-tf-init dir:
 [group('terraform')]
 tf-state dir subcommand="list": (check-tf-init dir)
 	#!/usr/bin/env bash
+	# shellcheck disable=SC1083,SC2157
 	set -euo pipefail
 	source bin/do-creds.sh "{{dir}}" # also chdir's
 	if [[ -n "{{subcommand}}" ]]; then
@@ -124,6 +131,7 @@ tf-output dir: (check-tf-init dir)
 [group('terraform')]
 tf-destroy dir approve="": (check-tf-init dir)
 	#!/usr/bin/env bash
+	# shellcheck disable=SC2157
 	set -euo pipefail
 	source bin/do-creds.sh "{{dir}}" # also chdir's
 	echo "{{RED}}⚠️   WARNING: About to destroy resources in {{dir}}{{NORMAL}}"
