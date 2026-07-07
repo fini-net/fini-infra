@@ -82,7 +82,7 @@ tf-init dir options="":
 # terraform-docs manually (tf-apply includes this)
 [group('terraform')]
 tf-docs dir:
-	terraform-docs markdown table --output-file README.md --output-mode inject  {{dir}}
+	terraform-docs --config .terraform-docs.yml {{dir}}
 
 # conditional tofu init
 [group('terraform')]
