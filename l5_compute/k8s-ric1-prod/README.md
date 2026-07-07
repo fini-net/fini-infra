@@ -67,8 +67,8 @@ just tf-output l5_compute/k8s-ric1-prod
 
 | Name | Version |
 | ---- | ------- |
-| digitalocean | ~> 2.0 |
-| onepassword | ~> 2.0 |
+| digitalocean | 2.85.0 |
+| onepassword | 2.2.1 |
 
 ## Modules
 

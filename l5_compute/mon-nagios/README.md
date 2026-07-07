@@ -81,7 +81,7 @@ This droplet runs Nagios for infrastructure monitoring and alerting.
 ## Requirements
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | terraform | >= 1.10 |
 | digitalocean | ~> 2.0 |
 | onepassword | ~> 2.0 |
@@ -89,9 +89,9 @@ This droplet runs Nagios for infrastructure monitoring and alerting.
 ## Providers
 
 | Name | Version |
-|------|---------|
-| digitalocean | 2.71.0 |
-| onepassword | 2.2.1 |
+| ---- | ------- |
+| digitalocean | ~> 2.0 |
+| onepassword | ~> 2.0 |
 
 ## Modules
 
@@ -100,14 +100,14 @@ No modules.
 ## Resources
 
 | Name | Type |
-|------|------|
+| ---- | ---- |
 | [digitalocean_droplet.mon_nagios](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/droplet) | resource |
 | [onepassword_item.digocean_fini](https://registry.terraform.io/providers/1Password/onepassword/latest/docs/data-sources/item) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | droplet\_name | Name of the monitoring droplet | `string` | `"mon00"` | no |
 | hostname | Fully qualified domain name for the monitoring server | `string` | `"mon00.fini.net"` | no |
 | onepassword\_path | Path to the 1password op command. | `string` | `"op"` | no |
@@ -115,7 +115,7 @@ No modules.
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | droplet\_id | The ID of the monitoring droplet |
 | droplet\_urn | The URN of the monitoring droplet |
 | hostname | The fully qualified domain name for the monitoring server |
