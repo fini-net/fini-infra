@@ -121,11 +121,12 @@ tf-state dir subcommand="list": (check-tf-init dir)
 
 # tofu output
 [group('terraform')]
-tf-output dir: (check-tf-init dir)
+tf-output dir *args: (check-tf-init dir)
 	#!/usr/bin/env bash
+	# shellcheck disable=SC1083
 	set -euo pipefail
 	source bin/do-creds.sh "{{dir}}" # also chdir's
-	tofu output
+	tofu output {{args}}
 
 # tofu destroy
 [group('terraform')]

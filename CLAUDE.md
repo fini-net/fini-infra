@@ -58,7 +58,7 @@ The justfile imports modules from `.just/` directory (`gh-process.just` for GitH
 - `just tf-docs <dir>` - Generate Terraform docs and inject into README (uses terraform-docs)
 - `just check-tf-init <dir>` - Conditionally initialize if .terraform dir missing
 - `just tf-state <dir> [subcommand]` - View or manipulate Terraform state (default: list)
-- `just tf-output <dir>` - Display Terraform outputs
+- `just tf-output <dir> [args...]` - Display Terraform outputs (extra args passed to `tofu output`, e.g. `--json`, or an output name)
 - `just tf-destroy <dir> [approve]` - Destroy infrastructure (with 3-second warning); optionally auto-approve
 - `just tf-import <dir> <addr> <id>` - Import existing resource into Terraform state
 
