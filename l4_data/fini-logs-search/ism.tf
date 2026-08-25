@@ -167,5 +167,13 @@ resource "opensearch_index" "app_logs_initial" {
 
   force_destroy = true
 
+  # mappings/settings are inherited from opensearch_index_template.app_logs_template
+  # at creation time and baked into state. Managing them in two places causes
+  # perpetual drift (and a forced replacement on every plan), so ignore them here
+  # and let the template remain the single source of truth.
+  lifecycle {
+    ignore_changes = [mappings, number_of_shards, number_of_replicas, refresh_interval]
+  }
+
   depends_on = [opensearch_index_template.app_logs_template]
 }
