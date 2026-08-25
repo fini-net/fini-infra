@@ -13,7 +13,7 @@ from DigitalOcean App Platform applications, particularly from the
 
 - **Layer**: L4 Data (databases and data stores)
 - **Engine**: OpenSearch 2.x (managed by DigitalOcean)
-- **Initial Size**: 1 node, 1vCPU, 2GB RAM
+- **Initial Size**: 1 node, 2vCPU, 4GB RAM
 - **Region**: NYC3
 
 ## Usage
@@ -112,8 +112,8 @@ To scale the cluster:
 
 Available sizes include:
 
-- `db-s-1vcpu-2gb` (current)
-- `db-s-2vcpu-4gb`
+- `db-s-1vcpu-2gb`
+- `db-s-2vcpu-4gb` (current)
 - `db-s-4vcpu-8gb`
 - And larger sizes as needed
 
@@ -127,8 +127,9 @@ Monitor cluster health through:
 
 ## Cost Considerations
 
-The current configuration (1 node, 1vCPU, 2GB) is the smallest available OpenSearch
-cluster size. Review DigitalOcean pricing before scaling.
+The current configuration (1 node, 2vCPU, 4GB) is a small OpenSearch cluster
+size suitable for production log analytics. Review DigitalOcean pricing before
+scaling further.
 
 ## Related Resources
 
