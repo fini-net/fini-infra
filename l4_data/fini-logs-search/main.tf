@@ -17,6 +17,14 @@ resource "digitalocean_database_cluster" "logs_search" {
     "purpose:log-analytics",
     "layer:l4-data"
   ]
+
+  # DigitalOcean assigns a concrete minor version (e.g., "2.19") at cluster creation
+  # and manages subsequent minor version upgrades. The opensearch_version variable
+  # governs only the initial major version requested; ignore the resolved version
+  # so plans don't drift against the API-reported value.
+  lifecycle {
+    ignore_changes = [version]
+  }
 }
 
 # Firewall rules for OpenSearch cluster

@@ -16,6 +16,16 @@ resource "opensearch_ism_policy" "app_logs_policy" {
               rollover = {
                 min_index_age          = "7d"
                 min_primary_shard_size = "10gb"
+                # OpenSearch auto-injects copy_alias=false on rollover actions;
+                # declare it explicitly so plan output doesn't drift against state.
+                copy_alias = false
+              }
+              # OpenSearch auto-injects default retry config into every ISM action;
+              # declare it explicitly so plan output doesn't drift against state.
+              retry = {
+                backoff = "exponential"
+                count   = 3
+                delay   = "1m"
               }
             }
           ]
@@ -35,6 +45,11 @@ resource "opensearch_ism_policy" "app_logs_policy" {
               replica_count = {
                 number_of_replicas = 0
               }
+              retry = {
+                backoff = "exponential"
+                count   = 3
+                delay   = "1m"
+              }
             }
           ]
           transitions = [
@@ -51,6 +66,11 @@ resource "opensearch_ism_policy" "app_logs_policy" {
           actions = [
             {
               delete = {}
+              retry = {
+                backoff = "exponential"
+                count   = 3
+                delay   = "1m"
+              }
             }
           ]
           transitions = []
@@ -69,13 +89,20 @@ resource "opensearch_index_template" "app_logs_template" {
     index_patterns = ["app-logs-*"]
     template = {
       settings = {
-        number_of_shards         = 1
-        number_of_replicas       = 0
-        "index.refresh_interval" = "30s"
+        # OpenSearch stores index settings in nested form; declare them the same way
+        # to avoid perpetual drift between HCL and the API-normalized representation.
+        index = {
+          number_of_shards   = "1"
+          number_of_replicas = "0"
+          refresh_interval   = "30s"
 
-        # Enable ISM policy (using plugins namespace for OpenSearch 2.x)
-        "plugins.index_state_management.policy_id"      = opensearch_ism_policy.app_logs_policy.policy_id
-        "plugins.index_state_management.rollover_alias" = "app-logs"
+          plugins = {
+            index_state_management = {
+              policy_id      = opensearch_ism_policy.app_logs_policy.policy_id
+              rollover_alias = "app-logs"
+            }
+          }
+        }
       }
       mappings = {
         properties = {
@@ -139,6 +166,14 @@ resource "opensearch_index" "app_logs_initial" {
   })
 
   force_destroy = true
+
+  # mappings/settings are inherited from opensearch_index_template.app_logs_template
+  # at creation time and baked into state. Managing them in two places causes
+  # perpetual drift (and a forced replacement on every plan), so ignore them here
+  # and let the template remain the single source of truth.
+  lifecycle {
+    ignore_changes = [mappings, number_of_shards, number_of_replicas, refresh_interval]
+  }
 
   depends_on = [opensearch_index_template.app_logs_template]
 }

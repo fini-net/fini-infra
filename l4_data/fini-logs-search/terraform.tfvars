@@ -3,7 +3,7 @@
 # OpenSearch cluster configuration
 cluster_name       = "fini-logs-search"
 opensearch_version = "2"
-node_size          = "db-s-1vcpu-2gb"
+node_size          = "db-s-2vcpu-4gb"
 node_count         = 1
 region             = "nyc3"
 environment        = "prod"
