@@ -148,7 +148,7 @@ scaling further.
 ## Requirements
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | terraform | >= 1.10 |
 | digitalocean | ~> 2.0 |
 | onepassword | ~> 2.0 |
@@ -157,8 +157,8 @@ scaling further.
 ## Providers
 
 | Name | Version |
-|------|---------|
-| digitalocean | 2.69.0 |
+| ---- | ------- |
+| digitalocean | 2.85.0 |
 | onepassword | 2.2.1 |
 | opensearch | 2.3.2 |
 
@@ -169,7 +169,7 @@ No modules.
 ## Resources
 
 | Name | Type |
-|------|------|
+| ---- | ---- |
 | [digitalocean_database_cluster.logs_search](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/database_cluster) | resource |
 | [digitalocean_database_firewall.logs_search_firewall](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/database_firewall) | resource |
 | [digitalocean_database_user.logs_ingest](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/database_user) | resource |
@@ -181,7 +181,7 @@ No modules.
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | allowed\_ips | List of IP addresses allowed to connect to the OpenSearch cluster (only used if enable\_firewall=true) | `list(string)` | `[]` | no |
 | cluster\_name | Name of the OpenSearch cluster | `string` | `"fini-logs-search"` | no |
 | enable\_firewall | Enable firewall/trusted sources (WARNING: disables App Platform log forwarding) | `bool` | `false` | no |
@@ -196,7 +196,7 @@ No modules.
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | app\_platform\_endpoint | Endpoint URL for App Platform log forwarding |
 | app\_platform\_index | Index name to use in App Platform log forwarding configuration |
 | cluster\_host | The hostname of the OpenSearch cluster |
