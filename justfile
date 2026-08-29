@@ -11,6 +11,7 @@ import? '.just/compliance.just'
 import? '.just/deploy-ssh.just'
 import? '.just/gh-process.just'
 import? '.just/packer.just'
+import? '.just/activity-graph.just'
 
 # list recipes (default works without naming it)
 [group('example')]
