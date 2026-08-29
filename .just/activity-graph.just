@@ -52,7 +52,9 @@ activity-graph-verify username="chicks-net":
     BASE_URL=$(just activity-graph-url 2>/dev/null | tail -1)
     URL="${BASE_URL}/graph?username={{username}}&theme=github-compact"
     echo "{{BLUE}}GET $URL{{NORMAL}}"
-    HTTP_CODE=$(curl -s -o /tmp/ag-verify.svg -w '%{http_code}' "$URL")
+    SVG=$(mktemp /tmp/justfile.ag-verify.XXXXXX)
+    trap 'rm -f "$SVG"' EXIT
+    HTTP_CODE=$(curl -s -o "$SVG" -w '%{http_code}' "$URL")
     echo "  HTTP: $HTTP_CODE"
     if [[ "$HTTP_CODE" != "200" ]]; then
         echo "{{RED}}FAIL: expected 200, got $HTTP_CODE{{NORMAL}}"
@@ -64,7 +66,7 @@ activity-graph-verify username="chicks-net":
         image/svg+xml*) ;;
         *) echo "{{RED}}FAIL: expected image/svg+xml, got '$CT'{{NORMAL}}"; exit 1 ;;
     esac
-    if grep -q "Can't fetch any contribution" /tmp/ag-verify.svg; then
+    if grep -q "Can't fetch any contribution" "$SVG"; then
         echo "{{RED}}FAIL: got the 'Can't fetch' error-graph — TOKEN is missing or invalid{{NORMAL}}"
         exit 1
     fi

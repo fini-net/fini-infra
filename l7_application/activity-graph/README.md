@@ -7,9 +7,10 @@ billing-locked (HTTP 402), so we run our own fork
 as a containerized Express 5 service.
 
 The app reads `process.env.TOKEN` as a Bearer token for the GitHub GraphQL
-contributions API. The token is retrieved from 1Password at runtime via
-the `onepassword` provider (item `github-activity-graph-token` in vault
-`Private`) — never stored in code or version control.
+contributions API. During `tofu apply` the `onepassword` provider reads the
+token from 1Password (item `github-activity-graph-token` in vault `Private`)
+and configures it as a DO App Platform `SECRET`/`RUN_TIME` env var — it is
+never stored in code or version control.
 
 See [chicks-net/www-chicks-net#371](https://github.com/chicks-net/www-chicks-net/issues/371)
 for the full self-hosting rationale.

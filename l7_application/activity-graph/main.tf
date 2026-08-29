@@ -9,13 +9,9 @@
 #
 # See chicks-net/www-chicks-net#371 for the full rationale.
 
-locals {
-  app_name = var.app_name
-}
-
 resource "digitalocean_app" "activity_graph" {
   spec {
-    name   = local.app_name
+    name   = var.app_name
     region = var.region
 
     alert {
