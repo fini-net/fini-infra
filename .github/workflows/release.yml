@@ -19,7 +19,6 @@ jobs:
     permissions:
       contents: write    # gh release upload
       id-token: write    # cosign keyless OIDC
-      attestations: write # GitHub artifact attestations
     outputs:
       hashes: ${{ steps.hash.outputs.hashes }}
     steps:
@@ -46,12 +45,22 @@ jobs:
           echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
           echo "bundle=${BUNDLE}" >> "$GITHUB_OUTPUT"
 
+      - name: Generate SBOM
+        uses: anchore/sbom-action@3ad7283483fc7af8ff2b4ea19663c2d5ca935e26 # v0.24.2
+        with:
+          file: ${{ steps.bundle.outputs.bundle }}
+          format: json
+          output-file: ${{ steps.bundle.outputs.bundle }}.sbom.json
+
+      # Generated after the SBOM so checksums.txt covers both the bundle and
+      # the SBOM. Integrity chain: bundle (cosign-signed) -> checksums.txt
+      # (SLSA provenance subject) -> SBOM hash pinned inside checksums.txt.
       - name: Generate checksums
         env:
           BUNDLE: ${{ steps.bundle.outputs.bundle }}
         run: |
           set -euo pipefail
-          sha256sum "${BUNDLE}" > checksums.txt
+          sha256sum "${BUNDLE}" "${BUNDLE}.sbom.json" > checksums.txt
           cat checksums.txt
 
       - name: Generate subject hashes for SLSA provenance
@@ -64,13 +73,6 @@ jobs:
           hashes=$(sha256sum "${BUNDLE}" checksums.txt | base64 -w0)
           echo "hashes=$hashes" >> "$GITHUB_OUTPUT"
 
-      - name: Generate SBOM
-        uses: anchore/sbom-action@3ad7283483fc7af8ff2b4ea19663c2d5ca935e26 # v0.24.2
-        with:
-          file: ${{ steps.bundle.outputs.bundle }}
-          format: json
-          output-file: ${{ steps.bundle.outputs.bundle }}.sbom.json
-
       - name: Install cosign
         uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
 
@@ -81,11 +83,13 @@ jobs:
           set -euo pipefail
           # Keyless signing via GitHub OIDC - no long-lived secrets to rotate.
           # The --bundle file embeds the signature, certificate, and Rekor
-          # entry; verify downstream with the identity/issuer flags, e.g.:
+          # entry; verify downstream with the identity/issuer flags. The
+          # regex is anchored and dot-escaped so it matches exactly one
+          # workflow@ref identity (dots would otherwise match any char):
           #   cosign verify-blob \
           #     --bundle fini-infra-${TAG}.tar.gz.bundle \
           #     --certificate-identity-regexp \
-          #       "https://github.com/fini-net/fini-infra/.github/workflows/release.yml@refs/tags/${TAG}" \
+          #       "^https://github\.com/fini-net/fini-infra/\.github/workflows/release\.yml@refs/tags/${TAG}$" \
           #     --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
           #     fini-infra-${TAG}.tar.gz
           cosign sign-blob --yes "${BUNDLE}" \
@@ -98,6 +102,12 @@ jobs:
           BUNDLE: ${{ steps.bundle.outputs.bundle }}
         run: |
           set -euo pipefail
+          # `just release` (gh release create) normally fires this workflow by
+          # pushing the tag, so the release already exists. If someone pushed
+          # a v* tag manually without creating the release first, create it
+          # here rather than failing the upload.
+          gh release view "${TAG}" >/dev/null 2>&1 || \
+            gh release create "${TAG}" --generate-notes --verify-tag
           gh release upload "${TAG}" \
             "${BUNDLE}" \
             checksums.txt \

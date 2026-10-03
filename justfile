@@ -193,9 +193,14 @@ verify-release TAG=`gh release view --json tagName -q .tagName`:
 	done
 
 	echo "{{GREEN}}Verifying cosign keyless signature...{{NORMAL}}"
+	# Anchor (^...$) and dot-escape the identity: this regex is the trust
+	# boundary for keyless verification, and unescaped dots would match any
+	# character (e.g. "release-yml" would pass as "release.yml").
+	IDENTITY="https://github.com/${REPO}/.github/workflows/release.yml@refs/tags/${TAG}"
+	IDENTITY_RE="${IDENTITY//./\\.}"
 	cosign verify-blob \
 		--bundle "${BUNDLE}.bundle" \
-		--certificate-identity-regexp "https://github.com/${REPO}/.github/workflows/release.yml@refs/tags/${TAG}" \
+		--certificate-identity-regexp "^${IDENTITY_RE}$" \
 		--certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
 		"${BUNDLE}"
 
@@ -207,8 +212,10 @@ verify-release TAG=`gh release view --json tagName -q .tagName`:
 		"${BUNDLE}"
 
 	echo "{{GREEN}}Verifying checksums.txt...{{NORMAL}}"
-	# checksums.txt only covers the bundle; regenerate and compare.
-	EXPECTED="$(grep -E " ${BUNDLE}\$" checksums.txt | awk '{print $1}')"
+	# checksums.txt covers the bundle and SBOM; regenerate and compare.
+	# grep -F (literal): the bundle name contains dots that ERE would treat
+	# as wildcards and could match a different filename.
+	EXPECTED="$(grep -F " ${BUNDLE}" checksums.txt | awk '{print $1}')"
 	# sha256sum is GNU coreutils (absent on macOS); fall back to shasum -a 256
 	if command -v sha256sum >/dev/null 2>&1; then
 		ACTUAL="$(sha256sum "${BUNDLE}" | awk '{print $1}')"
