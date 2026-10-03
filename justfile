@@ -183,6 +183,10 @@ verify-release TAG=`gh release view --json tagName -q .tagName`:
 	# Use --fail so curl exits non-zero on 4xx/5xx (e.g. 404) instead of
 	# silently saving the GitHub "Not Found" error page, which later makes
 	# cosign choke with "invalid character 'N' looking for beginning of value".
+	# multiple.intoto.jsonl is the SLSA generator's convention for 2+
+	# subjects (here: bundle + checksums.txt). A single subject would be
+	# named intoto.jsonl and this download would 404 - keep in sync if the
+	# subject list in .github/workflows/release.yml ever changes.
 	for ASSET in "${BUNDLE}" "${BUNDLE}.bundle" "multiple.intoto.jsonl" "checksums.txt"; do
 		if ! curl --fail --location --output "${ASSET}" "${BASE}/${ASSET}"; then
 			echo "{{RED}}Error: failed to download ${BASE}/${ASSET} (HTTP error)."
@@ -205,6 +209,8 @@ verify-release TAG=`gh release view --json tagName -q .tagName`:
 		"${BUNDLE}"
 
 	echo "{{GREEN}}Verifying SLSA build provenance...{{NORMAL}}"
+	# The generator signs both subjects (bundle + checksums.txt); verifying
+	# the bundle transitively covers checksums.txt and its SBOM hash.
 	slsa-verifier verify-artifact \
 		--provenance-path multiple.intoto.jsonl \
 		--source-uri "github.com/${REPO}" \
@@ -212,10 +218,11 @@ verify-release TAG=`gh release view --json tagName -q .tagName`:
 		"${BUNDLE}"
 
 	echo "{{GREEN}}Verifying checksums.txt...{{NORMAL}}"
-	# checksums.txt covers the bundle and SBOM; regenerate and compare.
-	# grep -F (literal): the bundle name contains dots that ERE would treat
-	# as wildcards and could match a different filename.
-	EXPECTED="$(grep -F " ${BUNDLE}" checksums.txt | awk '{print $1}')"
+	# checksums.txt covers the bundle and SBOM. Match the bundle by exact
+	# filename field: a literal grep would also hit the SBOM line, whose
+	# name starts with the bundle name (checksum bug found in review).
+	# Field 2 may carry a leading * binary marker (BSD shasum) - strip it.
+	EXPECTED="$(awk -v f="${BUNDLE}" '{ gsub(/^\*/, "", $2); if ($2 == f) print $1 }' checksums.txt)"
 	# sha256sum is GNU coreutils (absent on macOS); fall back to shasum -a 256
 	if command -v sha256sum >/dev/null 2>&1; then
 		ACTUAL="$(sha256sum "${BUNDLE}" | awk '{print $1}')"
