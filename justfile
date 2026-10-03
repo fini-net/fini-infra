@@ -223,6 +223,10 @@ verify-release TAG=`gh release view --json tagName -q .tagName`:
 	# name starts with the bundle name (checksum bug found in review).
 	# Field 2 may carry a leading * binary marker (BSD shasum) - strip it.
 	EXPECTED="$(awk -v f="${BUNDLE}" '{ gsub(/^\*/, "", $2); if ($2 == f) print $1 }' checksums.txt)"
+	if [[ -z "$EXPECTED" ]]; then
+		echo "{{RED}}Error: ${BUNDLE} not found in checksums.txt - release asset list looks wrong{{NORMAL}}"
+		exit 1
+	fi
 	# sha256sum is GNU coreutils (absent on macOS); fall back to shasum -a 256
 	if command -v sha256sum >/dev/null 2>&1; then
 		ACTUAL="$(sha256sum "${BUNDLE}" | awk '{print $1}')"

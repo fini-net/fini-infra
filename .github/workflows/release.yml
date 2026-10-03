@@ -16,6 +16,9 @@ permissions: {}
 jobs:
   release:
     runs-on: ubuntu-latest
+    # Signing and SBOM are external round-trips; don't let a hung step
+    # burn the 6h default.
+    timeout-minutes: 15
     permissions:
       contents: write    # gh release upload
       id-token: write    # cosign keyless OIDC
@@ -117,6 +120,8 @@ jobs:
 
   provenance:
     needs: release
+    # Note: timeout-minutes isn't allowed on a reusable-workflow call job;
+    # the generator's internal jobs set their own timeouts.
     permissions:
       actions: read
       id-token: write
