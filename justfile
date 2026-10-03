@@ -187,7 +187,7 @@ verify-release TAG=`gh release view --json tagName -q .tagName`:
 	# subjects (here: bundle + checksums.txt). A single subject would be
 	# named intoto.jsonl and this download would 404 - keep in sync if the
 	# subject list in .github/workflows/release.yml ever changes.
-	for ASSET in "${BUNDLE}" "${BUNDLE}.bundle" "multiple.intoto.jsonl" "checksums.txt"; do
+	for ASSET in "${BUNDLE}" "${BUNDLE}.bundle" "${BUNDLE}.sbom.json" "multiple.intoto.jsonl" "checksums.txt"; do
 		if ! curl --fail --location --output "${ASSET}" "${BASE}/${ASSET}"; then
 			echo "{{RED}}Error: failed to download ${BASE}/${ASSET} (HTTP error)."
 			echo "       Release ${TAG} may have no signed assets attached."
@@ -197,45 +197,56 @@ verify-release TAG=`gh release view --json tagName -q .tagName`:
 	done
 
 	echo "{{GREEN}}Verifying cosign keyless signature...{{NORMAL}}"
-	# Anchor (^...$) and dot-escape the identity: this regex is the trust
-	# boundary for keyless verification, and unescaped dots would match any
-	# character (e.g. "release-yml" would pass as "release.yml").
+	# Exact-match --certificate-identity (not a regex): the identity string
+	# is the trust boundary, and regex metacharacters in tag names (e.g. a
+	# '+' in semver build metadata) would need escaping if interpolated into
+	# a regex - an exact match sidesteps that entirely.
 	IDENTITY="https://github.com/${REPO}/.github/workflows/release.yml@refs/tags/${TAG}"
-	IDENTITY_RE="${IDENTITY//./\\.}"
 	cosign verify-blob \
 		--bundle "${BUNDLE}.bundle" \
-		--certificate-identity-regexp "^${IDENTITY_RE}$" \
+		--certificate-identity "${IDENTITY}" \
 		--certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
 		"${BUNDLE}"
 
 	echo "{{GREEN}}Verifying SLSA build provenance...{{NORMAL}}"
-	# The generator signs both subjects (bundle + checksums.txt); verifying
-	# the bundle transitively covers checksums.txt and its SBOM hash.
+	# Verify BOTH subjects: the bundle and checksums.txt itself (which pins
+	# the SBOM's hash). This closes the loop so every uploaded asset has a
+	# verified integrity path.
 	slsa-verifier verify-artifact \
 		--provenance-path multiple.intoto.jsonl \
 		--source-uri "github.com/${REPO}" \
 		--source-tag "${TAG}" \
-		"${BUNDLE}"
+		"${BUNDLE}" \
+		checksums.txt
 
 	echo "{{GREEN}}Verifying checksums.txt...{{NORMAL}}"
-	# checksums.txt covers the bundle and SBOM. Match the bundle by exact
+	# checksums.txt covers the bundle and SBOM. Match files by exact
 	# filename field: a literal grep would also hit the SBOM line, whose
 	# name starts with the bundle name (checksum bug found in review).
 	# Field 2 may carry a leading * binary marker (BSD shasum) - strip it.
-	EXPECTED="$(awk -v f="${BUNDLE}" '{ gsub(/^\*/, "", $2); if ($2 == f) print $1 }' checksums.txt)"
-	if [[ -z "$EXPECTED" ]]; then
-		echo "{{RED}}Error: ${BUNDLE} not found in checksums.txt - release asset list looks wrong{{NORMAL}}"
-		exit 1
-	fi
-	# sha256sum is GNU coreutils (absent on macOS); fall back to shasum -a 256
-	if command -v sha256sum >/dev/null 2>&1; then
-		ACTUAL="$(sha256sum "${BUNDLE}" | awk '{print $1}')"
-	else
-		ACTUAL="$(shasum -a 256 "${BUNDLE}" | awk '{print $1}')"
-	fi
-	if [[ "$EXPECTED" != "$ACTUAL" ]]; then
-		echo "{{RED}}Checksum mismatch: expected $EXPECTED, got $ACTUAL{{NORMAL}}"
-		exit 1
-	fi
+	checksum_of() {
+		awk -v f="$1" '{ gsub(/^\*/, "", $2); if ($2 == f) print $1 }' checksums.txt
+	}
+	actual_hash() {
+		if command -v sha256sum >/dev/null 2>&1; then
+			sha256sum "$1" | awk '{print $1}'
+		else
+			shasum -a 256 "$1" | awk '{print $1}'
+		fi
+	}
+	# Both the bundle and the SBOM are hashed in checksums.txt - verify
+	# each, so every release asset has an end-to-end integrity path.
+	for FILE in "${BUNDLE}" "${BUNDLE}.sbom.json"; do
+		EXPECTED="$(checksum_of "${FILE}")"
+		if [[ -z "$EXPECTED" ]]; then
+			echo "{{RED}}Error: ${FILE} not found in checksums.txt - release asset list looks wrong{{NORMAL}}"
+			exit 1
+		fi
+		ACTUAL="$(actual_hash "${FILE}")"
+		if [[ "$EXPECTED" != "$ACTUAL" ]]; then
+			echo "{{RED}}Checksum mismatch for ${FILE}: expected $EXPECTED, got $ACTUAL{{NORMAL}}"
+			exit 1
+		fi
+	done
 
 	echo "{{GREEN}}All signature and provenance checks passed for ${TAG}!{{NORMAL}}"

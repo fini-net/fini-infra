@@ -86,13 +86,12 @@ jobs:
           set -euo pipefail
           # Keyless signing via GitHub OIDC - no long-lived secrets to rotate.
           # The --bundle file embeds the signature, certificate, and Rekor
-          # entry; verify downstream with the identity/issuer flags. The
-          # regex is anchored and dot-escaped so it matches exactly one
-          # workflow@ref identity (dots would otherwise match any char):
+          # entry; verify downstream with an EXACT identity match (no regex,
+          # so no metacharacter-escaping concerns in tag names):
           #   cosign verify-blob \
           #     --bundle fini-infra-${TAG}.tar.gz.bundle \
-          #     --certificate-identity-regexp \
-          #       "^https://github\.com/fini-net/fini-infra/\.github/workflows/release\.yml@refs/tags/${TAG}$" \
+          #     --certificate-identity \
+          #       "https://github.com/fini-net/fini-infra/.github/workflows/release.yml@refs/tags/${TAG}" \
           #     --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
           #     fini-infra-${TAG}.tar.gz
           cosign sign-blob --yes "${BUNDLE}" \
