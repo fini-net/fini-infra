@@ -33,6 +33,6 @@ jobs:
           persist-credentials: false
 
       - name: Validate renovate.json
-        uses: docker://ghcr.io/renovatebot/renovate@sha256:d14d89a80209b5458a18c5e2dd7f440ef62b613a32e3c0f729de40ffb7bbe87e # v43.284.0
+        uses: docker://ghcr.io/renovatebot/renovate@sha256:6f1f3e2d9d0c3f99aa1f61f7509d302185de7deb173ac8c5ff88a5ce283ec435 # v43.284.0
         with:
           args: renovate-config-validator .github/renovate.json
