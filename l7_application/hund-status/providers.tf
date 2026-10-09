@@ -14,7 +14,7 @@ terraform {
     }
     hund = {
       source  = "registry.terraform.io/hundio/hund"
-      version = "~> 0.1"
+      version = "~> 0.2"
     }
   }
 
