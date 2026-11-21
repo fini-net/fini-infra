@@ -153,7 +153,7 @@ tf-import dir addr id: (check-tf-init dir)
 	set -x
 	tofu import "{{addr}}" "{{id}}"
 
-# Verify a release's cosign signature and SLSA provenance (defaults to latest)
+# Verify a release's cosign signature, SLSA provenance, and GitHub attestations (defaults to latest)
 # Usage: just verify-release [v4.5]
 [group('Release')]
 verify-release TAG=`gh release view --json tagName -q .tagName`:
@@ -218,6 +218,22 @@ verify-release TAG=`gh release view --json tagName -q .tagName`:
 		--source-tag "${TAG}" \
 		"${BUNDLE}" \
 		checksums.txt
+
+	echo "{{GREEN}}Verifying GitHub-native attestations...{{NORMAL}}"
+	# gh attestation verify prints nothing when not attached to a TTY but
+	# still exits 0 on success - GH_FORCE_TTY keeps the output visible.
+	# --signer-workflow pins the trust boundary to this release workflow,
+	# matching the exact-identity cosign check above; without it, any
+	# workflow in the repo could have produced the attestation.
+	GH_FORCE_TTY=1 gh attestation verify "${BUNDLE}" \
+		--repo "${REPO}" \
+		--signer-workflow "${REPO}/.github/workflows/release.yml"
+	# checksums.txt is itself an attestation subject; verifying it directly
+	# means the file that pins the bundle and SBOM digests is independently
+	# attested (the SLSA step above checks the same subject pair).
+	GH_FORCE_TTY=1 gh attestation verify checksums.txt \
+		--repo "${REPO}" \
+		--signer-workflow "${REPO}/.github/workflows/release.yml"
 
 	echo "{{GREEN}}Verifying checksums.txt...{{NORMAL}}"
 	# checksums.txt covers the bundle and SBOM. Match files by exact
